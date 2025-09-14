@@ -7,6 +7,7 @@ const navLinks = [
   { label: 'Directory', path: '/directory' },
   { label: 'Map', path: '/map' },
   { label: 'Events', path: '/events' },
+  { label: 'Submit', path: '/submit' },
 ];
 
 const Navbar = () => {
