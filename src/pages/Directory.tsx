@@ -125,12 +125,13 @@ const Directory = () => {
                       </p>
                       <p className="text-sm text-foreground/80 italic">"{biz.description}"</p>
                     </div>
-                    <button
+                    <Link
+                      to={`/business/${biz.id}`}
                       onClick={(e) => { e.stopPropagation(); }}
-                      className="mt-4 w-full bg-primary text-primary-foreground text-sm font-semibold py-2 rounded-lg hover:bg-navy-light transition-colors"
+                      className="mt-4 w-full bg-primary text-primary-foreground text-sm font-semibold py-2 rounded-lg hover:bg-navy-light transition-colors block text-center"
                     >
                       View Full Profile
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </motion.div>
