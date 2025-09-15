@@ -10,6 +10,7 @@ import MapPage from "./pages/MapPage";
 import About from "./pages/About";
 import Events from "./pages/Events";
 import SubmitBusiness from "./pages/SubmitBusiness";
+import BusinessDetail from "./pages/BusinessDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/events" element={<Events />} />
             <Route path="/submit" element={<SubmitBusiness />} />
+            <Route path="/business/:id" element={<BusinessDetail />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
