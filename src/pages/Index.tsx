@@ -172,6 +172,39 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ─── PHOTO GALLERY STRIP ─── */}
+      <section className="py-16 overflow-hidden">
+        <ScrollFadeIn>
+          <h2 className="font-display text-3xl font-bold text-foreground text-center mb-8">Life in Cypress</h2>
+        </ScrollFadeIn>
+        <div className="relative">
+          <div className="flex gap-4 animate-scroll-x hover:[animation-play-state:paused]">
+            {[
+              { src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=350&fit=crop", alt: "Local dining" },
+              { src: "https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=500&h=350&fit=crop", alt: "Waterfront views" },
+              { src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&h=350&fit=crop", alt: "Outdoor fun" },
+              { src: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&h=350&fit=crop", alt: "Entertainment" },
+              { src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=350&fit=crop", alt: "Restaurants" },
+              { src: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&h=350&fit=crop", alt: "Sweet treats" },
+              { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&h=350&fit=crop", alt: "Wellness" },
+              { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=350&fit=crop", alt: "Green spaces" },
+              { src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=350&fit=crop", alt: "Local dining" },
+              { src: "https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=500&h=350&fit=crop", alt: "Waterfront views" },
+              { src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&h=350&fit=crop", alt: "Outdoor fun" },
+              { src: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&h=350&fit=crop", alt: "Entertainment" },
+              { src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=350&fit=crop", alt: "Restaurants" },
+              { src: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&h=350&fit=crop", alt: "Sweet treats" },
+              { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&h=350&fit=crop", alt: "Wellness" },
+              { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=350&fit=crop", alt: "Green spaces" },
+            ].map((img, i) => (
+              <div key={i} className="flex-shrink-0 w-72 h-48 rounded-xl overflow-hidden">
+                <img src={img.src} alt={img.alt} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── EVENTS ─── */}
       <section className="py-24 px-6 bg-muted">
         <div className="max-w-7xl mx-auto">
