@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useSearchParams } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Search, Star, MapPin } from 'lucide-react';
 import { businesses } from '@/data/businessData';
 import L from 'leaflet';
@@ -16,10 +17,24 @@ const defaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = defaultIcon;
 
+// Helper to fly to a location from URL params
+const FlyToLocation = ({ lat, lng }: { lat: number; lng: number }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo([lat, lng], 17, { duration: 1.5 });
+  }, [lat, lng, map]);
+  return null;
+};
+
 const MapPage = () => {
+  const [searchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const mapRef = useRef<L.Map | null>(null);
+
+  const targetLat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : null;
+  const targetLng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : null;
+  const targetBizId = searchParams.get('biz') || null;
 
   const filtered = useMemo(() => {
     return businesses.filter((b) => {
@@ -71,6 +86,9 @@ const MapPage = () => {
             className="w-full h-full z-0"
             ref={mapRef}
           >
+            {targetLat !== null && targetLng !== null && (
+              <FlyToLocation lat={targetLat} lng={targetLng} />
+            )}
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
