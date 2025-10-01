@@ -212,7 +212,7 @@ const BusinessDetail = () => {
               <div className="bg-card border border-border rounded-xl p-5">
                 <h3 className="font-display text-lg font-bold text-foreground mb-4">Location</h3>
                 <div className="bg-muted rounded-lg h-40 flex items-center justify-center mb-3">
-                  <Link to="/map" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors">
+                  <Link to={`/map?lat=${biz.lat}&lng=${biz.lng}&biz=${biz.id}`} className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors">
                     <MapPin className="w-8 h-8" />
                     <span className="text-sm font-medium">View on Map</span>
                   </Link>
