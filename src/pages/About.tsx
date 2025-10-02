@@ -1,5 +1,8 @@
-import { ScrollFadeIn, StaggerChildren, StaggerItem, TextReveal } from '@/components/ScrollAnimations';
+import { ScrollFadeIn, StaggerChildren, StaggerItem, TextReveal, ScrollRotate3D } from '@/components/ScrollAnimations';
 import { MapPin, Tag, Users, Star } from 'lucide-react';
+import { FloatingOrbs } from '@/components/FloatingOrbs';
+import TiltCard from '@/components/TiltCard';
+import { motion } from 'framer-motion';
 
 const stats = [
   { icon: MapPin, value: "74+", label: "Local Businesses" },
