@@ -9,7 +9,6 @@ const vertexShader = `
   varying vec3 vNormal;
   varying vec3 vPosition;
   
-  // Simplex-like noise
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -75,42 +74,57 @@ const vertexShader = `
 
 const fragmentShader = `
   uniform float uTime;
+  uniform vec3 uColor1;
+  uniform vec3 uColor2;
+  uniform vec3 uColor3;
   varying vec3 vNormal;
   varying vec3 vPosition;
   
   void main() {
-    // Cyan to purple to pink gradient based on normal direction
-    vec3 color1 = vec3(0.0, 0.85, 0.8);   // Cyan
-    vec3 color2 = vec3(0.5, 0.2, 0.9);     // Purple
-    vec3 color3 = vec3(0.9, 0.2, 0.5);     // Pink
-    
     float mixFactor1 = dot(vNormal, vec3(0.0, 1.0, 0.0)) * 0.5 + 0.5;
     float mixFactor2 = dot(vNormal, vec3(1.0, 0.0, 0.0)) * 0.5 + 0.5;
     float timeMix = sin(uTime * 0.3) * 0.5 + 0.5;
     
-    vec3 color = mix(color1, color2, mixFactor1);
-    color = mix(color, color3, mixFactor2 * timeMix);
+    vec3 color = mix(uColor1, uColor2, mixFactor1);
+    color = mix(color, uColor3, mixFactor2 * timeMix);
     
-    // Fresnel effect for glow edges
     vec3 viewDir = normalize(cameraPosition - vPosition);
     float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
-    color += fresnel * vec3(0.3, 0.6, 1.0);
+    color += fresnel * uColor2 * 0.6;
     
-    // Add subtle pulsing
     color *= 0.8 + 0.2 * sin(uTime * 0.5);
     
-    gl_FragColor = vec4(color, 0.9);
+    gl_FragColor = vec4(color, 0.85);
   }
 `;
 
-const MorphBlob = () => {
+interface MorphBlobProps {
+  color1?: [number, number, number];
+  color2?: [number, number, number];
+  color3?: [number, number, number];
+  speed?: number;
+  noiseStrength?: number;
+  size?: number;
+}
+
+const MorphBlob = ({
+  color1 = [0.16, 0.24, 0.42],  // Navy
+  color2 = [0.83, 0.66, 0.33],  // Gold
+  color3 = [0.4, 0.15, 0.6],    // Purple accent
+  speed = 0.4,
+  noiseStrength = 0.35,
+  size = 2,
+}: MorphBlobProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uSpeed: { value: 0.4 },
-      uNoiseStrength: { value: 0.35 },
+      uSpeed: { value: speed },
+      uNoiseStrength: { value: noiseStrength },
+      uColor1: { value: new THREE.Vector3(...color1) },
+      uColor2: { value: new THREE.Vector3(...color2) },
+      uColor3: { value: new THREE.Vector3(...color3) },
     }),
     []
   );
@@ -125,7 +139,7 @@ const MorphBlob = () => {
 
   return (
     <mesh ref={meshRef}>
-      <icosahedronGeometry args={[2, 64]} />
+      <icosahedronGeometry args={[size, 64]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}

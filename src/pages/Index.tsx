@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Star, Clock, MapPin, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
+import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
 import { businesses, categories, reviews, events } from '@/data/businessData';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import MorphScene from '@/components/MorphScene';
+import { FloatingOrbs } from '@/components/FloatingOrbs';
+import TiltCard from '@/components/TiltCard';
 
 const topRated = businesses.filter(b => b.rating >= 4.8).slice(0, 3);
 
@@ -24,28 +27,62 @@ const Index = () => {
 
   return (
     <div className="bg-background">
-      {/* ─── HERO ─── */}
+      {/* ─── HERO WITH 3D MORPH ─── */}
       <StickyReveal>
-        <div className="relative h-screen flex flex-col items-center justify-center">
-          {/* Background */}
+        <div className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+          {/* Background image */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=1080&fit=crop)' }}
           />
           <div className="absolute inset-0 bg-hero-overlay" />
 
+          {/* 3D Morph blob behind text */}
+          <div className="absolute inset-0 opacity-40">
+            <Suspense fallback={null}>
+              <MorphScene
+                color1={[0.16, 0.24, 0.42]}
+                color2={[0.83, 0.66, 0.33]}
+                color3={[0.5, 0.2, 0.7]}
+                size={3}
+                interactive={false}
+              />
+            </Suspense>
+          </div>
+
           {/* Content */}
-          <div className="relative z-10 text-center px-6 max-w-3xl">
-            <h1 className="font-display text-5xl md:text-7xl font-bold text-primary-foreground mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: 'easeOut' }}
+            className="relative z-10 text-center px-6 max-w-3xl"
+          >
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="font-display text-5xl md:text-7xl font-bold text-primary-foreground mb-4"
+            >
               Cypress <span className="gradient-gold">LocalLink</span>
-            </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/80 mb-8">
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-lg md:text-xl text-primary-foreground/80 mb-8"
+            >
               Discover, Support & Celebrate Local Businesses
-            </p>
+            </motion.p>
 
             {/* Search */}
-            <form onSubmit={handleSearch} className="relative max-w-xl mx-auto mb-8">
-              <div className="flex items-center bg-card/95 backdrop-blur-sm rounded-full overflow-hidden shadow-lg">
+            <motion.form
+              onSubmit={handleSearch}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="relative max-w-xl mx-auto mb-8"
+            >
+              <div className="flex items-center bg-card/95 backdrop-blur-sm rounded-full overflow-hidden shadow-2xl border border-border/30">
                 <Search className="w-5 h-5 text-muted-foreground ml-5" />
                 <input
                   type="text"
@@ -61,35 +98,49 @@ const Index = () => {
                   Search
                 </button>
               </div>
-            </form>
+            </motion.form>
 
-            <div className="flex items-center justify-center gap-3 text-primary-foreground/60 text-sm font-body tracking-widest">
-              <span>EAT</span>
-              <span className="text-gold">•</span>
-              <span>SHOP</span>
-              <span className="text-gold">•</span>
-              <span>PLAY</span>
-              <span className="text-gold">•</span>
-              <span>LIVE</span>
-            </div>
-          </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 0.6 }}
+              className="flex items-center justify-center gap-3 text-primary-foreground/60 text-sm font-body tracking-widest"
+            >
+              {['EAT', 'SHOP', 'PLAY', 'LIVE'].map((word, i) => (
+                <motion.span
+                  key={word}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 + i * 0.1 }}
+                >
+                  {i > 0 && <span className="text-gold mr-3">•</span>}
+                  {word}
+                </motion.span>
+              ))}
+            </motion.div>
+          </motion.div>
 
           {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ repeat: Infinity, duration: 2 }}
               className="w-6 h-10 border-2 border-primary-foreground/30 rounded-full flex items-start justify-center p-2"
             >
-              <div className="w-1 h-2 bg-primary-foreground/50 rounded-full" />
+              <motion.div
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="w-1 h-2 bg-gold rounded-full"
+              />
             </motion.div>
           </div>
         </div>
       </StickyReveal>
 
-      {/* ─── CATEGORIES ─── */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* ─── CATEGORIES WITH 3D TILT ─── */}
+      <section className="py-24 px-6 relative">
+        <FloatingOrbs />
+        <div className="max-w-7xl mx-auto relative z-10">
           <ScrollFadeIn>
             <div className="text-center mb-16">
               <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">Explore Categories</h2>
@@ -97,18 +148,26 @@ const Index = () => {
             </div>
           </ScrollFadeIn>
 
-          <StaggerChildren className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((cat) => (
+          <StaggerChildren className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+            {categories.slice(0, 10).map((cat) => (
               <StaggerItem key={cat.slug}>
-                <Link
-                  to={`/directory?category=${encodeURIComponent(cat.slug)}`}
-                  className="group block bg-card rounded-xl p-6 text-center card-hover border border-border"
-                >
-                  <div className="text-4xl mb-3">{cat.icon}</div>
-                  <span className="text-sm font-semibold text-foreground group-hover:text-gold transition-colors">
-                    {cat.name}
-                  </span>
-                </Link>
+                <TiltCard intensity={12}>
+                  <Link
+                    to={`/directory?category=${encodeURIComponent(cat.slug)}`}
+                    className="group block bg-card rounded-xl p-6 text-center border border-border hover:border-gold/30 hover:shadow-lg hover:shadow-gold/5 transition-all duration-300"
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.2, rotate: [0, -5, 5, 0] }}
+                      transition={{ duration: 0.4 }}
+                      className="text-4xl mb-3"
+                    >
+                      {cat.icon}
+                    </motion.div>
+                    <span className="text-sm font-semibold text-foreground group-hover:text-gold transition-colors">
+                      {cat.name}
+                    </span>
+                  </Link>
+                </TiltCard>
               </StaggerItem>
             ))}
           </StaggerChildren>
@@ -121,9 +180,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ─── TEXT REVEAL ─── */}
-      <section className="py-24 px-6 bg-primary">
-        <div className="max-w-4xl mx-auto min-h-[40vh] flex items-center">
+      {/* ─── TEXT REVEAL WITH MORPH BACKGROUND ─── */}
+      <section className="py-24 px-6 bg-primary relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <Suspense fallback={null}>
+            <MorphScene
+              color1={[0.83, 0.66, 0.33]}
+              color2={[0.3, 0.15, 0.5]}
+              color3={[0.16, 0.24, 0.42]}
+              size={4}
+              interactive={false}
+            />
+          </Suspense>
+        </div>
+        <div className="max-w-4xl mx-auto min-h-[40vh] flex items-center relative z-10">
           <TextReveal
             text="Every local business has a story. We connect you with the people, places, and passions that make Cypress, Texas truly home."
             className="text-2xl md:text-4xl font-display font-bold text-primary-foreground leading-snug justify-center text-center"
@@ -131,44 +201,60 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ─── TOP RATED ─── */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* ─── TOP RATED WITH 3D ROTATE ─── */}
+      <section className="py-24 px-6 relative">
+        <FloatingOrbs className="opacity-50" />
+        <div className="max-w-7xl mx-auto relative z-10">
           <ScrollFadeIn>
             <div className="text-center mb-16">
               <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">Top Rated Spots</h2>
             </div>
           </ScrollFadeIn>
 
-          <StaggerChildren className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {topRated.map((biz) => (
-              <StaggerItem key={biz.id}>
-                <Link to={`/directory`} className="group block">
-                  <div className="relative rounded-xl overflow-hidden card-hover">
-                    <img
-                      src={biz.image}
-                      alt={biz.name}
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6">
-                      <span className="inline-block bg-gold/90 text-primary text-xs font-bold px-2 py-1 rounded mb-2">
-                        Local Favorite
-                      </span>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Star className="w-4 h-4 text-gold fill-gold" />
-                        <span className="text-primary-foreground font-semibold text-sm">{biz.rating}</span>
-                        <span className="text-primary-foreground/60 text-xs">{biz.category}</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {topRated.map((biz, i) => (
+              <ScrollRotate3D key={biz.id}>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+                >
+                  <TiltCard intensity={10}>
+                    <Link to={`/business/${biz.id}`} className="group block">
+                      <div className="relative rounded-xl overflow-hidden shadow-lg">
+                        <img
+                          src={biz.image}
+                          alt={biz.name}
+                          className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6">
+                          <motion.span
+                            initial={{ x: -20, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.3 + i * 0.1 }}
+                            className="inline-block bg-gold/90 text-primary text-xs font-bold px-2 py-1 rounded mb-2"
+                          >
+                            Local Favorite
+                          </motion.span>
+                          <div className="flex items-center gap-2 mb-1">
+                            <Star className="w-4 h-4 text-gold fill-gold" />
+                            <span className="text-primary-foreground font-semibold text-sm">{biz.rating}</span>
+                            <span className="text-primary-foreground/60 text-xs">{biz.category}</span>
+                          </div>
+                          <h3 className="font-display text-xl font-bold text-primary-foreground">{biz.name}</h3>
+                          <p className="text-primary-foreground/70 text-sm mt-1 line-clamp-2">{biz.description}</p>
+                        </div>
                       </div>
-                      <h3 className="font-display text-xl font-bold text-primary-foreground">{biz.name}</h3>
-                      <p className="text-primary-foreground/70 text-sm mt-1 line-clamp-2">{biz.description}</p>
-                    </div>
-                  </div>
-                </Link>
-              </StaggerItem>
+                    </Link>
+                  </TiltCard>
+                </motion.div>
+              </ScrollRotate3D>
             ))}
-          </StaggerChildren>
+          </div>
         </div>
       </section>
 
@@ -177,37 +263,37 @@ const Index = () => {
         <ScrollFadeIn>
           <h2 className="font-display text-3xl font-bold text-foreground text-center mb-8">Life in Cypress</h2>
         </ScrollFadeIn>
-        <div className="relative">
-          <div className="flex gap-4 animate-scroll-x hover:[animation-play-state:paused]">
-            {[
-              { src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=350&fit=crop", alt: "Local dining" },
-              { src: "https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=500&h=350&fit=crop", alt: "Waterfront views" },
-              { src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&h=350&fit=crop", alt: "Outdoor fun" },
-              { src: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&h=350&fit=crop", alt: "Entertainment" },
-              { src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=350&fit=crop", alt: "Restaurants" },
-              { src: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&h=350&fit=crop", alt: "Sweet treats" },
-              { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&h=350&fit=crop", alt: "Wellness" },
-              { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=350&fit=crop", alt: "Green spaces" },
-              { src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=350&fit=crop", alt: "Local dining" },
-              { src: "https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=500&h=350&fit=crop", alt: "Waterfront views" },
-              { src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&h=350&fit=crop", alt: "Outdoor fun" },
-              { src: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&h=350&fit=crop", alt: "Entertainment" },
-              { src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=350&fit=crop", alt: "Restaurants" },
-              { src: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&h=350&fit=crop", alt: "Sweet treats" },
-              { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&h=350&fit=crop", alt: "Wellness" },
-              { src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=350&fit=crop", alt: "Green spaces" },
-            ].map((img, i) => (
-              <div key={i} className="flex-shrink-0 w-72 h-48 rounded-xl overflow-hidden">
-                <img src={img.src} alt={img.alt} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
-              </div>
-            ))}
+        <ScrollParallax speed={0.2}>
+          <div className="relative">
+            <div className="flex gap-4 animate-scroll-x hover:[animation-play-state:paused]">
+              {[
+                "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=350&fit=crop",
+              ].flatMap((src, i) => [src, src]).map((src, i) => (
+                <div key={i} className="flex-shrink-0 w-72 h-48 rounded-xl overflow-hidden group">
+                  <img
+                    src={src}
+                    alt="Cypress life"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </ScrollParallax>
       </section>
 
-      {/* ─── EVENTS ─── */}
-      <section className="py-24 px-6 bg-muted">
-        <div className="max-w-7xl mx-auto">
+      {/* ─── EVENTS WITH 3D CARDS ─── */}
+      <section className="py-24 px-6 bg-muted relative">
+        <FloatingOrbs className="opacity-30" />
+        <div className="max-w-7xl mx-auto relative z-10">
           <ScrollFadeIn>
             <div className="flex items-center justify-between mb-12">
               <h2 className="font-display text-4xl font-bold text-foreground">Upcoming Events</h2>
@@ -220,60 +306,83 @@ const Index = () => {
           <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {events.map((ev) => (
               <StaggerItem key={ev.id}>
-                <div className="flex items-center gap-4 bg-card rounded-xl p-4 border border-border card-hover">
-                  <div className="flex-shrink-0 w-14 h-14 bg-primary rounded-lg flex flex-col items-center justify-center">
-                    <span className="text-lg font-bold text-primary-foreground leading-none">{ev.day}</span>
-                    <span className="text-xs text-gold font-semibold">{ev.month}</span>
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="font-semibold text-foreground text-sm truncate">{ev.title}</h4>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                      <Clock className="w-3 h-3" />
-                      <span>{ev.time}</span>
+                <TiltCard intensity={8}>
+                  <div className="flex items-center gap-4 bg-card rounded-xl p-4 border border-border hover:border-gold/20 hover:shadow-md transition-all duration-300">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotateZ: -3 }}
+                      className="flex-shrink-0 w-14 h-14 bg-navy-gradient rounded-lg flex flex-col items-center justify-center shadow-md"
+                    >
+                      <span className="text-lg font-bold text-primary-foreground leading-none">{ev.day}</span>
+                      <span className="text-xs text-gold font-semibold">{ev.month}</span>
+                    </motion.div>
+                    <div className="min-w-0">
+                      <h4 className="font-semibold text-foreground text-sm truncate">{ev.title}</h4>
+                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>{ev.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground">
+                        <MapPin className="w-3 h-3" />
+                        <span className="truncate">{ev.location}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground">
-                      <MapPin className="w-3 h-3" />
-                      <span className="truncate">{ev.location}</span>
-                    </div>
                   </div>
-                </div>
+                </TiltCard>
               </StaggerItem>
             ))}
           </StaggerChildren>
         </div>
       </section>
 
-      {/* ─── MAP PREVIEW ─── */}
+      {/* ─── MAP PREVIEW WITH 3D ─── */}
       <section className="py-24 px-6">
-        <ScrollScale>
+        <ScrollRotate3D>
           <Link to="/map" className="block max-w-4xl mx-auto group">
-            <div className="relative rounded-2xl overflow-hidden card-hover border border-border">
-              <img
-                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&h=500&fit=crop"
-                alt="Cypress community map"
-                className="w-full h-64 md:h-80 object-cover group-hover:scale-105 transition-transform duration-500"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent flex flex-col items-center justify-end p-8 text-center">
-                <MapPin className="w-8 h-8 text-gold mb-3" />
-                <h3 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
-                  Find Businesses Near You
-                </h3>
-                <p className="text-primary-foreground/70 text-sm max-w-md mb-4">
-                  Explore the Cypress community map — dining, shopping, wellness & more.
-                </p>
-                <span className="inline-flex items-center gap-2 bg-gold text-primary px-5 py-2 rounded-full text-sm font-bold group-hover:gap-3 transition-all">
-                  Open Map <ArrowRight className="w-4 h-4" />
-                </span>
+            <TiltCard intensity={6} glare>
+              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-border">
+                <img
+                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&h=500&fit=crop"
+                  alt="Cypress community map"
+                  className="w-full h-64 md:h-80 object-cover group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent flex flex-col items-center justify-end p-8 text-center">
+                  <motion.div
+                    whileHover={{ scale: 1.15 }}
+                    className="mb-3"
+                  >
+                    <MapPin className="w-8 h-8 text-gold" />
+                  </motion.div>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
+                    Find Businesses Near You
+                  </h3>
+                  <p className="text-primary-foreground/70 text-sm max-w-md mb-4">
+                    Explore the Cypress community map — dining, shopping, wellness & more.
+                  </p>
+                  <span className="inline-flex items-center gap-2 bg-gold text-primary px-5 py-2 rounded-full text-sm font-bold group-hover:gap-3 transition-all">
+                    Open Map <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
               </div>
-            </div>
+            </TiltCard>
           </Link>
-        </ScrollScale>
+        </ScrollRotate3D>
       </section>
 
-      {/* ─── REVIEWS ─── */}
-      <section className="py-24 px-6 bg-primary">
-        <div className="max-w-4xl mx-auto">
+      {/* ─── REVIEWS WITH MORPH ─── */}
+      <section className="py-24 px-6 bg-primary relative overflow-hidden">
+        <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-15">
+          <Suspense fallback={null}>
+            <MorphScene
+              color1={[0.83, 0.66, 0.33]}
+              color2={[1, 1, 1]}
+              color3={[0.5, 0.3, 0.1]}
+              size={2.5}
+              interactive={false}
+            />
+          </Suspense>
+        </div>
+        <div className="max-w-4xl mx-auto relative z-10">
           <ScrollFadeIn>
             <h2 className="font-display text-4xl font-bold text-primary-foreground text-center mb-16">Community Voices</h2>
           </ScrollFadeIn>
@@ -281,19 +390,25 @@ const Index = () => {
           <div className="relative">
             <motion.div
               key={reviewIndex}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.4 }}
+              initial={{ opacity: 0, x: 60, rotateY: -10 }}
+              animate={{ opacity: 1, x: 0, rotateY: 0 }}
+              exit={{ opacity: 0, x: -60, rotateY: 10 }}
+              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="text-center"
+              style={{ perspective: 1000 }}
             >
               <p className="text-xl md:text-2xl text-primary-foreground/90 italic font-display leading-relaxed mb-8">
                 "{reviews[reviewIndex].text}"
               </p>
               <div className="flex items-center justify-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-sm">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: 'spring' }}
+                  className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-sm"
+                >
                   {reviews[reviewIndex].initials}
-                </div>
+                </motion.div>
                 <div className="text-left">
                   <p className="text-primary-foreground font-semibold text-sm">{reviews[reviewIndex].author}</p>
                   <p className="text-primary-foreground/50 text-xs">{reviews[reviewIndex].date}</p>
@@ -302,50 +417,95 @@ const Index = () => {
             </motion.div>
 
             <div className="flex items-center justify-center gap-4 mt-10">
-              <button onClick={prevReview} className="p-2 rounded-full border border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-primary-foreground/40 transition-colors">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={prevReview}
+                className="p-2 rounded-full border border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-gold/40 transition-colors"
+              >
                 <ChevronLeft className="w-5 h-5" />
-              </button>
+              </motion.button>
               <div className="flex gap-1.5">
                 {reviews.map((_, i) => (
-                  <button
+                  <motion.button
                     key={i}
+                    whileHover={{ scale: 1.3 }}
                     onClick={() => setReviewIndex(i)}
                     className={`w-2 h-2 rounded-full transition-colors ${i === reviewIndex ? 'bg-gold' : 'bg-primary-foreground/20'}`}
                   />
                 ))}
               </div>
-              <button onClick={nextReview} className="p-2 rounded-full border border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-primary-foreground/40 transition-colors">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={nextReview}
+                className="p-2 rounded-full border border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-gold/40 transition-colors"
+              >
                 <ChevronRight className="w-5 h-5" />
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── CTA ─── */}
-      <section className="py-24 px-6">
+      {/* ─── CTA WITH MORPH ─── */}
+      <section className="py-32 px-6 relative overflow-hidden">
+        <FloatingOrbs />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-10">
+          <Suspense fallback={null}>
+            <MorphScene
+              color1={[0.16, 0.24, 0.42]}
+              color2={[0.83, 0.66, 0.33]}
+              color3={[0.4, 0.2, 0.6]}
+              size={3.5}
+              interactive={false}
+            />
+          </Suspense>
+        </div>
         <ScrollScale>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <div className="max-w-3xl mx-auto text-center relative z-10">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4"
+            >
               Join the LocalLink Community
-            </h2>
-            <p className="text-muted-foreground text-lg mb-8">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="text-muted-foreground text-lg mb-8"
+            >
               Whether you're a business owner or a local explorer, we have something for you.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/directory"
-                className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-full font-semibold hover:bg-navy-light transition-colors"
-              >
-                Explore Businesses
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center justify-center gap-2 border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                Learn More
-              </Link>
-            </div>
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                <Link
+                  to="/directory"
+                  className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-full font-semibold hover:bg-navy-light transition-colors shadow-lg"
+                >
+                  Explore Businesses
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                <Link
+                  to="/about"
+                  className="inline-flex items-center justify-center gap-2 border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  Learn More
+                </Link>
+              </motion.div>
+            </motion.div>
           </div>
         </ScrollScale>
       </section>
