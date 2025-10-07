@@ -103,7 +103,7 @@ const Directory = () => {
                   style={{ transformStyle: 'preserve-3d' }}
                 >
                   {/* Front */}
-                  <div className="absolute inset-0 rounded-xl overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300" style={{ backfaceVisibility: 'hidden' }}>
+                  <div className="absolute inset-0 rounded-xl overflow-hidden shadow-md group-hover:shadow-xl group-hover:depth-shadow transition-shadow duration-300" style={{ backfaceVisibility: 'hidden' }}>
                     <img src={biz.image} alt={biz.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary/85 via-primary/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -123,7 +123,7 @@ const Directory = () => {
 
                   {/* Back */}
                   <div
-                    className="absolute inset-0 rounded-xl bg-card border border-border p-6 flex flex-col justify-between shadow-xl"
+                    className="absolute inset-0 rounded-xl glass p-6 flex flex-col justify-between depth-shadow"
                     style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                   >
                     <div>
