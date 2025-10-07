@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, Star, Clock, MapPin, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
 import { businesses, categories, reviews, events } from '@/data/businessData';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import MorphScene from '@/components/MorphScene';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import TiltCard from '@/components/TiltCard';
+import MagneticButton from '@/components/MagneticButton';
+import GlassCard from '@/components/GlassCard';
 
 const topRated = businesses.filter(b => b.rating >= 4.8).slice(0, 3);
 
@@ -30,14 +32,13 @@ const Index = () => {
       {/* ─── HERO WITH 3D MORPH ─── */}
       <StickyReveal>
         <div className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-          {/* Background image */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=1080&fit=crop)' }}
           />
           <div className="absolute inset-0 bg-hero-overlay" />
 
-          {/* 3D Morph blob behind text */}
+          {/* 3D Morph blob */}
           <div className="absolute inset-0 opacity-40">
             <Suspense fallback={null}>
               <MorphScene
@@ -58,45 +59,47 @@ const Index = () => {
             className="relative z-10 text-center px-6 max-w-3xl"
           >
             <motion.h1
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.9, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
               transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="font-display text-5xl md:text-7xl font-bold text-primary-foreground mb-4"
             >
               Cypress <span className="gradient-gold">LocalLink</span>
             </motion.h1>
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, filter: 'blur(0px)' }}
               transition={{ delay: 0.5, duration: 0.8 }}
               className="text-lg md:text-xl text-primary-foreground/80 mb-8"
             >
               Discover, Support & Celebrate Local Businesses
             </motion.p>
 
-            {/* Search */}
+            {/* Search - Glassmorphism */}
             <motion.form
               onSubmit={handleSearch}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ delay: 0.7, duration: 0.6 }}
               className="relative max-w-xl mx-auto mb-8"
             >
-              <div className="flex items-center bg-card/95 backdrop-blur-sm rounded-full overflow-hidden shadow-2xl border border-border/30">
-                <Search className="w-5 h-5 text-muted-foreground ml-5" />
+              <div className="flex items-center glass rounded-full overflow-hidden shadow-2xl glow-gold">
+                <Search className="w-5 h-5 text-primary-foreground/60 ml-5" />
                 <input
                   type="text"
                   placeholder="What are you looking for?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 px-4 py-4 bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-body text-sm"
+                  className="flex-1 px-4 py-4 bg-transparent text-primary-foreground placeholder:text-primary-foreground/40 outline-none font-body text-sm"
                 />
-                <button
-                  type="submit"
-                  className="bg-primary text-primary-foreground px-6 py-3 mr-1 rounded-full text-sm font-semibold hover:bg-navy-light transition-colors"
-                >
-                  Search
-                </button>
+                <MagneticButton strength={0.3}>
+                  <button
+                    type="submit"
+                    className="bg-gold text-primary px-6 py-3 mr-1 rounded-full text-sm font-semibold hover:bg-gold-light transition-colors"
+                  >
+                    Search
+                  </button>
+                </MagneticButton>
               </div>
             </motion.form>
 
@@ -137,7 +140,7 @@ const Index = () => {
         </div>
       </StickyReveal>
 
-      {/* ─── CATEGORIES WITH 3D TILT ─── */}
+      {/* ─── CATEGORIES WITH GLASSMORPHISM ─── */}
       <section className="py-24 px-6 relative">
         <FloatingOrbs />
         <div className="max-w-7xl mx-auto relative z-10">
@@ -154,7 +157,7 @@ const Index = () => {
                 <TiltCard intensity={12}>
                   <Link
                     to={`/directory?category=${encodeURIComponent(cat.slug)}`}
-                    className="group block bg-card rounded-xl p-6 text-center border border-border hover:border-gold/30 hover:shadow-lg hover:shadow-gold/5 transition-all duration-300"
+                    className="group block glass rounded-xl p-6 text-center hover:glow-gold transition-all duration-500"
                   >
                     <motion.div
                       whileHover={{ scale: 1.2, rotate: [0, -5, 5, 0] }}
@@ -173,9 +176,11 @@ const Index = () => {
           </StaggerChildren>
 
           <div className="text-center mt-10">
-            <Link to="/directory" className="inline-flex items-center gap-2 text-gold font-semibold hover:gap-3 transition-all">
-              View All Businesses <ArrowRight className="w-4 h-4" />
-            </Link>
+            <MagneticButton strength={0.4}>
+              <Link to="/directory" className="inline-flex items-center gap-2 text-gold font-semibold hover:gap-3 transition-all">
+                View All Businesses <ArrowRight className="w-4 h-4" />
+              </Link>
+            </MagneticButton>
           </div>
         </div>
       </section>
@@ -201,7 +206,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ─── TOP RATED WITH 3D ROTATE ─── */}
+      {/* ─── TOP RATED WITH GLASS CARDS ─── */}
       <section className="py-24 px-6 relative">
         <FloatingOrbs className="opacity-50" />
         <div className="max-w-7xl mx-auto relative z-10">
@@ -215,14 +220,15 @@ const Index = () => {
             {topRated.map((biz, i) => (
               <ScrollRotate3D key={biz.id}>
                 <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 60, rotateX: 15, filter: 'blur(6px)' }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)' }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.15, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ delay: i * 0.15, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  style={{ perspective: 1000 }}
                 >
                   <TiltCard intensity={10}>
                     <Link to={`/business/${biz.id}`} className="group block">
-                      <div className="relative rounded-xl overflow-hidden shadow-lg">
+                      <div className="relative rounded-2xl overflow-hidden depth-shadow-lg">
                         <img
                           src={biz.image}
                           alt={biz.name}
@@ -230,23 +236,26 @@ const Index = () => {
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
+                        {/* Glass overlay at bottom */}
                         <div className="absolute bottom-0 left-0 right-0 p-6">
-                          <motion.span
-                            initial={{ x: -20, opacity: 0 }}
-                            whileInView={{ x: 0, opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.3 + i * 0.1 }}
-                            className="inline-block bg-gold/90 text-primary text-xs font-bold px-2 py-1 rounded mb-2"
-                          >
-                            Local Favorite
-                          </motion.span>
-                          <div className="flex items-center gap-2 mb-1">
-                            <Star className="w-4 h-4 text-gold fill-gold" />
-                            <span className="text-primary-foreground font-semibold text-sm">{biz.rating}</span>
-                            <span className="text-primary-foreground/60 text-xs">{biz.category}</span>
+                          <div className="glass-dark rounded-xl p-4">
+                            <motion.span
+                              initial={{ x: -20, opacity: 0 }}
+                              whileInView={{ x: 0, opacity: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ delay: 0.3 + i * 0.1 }}
+                              className="inline-block glass-gold text-gold text-xs font-bold px-2 py-1 rounded mb-2"
+                            >
+                              Local Favorite
+                            </motion.span>
+                            <div className="flex items-center gap-2 mb-1">
+                              <Star className="w-4 h-4 text-gold fill-gold" />
+                              <span className="text-primary-foreground font-semibold text-sm">{biz.rating}</span>
+                              <span className="text-primary-foreground/60 text-xs">{biz.category}</span>
+                            </div>
+                            <h3 className="font-display text-xl font-bold text-primary-foreground">{biz.name}</h3>
+                            <p className="text-primary-foreground/70 text-sm mt-1 line-clamp-2">{biz.description}</p>
                           </div>
-                          <h3 className="font-display text-xl font-bold text-primary-foreground">{biz.name}</h3>
-                          <p className="text-primary-foreground/70 text-sm mt-1 line-clamp-2">{biz.description}</p>
                         </div>
                       </div>
                     </Link>
@@ -275,7 +284,7 @@ const Index = () => {
                 "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&h=350&fit=crop",
                 "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&h=350&fit=crop",
                 "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=350&fit=crop",
-              ].flatMap((src, i) => [src, src]).map((src, i) => (
+              ].flatMap((src) => [src, src]).map((src, i) => (
                 <div key={i} className="flex-shrink-0 w-72 h-48 rounded-xl overflow-hidden group">
                   <img
                     src={src}
@@ -290,24 +299,26 @@ const Index = () => {
         </ScrollParallax>
       </section>
 
-      {/* ─── EVENTS WITH 3D CARDS ─── */}
+      {/* ─── EVENTS WITH GLASS CARDS ─── */}
       <section className="py-24 px-6 bg-muted relative">
         <FloatingOrbs className="opacity-30" />
         <div className="max-w-7xl mx-auto relative z-10">
           <ScrollFadeIn>
             <div className="flex items-center justify-between mb-12">
               <h2 className="font-display text-4xl font-bold text-foreground">Upcoming Events</h2>
-              <Link to="/events" className="text-gold font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                See All <ArrowRight className="w-4 h-4" />
-              </Link>
+              <MagneticButton strength={0.3}>
+                <Link to="/events" className="text-gold font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                  See All <ArrowRight className="w-4 h-4" />
+                </Link>
+              </MagneticButton>
             </div>
           </ScrollFadeIn>
 
           <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {events.map((ev) => (
               <StaggerItem key={ev.id}>
-                <TiltCard intensity={8}>
-                  <div className="flex items-center gap-4 bg-card rounded-xl p-4 border border-border hover:border-gold/20 hover:shadow-md transition-all duration-300">
+                <GlassCard glow hover3d className="p-4">
+                  <div className="flex items-center gap-4">
                     <motion.div
                       whileHover={{ scale: 1.1, rotateZ: -3 }}
                       className="flex-shrink-0 w-14 h-14 bg-navy-gradient rounded-lg flex flex-col items-center justify-center shadow-md"
@@ -327,7 +338,7 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                </TiltCard>
+                </GlassCard>
               </StaggerItem>
             ))}
           </StaggerChildren>
@@ -339,7 +350,7 @@ const Index = () => {
         <ScrollRotate3D>
           <Link to="/map" className="block max-w-4xl mx-auto group">
             <TiltCard intensity={6} glare>
-              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-border">
+              <div className="relative rounded-2xl overflow-hidden depth-shadow-lg">
                 <img
                   src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&h=500&fit=crop"
                   alt="Cypress community map"
@@ -347,21 +358,22 @@ const Index = () => {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent flex flex-col items-center justify-end p-8 text-center">
-                  <motion.div
-                    whileHover={{ scale: 1.15 }}
-                    className="mb-3"
-                  >
-                    <MapPin className="w-8 h-8 text-gold" />
-                  </motion.div>
+                  <MagneticButton strength={0.4}>
+                    <div className="mb-3">
+                      <MapPin className="w-8 h-8 text-gold" />
+                    </div>
+                  </MagneticButton>
                   <h3 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
                     Find Businesses Near You
                   </h3>
                   <p className="text-primary-foreground/70 text-sm max-w-md mb-4">
                     Explore the Cypress community map — dining, shopping, wellness & more.
                   </p>
-                  <span className="inline-flex items-center gap-2 bg-gold text-primary px-5 py-2 rounded-full text-sm font-bold group-hover:gap-3 transition-all">
-                    Open Map <ArrowRight className="w-4 h-4" />
-                  </span>
+                  <MagneticButton strength={0.3}>
+                    <span className="inline-flex items-center gap-2 glass-gold text-gold px-5 py-2 rounded-full text-sm font-bold group-hover:gap-3 group-hover:glow-gold transition-all">
+                      Open Map <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </MagneticButton>
                 </div>
               </div>
             </TiltCard>
@@ -390,59 +402,64 @@ const Index = () => {
           <div className="relative">
             <motion.div
               key={reviewIndex}
-              initial={{ opacity: 0, x: 60, rotateY: -10 }}
-              animate={{ opacity: 1, x: 0, rotateY: 0 }}
-              exit={{ opacity: 0, x: -60, rotateY: 10 }}
+              initial={{ opacity: 0, x: 60, rotateY: -10, filter: 'blur(6px)' }}
+              animate={{ opacity: 1, x: 0, rotateY: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, x: -60, rotateY: 10, filter: 'blur(6px)' }}
               transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-center"
               style={{ perspective: 1000 }}
             >
-              <p className="text-xl md:text-2xl text-primary-foreground/90 italic font-display leading-relaxed mb-8">
-                "{reviews[reviewIndex].text}"
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, type: 'spring' }}
-                  className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-sm"
-                >
-                  {reviews[reviewIndex].initials}
-                </motion.div>
-                <div className="text-left">
-                  <p className="text-primary-foreground font-semibold text-sm">{reviews[reviewIndex].author}</p>
-                  <p className="text-primary-foreground/50 text-xs">{reviews[reviewIndex].date}</p>
+              <div className="glass-dark rounded-2xl p-8 md:p-12 text-center glow-navy">
+                <p className="text-xl md:text-2xl text-primary-foreground/90 italic font-display leading-relaxed mb-8">
+                  "{reviews[reviewIndex].text}"
+                </p>
+                <div className="flex items-center justify-center gap-3">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: 'spring' }}
+                    className="w-10 h-10 rounded-full glass-gold flex items-center justify-center text-gold font-bold text-sm"
+                  >
+                    {reviews[reviewIndex].initials}
+                  </motion.div>
+                  <div className="text-left">
+                    <p className="text-primary-foreground font-semibold text-sm">{reviews[reviewIndex].author}</p>
+                    <p className="text-primary-foreground/50 text-xs">{reviews[reviewIndex].date}</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
 
             <div className="flex items-center justify-center gap-4 mt-10">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={prevReview}
-                className="p-2 rounded-full border border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-gold/40 transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </motion.button>
+              <MagneticButton strength={0.5}>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={prevReview}
+                  className="p-2 rounded-full glass-dark text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </motion.button>
+              </MagneticButton>
               <div className="flex gap-1.5">
                 {reviews.map((_, i) => (
                   <motion.button
                     key={i}
                     whileHover={{ scale: 1.3 }}
                     onClick={() => setReviewIndex(i)}
-                    className={`w-2 h-2 rounded-full transition-colors ${i === reviewIndex ? 'bg-gold' : 'bg-primary-foreground/20'}`}
+                    className={`w-2 h-2 rounded-full transition-colors ${i === reviewIndex ? 'bg-gold glow-gold' : 'bg-primary-foreground/20'}`}
                   />
                 ))}
               </div>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={nextReview}
-                className="p-2 rounded-full border border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-gold/40 transition-colors"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </motion.button>
+              <MagneticButton strength={0.5}>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={nextReview}
+                  className="p-2 rounded-full glass-dark text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </motion.button>
+              </MagneticButton>
             </div>
           </div>
         </div>
@@ -465,8 +482,8 @@ const Index = () => {
         <ScrollScale>
           <div className="max-w-3xl mx-auto text-center relative z-10">
             <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4"
@@ -489,22 +506,22 @@ const Index = () => {
               transition={{ delay: 0.5, duration: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+              <MagneticButton strength={0.3}>
                 <Link
                   to="/directory"
-                  className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-full font-semibold hover:bg-navy-light transition-colors shadow-lg"
+                  className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-full font-semibold hover:bg-navy-light transition-colors depth-shadow"
                 >
                   Explore Businesses
                 </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+              </MagneticButton>
+              <MagneticButton strength={0.3}>
                 <Link
                   to="/about"
-                  className="inline-flex items-center justify-center gap-2 border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="inline-flex items-center justify-center gap-2 glass border-2 border-primary/20 text-primary px-8 py-3 rounded-full font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
                 >
                   Learn More
                 </Link>
-              </motion.div>
+              </MagneticButton>
             </motion.div>
           </div>
         </ScrollScale>

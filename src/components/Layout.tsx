@@ -1,15 +1,23 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from './PageTransition';
 
 const Layout = () => {
+  const location = useLocation();
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main>
-        <Outlet />
-      </main>
+      <AnimatePresence mode="wait">
+        <PageTransition key={location.pathname}>
+          <main>
+            <Outlet />
+          </main>
+        </PageTransition>
+      </AnimatePresence>
       <footer className="bg-primary text-primary-foreground py-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
