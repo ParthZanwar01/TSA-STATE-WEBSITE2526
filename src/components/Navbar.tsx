@@ -70,14 +70,22 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-card/95 backdrop-blur-md border-b border-border px-6 py-4 space-y-3">
+        <div
+          className="md:hidden border-b border-border/30 px-6 py-6 space-y-3 relative overflow-hidden"
+        >
+          {/* Background image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=800&h=600&fit=crop)' }}
+          />
+          <div className="absolute inset-0 bg-primary/85 backdrop-blur-sm" />
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setOpen(false)}
-              className={`block text-sm font-medium py-2 ${
-                location.pathname === link.path ? 'text-gold' : 'text-foreground'
+              className={`relative z-10 block text-sm font-medium py-2 ${
+                location.pathname === link.path ? 'text-gold' : 'text-primary-foreground/80 hover:text-primary-foreground'
               }`}
             >
               {link.label}
