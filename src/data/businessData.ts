@@ -35,16 +35,16 @@ export interface Event {
 }
 
 export const categories = [
-  { name: "Food & Dining", icon: "🍽️", slug: "Restaurant" },
-  { name: "Retail", icon: "🛍️", slug: "Retail" },
-  { name: "Health & Fitness", icon: "💪", slug: "Health & Fitness" },
-  { name: "Services", icon: "🔧", slug: "Services" },
-  { name: "Automotive", icon: "🚗", slug: "Automotive" },
-  { name: "Beauty & Spa", icon: "💆", slug: "Beauty & Spa" },
-  { name: "Non-Profits", icon: "🤝", slug: "Non-Profit" },
-  { name: "Entertainment", icon: "🎭", slug: "Entertainment" },
-  { name: "Home & Garden", icon: "🏡", slug: "Home & Garden" },
-  { name: "Education", icon: "📚", slug: "Education" },
+  { name: "Food & Dining", icon: "🍽️", slug: "Restaurant", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop" },
+  { name: "Retail", icon: "🛍️", slug: "Retail", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop" },
+  { name: "Health & Fitness", icon: "💪", slug: "Health & Fitness", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop" },
+  { name: "Services", icon: "🔧", slug: "Services", image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&h=300&fit=crop" },
+  { name: "Automotive", icon: "🚗", slug: "Automotive", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop" },
+  { name: "Beauty & Spa", icon: "💆", slug: "Beauty & Spa", image: "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=400&h=300&fit=crop" },
+  { name: "Non-Profits", icon: "🤝", slug: "Non-Profit", image: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=300&fit=crop" },
+  { name: "Entertainment", icon: "🎭", slug: "Entertainment", image: "https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=400&h=300&fit=crop" },
+  { name: "Home & Garden", icon: "🏡", slug: "Home & Garden", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop" },
+  { name: "Education", icon: "📚", slug: "Education", image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop" },
 ];
 
 export const businesses: Business[] = [

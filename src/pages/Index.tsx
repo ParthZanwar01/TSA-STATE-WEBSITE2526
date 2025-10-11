@@ -152,23 +152,25 @@ const Index = () => {
           </ScrollFadeIn>
 
           <StaggerChildren className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-            {categories.slice(0, 10).map((cat) => (
+            {categories.map((cat) => (
               <StaggerItem key={cat.slug}>
                 <TiltCard intensity={12}>
                   <Link
                     to={`/directory?category=${encodeURIComponent(cat.slug)}`}
-                    className="group block glass rounded-xl p-6 text-center hover:glow-gold transition-all duration-500"
+                    className="group block rounded-xl overflow-hidden relative h-44 depth-shadow hover:depth-shadow-lg transition-all duration-500"
                   >
-                    <motion.div
-                      whileHover={{ scale: 1.2, rotate: [0, -5, 5, 0] }}
-                      transition={{ duration: 0.4 }}
-                      className="text-4xl mb-3"
-                    >
-                      {cat.icon}
-                    </motion.div>
-                    <span className="text-sm font-semibold text-foreground group-hover:text-gold transition-colors">
-                      {cat.name}
-                    </span>
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent group-hover:from-primary/90 transition-all duration-500" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                      <span className="font-display text-sm font-bold text-primary-foreground group-hover:text-gold transition-colors">
+                        {cat.name}
+                      </span>
+                    </div>
                   </Link>
                 </TiltCard>
               </StaggerItem>
