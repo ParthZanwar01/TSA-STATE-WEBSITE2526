@@ -279,18 +279,18 @@ const Index = () => {
             <div className="flex gap-4 animate-scroll-x hover:[animation-play-state:paused]">
               {[
                 "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=350&fit=crop",
-                "https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=500&h=350&fit=crop",
-                "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&h=350&fit=crop",
-                "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&h=350&fit=crop",
                 "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=350&fit=crop",
                 "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&h=350&fit=crop",
                 "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&h=350&fit=crop",
-                "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=350&fit=crop",
-              ].flatMap((src) => [src, src]).map((src, i) => (
+                "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=350&fit=crop",
+                "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=350&fit=crop",
+              ].map((src, i) => (
                 <div key={i} className="flex-shrink-0 w-72 h-48 rounded-xl overflow-hidden group">
                   <img
                     src={src}
-                    alt="Cypress life"
+                    alt={`Life in Cypress ${i + 1}`}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
                   />
