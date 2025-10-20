@@ -1,4 +1,4 @@
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Star, Clock, MapPin, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
@@ -32,10 +32,24 @@ const Index = () => {
       {/* ─── HERO WITH 3D MORPH ─── */}
       <StickyReveal>
         <div className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=1080&fit=crop)' }}
-          />
+          {/* Parallax video background */}
+          <motion.div
+            className="absolute inset-0"
+            style={{ scale: 1.15 }}
+            initial={{ y: 0 }}
+            whileInView={{ y: 0 }}
+          >
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster="https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=1080&fit=crop"
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+            </video>
+          </motion.div>
           <div className="absolute inset-0 bg-hero-overlay" />
 
           {/* 3D Morph blob */}
