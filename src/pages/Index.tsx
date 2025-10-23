@@ -398,7 +398,7 @@ const Index = () => {
       </section>
 
       {/* ─── REVIEWS WITH MORPH ─── */}
-      <section className="py-24 px-6 bg-primary relative overflow-hidden">
+      <section className="py-24 px-6 bg-muted relative overflow-hidden">
         <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-15">
           <Suspense fallback={null}>
             <MorphScene
@@ -412,7 +412,7 @@ const Index = () => {
         </div>
         <div className="max-w-4xl mx-auto relative z-10">
           <ScrollFadeIn>
-            <h2 className="font-display text-4xl font-bold text-primary-foreground text-center mb-16">Community Voices</h2>
+            <h2 className="font-display text-4xl font-bold text-foreground text-center mb-16">Community Voices</h2>
           </ScrollFadeIn>
 
           <div className="relative">
@@ -424,23 +424,13 @@ const Index = () => {
               transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
               style={{ perspective: 1000 }}
             >
-              <div className="glass-dark rounded-2xl p-8 md:p-12 text-center glow-navy">
-                <p className="text-xl md:text-2xl text-primary-foreground/90 italic font-display leading-relaxed mb-8">
+              <div className="glass rounded-2xl p-8 md:p-12 text-center depth-shadow">
+                <p className="text-xl md:text-2xl text-foreground/90 italic font-display leading-relaxed mb-8">
                   "{reviews[reviewIndex].text}"
                 </p>
-                <div className="flex items-center justify-center gap-3">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: 'spring' }}
-                    className="w-10 h-10 rounded-full glass-gold flex items-center justify-center text-gold font-bold text-sm"
-                  >
-                    {reviews[reviewIndex].initials}
-                  </motion.div>
-                  <div className="text-left">
-                    <p className="text-primary-foreground font-semibold text-sm">{reviews[reviewIndex].author}</p>
-                    <p className="text-primary-foreground/50 text-xs">{reviews[reviewIndex].date}</p>
-                  </div>
+                <div className="text-center">
+                  <p className="text-foreground font-semibold text-sm">{reviews[reviewIndex].author}</p>
+                  <p className="text-muted-foreground text-xs">{reviews[reviewIndex].date}</p>
                 </div>
               </div>
             </motion.div>
@@ -451,7 +441,7 @@ const Index = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={prevReview}
-                  className="p-2 rounded-full glass-dark text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                  className="p-2 rounded-full glass text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </motion.button>
@@ -462,7 +452,7 @@ const Index = () => {
                     key={i}
                     whileHover={{ scale: 1.3 }}
                     onClick={() => setReviewIndex(i)}
-                    className={`w-2 h-2 rounded-full transition-colors ${i === reviewIndex ? 'bg-gold glow-gold' : 'bg-primary-foreground/20'}`}
+                    className={`w-2 h-2 rounded-full transition-colors ${i === reviewIndex ? 'bg-gold glow-gold' : 'bg-muted-foreground/30'}`}
                   />
                 ))}
               </div>
@@ -471,7 +461,7 @@ const Index = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={nextReview}
-                  className="p-2 rounded-full glass-dark text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                  className="p-2 rounded-full glass text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </motion.button>
