@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import CursorGlow from './CursorGlow';
+
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
@@ -11,7 +11,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <CursorGlow />
+      
       <Navbar />
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname}>
