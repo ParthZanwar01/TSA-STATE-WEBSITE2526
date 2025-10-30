@@ -471,16 +471,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ─── CTA WITH MORPH ─── */}
-      <section className="py-32 px-6 relative overflow-hidden">
-        <FloatingOrbs />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-10">
+      {/* ─── CTA ─── */}
+      <section className="py-32 px-6 bg-primary relative overflow-hidden">
+        <FloatingOrbs className="opacity-20" />
+        <div className="absolute inset-0 opacity-10">
           <Suspense fallback={null}>
             <MorphScene
-              color1={[0.16, 0.24, 0.42]}
-              color2={[0.83, 0.66, 0.33]}
+              color1={[0.83, 0.66, 0.33]}
+              color2={[0.16, 0.24, 0.42]}
               color3={[0.4, 0.2, 0.6]}
-              size={3.5}
+              size={4}
               interactive={false}
             />
           </Suspense>
@@ -492,7 +492,7 @@ const Index = () => {
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4"
+              className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4"
             >
               Join the LocalLink Community
             </motion.h2>
@@ -501,7 +501,7 @@ const Index = () => {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-muted-foreground text-lg mb-8"
+              className="text-primary-foreground/70 text-lg mb-10"
             >
               Whether you're a business owner or a local explorer, we have something for you.
             </motion.p>
@@ -515,7 +515,7 @@ const Index = () => {
               <MagneticButton strength={0.3}>
                 <Link
                   to="/directory"
-                  className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-full font-semibold hover:bg-navy-light transition-colors depth-shadow"
+                  className="inline-flex items-center justify-center gap-2 bg-gold text-primary px-8 py-3.5 rounded-full font-semibold hover:bg-gold-light transition-colors depth-shadow text-sm"
                 >
                   Explore Businesses
                 </Link>
@@ -523,7 +523,7 @@ const Index = () => {
               <MagneticButton strength={0.3}>
                 <Link
                   to="/about"
-                  className="inline-flex items-center justify-center gap-2 glass border-2 border-primary/20 text-primary px-8 py-3 rounded-full font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border border-primary-foreground/30 text-primary-foreground px-8 py-3.5 rounded-full font-semibold hover:bg-primary-foreground/10 transition-colors text-sm"
                 >
                   Learn More
                 </Link>
