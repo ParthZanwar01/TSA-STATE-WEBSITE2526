@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import Navbar from './Navbar';
@@ -5,6 +6,14 @@ import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './PageTransition';
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 const Layout = () => {
   const location = useLocation();
