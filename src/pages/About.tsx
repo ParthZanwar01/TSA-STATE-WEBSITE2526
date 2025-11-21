@@ -1,108 +1,195 @@
-import { ScrollFadeIn, StaggerChildren, StaggerItem, TextReveal, ScrollRotate3D } from '@/components/ScrollAnimations';
-import { MapPin, Tag, Users, Star } from 'lucide-react';
+import { ScrollFadeIn, StaggerChildren, StaggerItem, TextReveal } from '@/components/ScrollAnimations';
+import { MapPin, Tag, Users, Star, Heart, Globe, Shield, ArrowRight } from 'lucide-react';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
-import TiltCard from '@/components/TiltCard';
 import { motion } from 'framer-motion';
+import GlassCard from '@/components/GlassCard';
+import { Link } from 'react-router-dom';
 
 const stats = [
-  { icon: MapPin, value: "74+", label: "Local Businesses" },
-  { icon: Tag, value: "15+", label: "Active Deals" },
+  { icon: MapPin, value: "92+", label: "Local Businesses" },
+  { icon: Tag, value: "10", label: "Categories" },
   { icon: Users, value: "Monthly", label: "Community Events" },
   { icon: Star, value: "500+", label: "5-Star Reviews" },
+];
+
+const values = [
+  { icon: Heart, title: "Community First", desc: "Every feature we build starts with the question: does this help our neighbors connect?" },
+  { icon: Globe, title: "Local Discovery", desc: "We spotlight hidden gems so you can explore beyond the big chains." },
+  { icon: Shield, title: "Trust & Quality", desc: "Real reviews from real residents. No paid placements, no bias." },
 ];
 
 const About = () => {
   return (
     <div className="pt-20 bg-background">
       {/* Hero */}
-      <div className="relative h-[50vh] flex items-center justify-center">
+      <div className="relative h-[60vh] flex items-center justify-center overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center scale-105"
           style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=800&fit=crop)' }}
         />
         <div className="absolute inset-0 bg-hero-overlay" />
-        <div className="relative z-10 text-center px-6 max-w-3xl">
-          <MapPin className="w-10 h-10 text-primary-foreground/50 mx-auto mb-4" />
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
-            About Cypress LocalLink
+        <FloatingOrbs className="opacity-10" />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="relative z-10 text-center px-6 max-w-3xl"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            className="w-16 h-16 rounded-2xl bg-gold/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6 border border-gold/30"
+          >
+            <MapPin className="w-8 h-8 text-gold" />
+          </motion.div>
+          <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-4">
+            About Cypress <span className="text-gold">LocalLink</span>
           </h1>
-          <p className="text-primary-foreground/80 text-lg leading-relaxed">
-            This community resource hub is designed for the Cypress, Texas community — connecting residents with local businesses, non-profits, support services, and civic programs.
+          <p className="text-primary-foreground/80 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+            A community resource hub connecting Cypress, Texas residents with local businesses, events, and resources.
           </p>
-        </div>
+        </motion.div>
       </div>
 
       {/* Stats */}
-      <section className="py-16 px-6">
-        <StaggerChildren className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((stat) => (
-            <StaggerItem key={stat.label}>
-              <div className="bg-card border border-border rounded-xl p-6 text-center card-hover">
-                <stat.icon className="w-6 h-6 text-gold mx-auto mb-3" />
-                <div className="text-3xl font-bold text-gold mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerChildren>
+      <section className="py-20 px-6 relative">
+        <div className="max-w-5xl mx-auto">
+          <StaggerChildren className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat) => (
+              <StaggerItem key={stat.label}>
+                <GlassCard glow hover3d className="p-8 text-center">
+                  <div className="w-12 h-12 rounded-xl bg-gold/15 flex items-center justify-center mx-auto mb-4">
+                    <stat.icon className="w-6 h-6 text-gold" />
+                  </div>
+                  <div className="text-3xl md:text-4xl font-bold text-gold font-display mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                </GlassCard>
+              </StaggerItem>
+            ))}
+          </StaggerChildren>
+        </div>
+      </section>
+
+      {/* Our Values */}
+      <section className="py-20 px-6 bg-muted">
+        <div className="max-w-5xl mx-auto">
+          <ScrollFadeIn>
+            <div className="text-center mb-16">
+              <span className="text-gold text-sm font-semibold tracking-wider uppercase">What Drives Us</span>
+              <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mt-3">
+                Our Values
+              </h2>
+            </div>
+          </ScrollFadeIn>
+          <StaggerChildren className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {values.map((v) => (
+              <StaggerItem key={v.title}>
+                <GlassCard glow hover3d className="p-8 h-full">
+                  <div className="w-14 h-14 rounded-2xl bg-navy-gradient flex items-center justify-center mb-6">
+                    <v.icon className="w-7 h-7 text-gold" />
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-foreground mb-3">{v.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{v.desc}</p>
+                </GlassCard>
+              </StaggerItem>
+            ))}
+          </StaggerChildren>
+        </div>
       </section>
 
       {/* Why */}
-      <section className="py-16 px-6 bg-muted">
-        <div className="max-w-4xl mx-auto">
-          <ScrollFadeIn>
-            <span className="text-gold text-sm font-semibold tracking-wider uppercase">The Challenge</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2 mb-6">
-              Why We Built LocalLink
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              In suburban communities like Cypress, Texas, discovering quality local businesses can be challenging. National chain stores often dominate visibility, while neighborhood gems remain hidden.
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-foreground">
-                <span className="text-gold mt-1">•</span>
-                Finding reliable local services without a centralized directory
-              </li>
-              <li className="flex items-start gap-3 text-foreground">
-                <span className="text-gold mt-1">•</span>
-                Trusting business quality without community feedback
-              </li>
-              <li className="flex items-start gap-3 text-foreground">
-                <span className="text-gold mt-1">•</span>
-                Discovering special offers and deals from local establishments
-              </li>
-            </ul>
-          </ScrollFadeIn>
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <ScrollFadeIn>
+              <span className="text-gold text-sm font-semibold tracking-wider uppercase">The Challenge</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-3 mb-6">
+                Why We Built LocalLink
+              </h2>
+              <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+                In suburban communities like Cypress, discovering quality local businesses can be challenging. National chains dominate visibility, while neighborhood gems remain hidden.
+              </p>
+              <div className="space-y-4">
+                {[
+                  "Finding reliable local services without a centralized directory",
+                  "Trusting business quality without community feedback",
+                  "Discovering special offers and deals from local establishments",
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.15 }}
+                    viewport={{ once: true }}
+                    className="flex items-start gap-4"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gold/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-gold font-bold text-sm">{i + 1}</span>
+                    </div>
+                    <p className="text-foreground">{item}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </ScrollFadeIn>
+            <ScrollFadeIn>
+              <div className="relative">
+                <div className="rounded-2xl overflow-hidden depth-shadow-lg">
+                  <img
+                    src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&h=500&fit=crop"
+                    alt="Cypress community"
+                    className="w-full h-[400px] object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-2xl bg-gold/10 border border-gold/20 -z-10" />
+                <div className="absolute -top-6 -left-6 w-24 h-24 rounded-2xl bg-primary/10 border border-primary/20 -z-10" />
+              </div>
+            </ScrollFadeIn>
+          </div>
         </div>
       </section>
 
       {/* Solution */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="py-20 px-6 bg-muted">
+        <div className="max-w-5xl mx-auto">
           <ScrollFadeIn>
-            <span className="text-gold text-sm font-semibold tracking-wider uppercase">Our Solution</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2 mb-6">
-              A Digital Ecosystem for Community
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              LocalLink creates a vibrant platform where residents can discover, evaluate, and support local businesses while fostering a sense of community pride and economic vitality.
-            </p>
+            <div className="text-center mb-16">
+              <span className="text-gold text-sm font-semibold tracking-wider uppercase">Our Solution</span>
+              <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mt-3">
+                A Digital Ecosystem for Community
+              </h2>
+              <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
+                LocalLink creates a vibrant platform where residents discover, evaluate, and support local businesses.
+              </p>
+            </div>
           </ScrollFadeIn>
 
-          <StaggerChildren className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StaggerChildren className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Discover", desc: "Find local businesses easily with our comprehensive directory", img: "https://images.unsplash.com/photo-1526243741027-444d633d7365?w=400&h=300&fit=crop" },
-              { title: "Evaluate", desc: "Read authentic community reviews from your neighbors", img: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400&h=300&fit=crop" },
-              { title: "Support", desc: "Shop local and strengthen the Cypress community", img: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=400&h=300&fit=crop" },
-            ].map((item) => (
+              { title: "Discover", desc: "Find local businesses easily with our comprehensive, searchable directory", img: "https://images.unsplash.com/photo-1526243741027-444d633d7365?w=400&h=300&fit=crop" },
+              { title: "Evaluate", desc: "Read authentic community reviews from your Cypress neighbors", img: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400&h=300&fit=crop" },
+              { title: "Support", desc: "Shop local and strengthen the Cypress economy and community", img: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=400&h=300&fit=crop" },
+            ].map((item, i) => (
               <StaggerItem key={item.title}>
-                <div className="bg-card border border-border rounded-xl overflow-hidden card-hover">
-                  <img src={item.img} alt={item.title} className="w-full h-40 object-cover" loading="lazy" />
-                  <div className="p-5">
-                    <h3 className="font-display text-lg font-bold text-foreground mb-2">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                <motion.div
+                  whileHover={{ y: -8 }}
+                  className="bg-card border border-border rounded-2xl overflow-hidden depth-shadow group"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
+                    <div className="absolute bottom-4 left-4">
+                      <span className="bg-gold/90 text-primary font-bold text-xs px-3 py-1 rounded-full">
+                        0{i + 1}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                  <div className="p-6">
+                    <h3 className="font-display text-xl font-bold text-foreground mb-2">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </div>
+                </motion.div>
               </StaggerItem>
             ))}
           </StaggerChildren>
@@ -110,12 +197,41 @@ const About = () => {
       </section>
 
       {/* Text reveal */}
-      <section className="py-24 px-6 bg-primary">
-        <div className="max-w-4xl mx-auto min-h-[30vh] flex items-center">
+      <section className="py-28 px-6 bg-primary relative overflow-hidden">
+        <FloatingOrbs className="opacity-10" />
+        <div className="max-w-4xl mx-auto min-h-[30vh] flex items-center relative z-10">
           <TextReveal
             text="We believe every neighborhood deserves a digital main street where local businesses thrive and community connections flourish."
             className="text-2xl md:text-3xl font-display font-bold text-primary-foreground leading-snug justify-center text-center"
           />
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <ScrollFadeIn>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Ready to Explore?
+            </h2>
+            <p className="text-muted-foreground text-lg mb-8">
+              Discover what makes Cypress special through our community-driven directory.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/directory"
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-full font-semibold hover:bg-navy-light transition-colors depth-shadow"
+              >
+                Browse Directory <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                to="/submit"
+                className="inline-flex items-center gap-2 border-2 border-border text-foreground px-8 py-4 rounded-full font-semibold hover:border-gold hover:text-gold transition-colors"
+              >
+                List Your Business
+              </Link>
+            </div>
+          </ScrollFadeIn>
         </div>
       </section>
     </div>
