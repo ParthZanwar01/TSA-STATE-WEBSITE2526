@@ -1,6 +1,6 @@
 import { useState, Suspense } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Search, MapPin } from 'lucide-react';
+import { Menu, X, Search, MapPin, LogIn } from 'lucide-react';
 import { motion } from 'framer-motion';
 import MorphScene from '@/components/MorphScene';
 
@@ -70,6 +70,17 @@ const Navbar = () => {
             className="p-2 rounded-full transition-colors duration-200 hover:bg-muted/30"
           >
             <Search className={`w-4 h-4 ${isHome ? 'text-primary-foreground/80' : 'text-muted-foreground'}`} />
+          </Link>
+          <Link
+            to="/login"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 ${
+              isHome
+                ? 'bg-gold/20 text-gold hover:bg-gold/30'
+                : 'bg-primary text-primary-foreground hover:bg-navy-light'
+            }`}
+          >
+            <LogIn className="w-3.5 h-3.5" />
+            Login
           </Link>
         </div>
 

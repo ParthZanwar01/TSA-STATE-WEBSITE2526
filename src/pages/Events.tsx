@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { events } from '@/data/businessData';
-import { Clock, MapPin, CalendarDays, List } from 'lucide-react';
-import { StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
+import { Clock, MapPin, CalendarDays, List, Sparkles } from 'lucide-react';
+import { StaggerChildren, StaggerItem, ScrollFadeIn } from '@/components/ScrollAnimations';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
@@ -12,10 +12,8 @@ const Events = () => {
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
-  // Parse event dates for calendar highlighting
   const eventDates = events.map((ev) => new Date(ev.date + 'T00:00:00'));
 
-  // Filter events for selected date
   const filteredEvents = selectedDate
     ? events.filter((ev) => {
         const evDate = new Date(ev.date + 'T00:00:00');
@@ -29,136 +27,165 @@ const Events = () => {
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
-      <div className="bg-primary py-12 px-6 mb-8 relative overflow-hidden">
-        <FloatingOrbs className="opacity-20" />
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-7xl mx-auto relative z-10 flex items-end justify-between"
-        >
-          <div>
-            <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-2">
-              Community Events
-            </h1>
-            <p className="text-primary-foreground/70">What's happening in Cypress</p>
-          </div>
-          <div className="flex gap-1 bg-primary-foreground/10 rounded-lg p-1">
-            <button
-              onClick={() => setView('list')}
-              className={cn(
-                'flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                view === 'list'
-                  ? 'bg-primary-foreground text-primary'
-                  : 'text-primary-foreground/70 hover:text-primary-foreground'
-              )}
-            >
-              <List className="w-4 h-4" />
-              <span className="hidden sm:inline">List</span>
-            </button>
-            <button
-              onClick={() => setView('calendar')}
-              className={cn(
-                'flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                view === 'calendar'
-                  ? 'bg-primary-foreground text-primary'
-                  : 'text-primary-foreground/70 hover:text-primary-foreground'
-              )}
-            >
-              <CalendarDays className="w-4 h-4" />
-              <span className="hidden sm:inline">Calendar</span>
-            </button>
-          </div>
-        </motion.div>
+      {/* Hero Header */}
+      <div className="relative overflow-hidden">
+        <div className="bg-primary py-16 md:py-20 px-6 relative">
+          <FloatingOrbs className="opacity-15" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="max-w-7xl mx-auto relative z-10"
+          >
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+              <div>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                  className="w-14 h-14 rounded-2xl bg-gold/20 backdrop-blur-sm flex items-center justify-center mb-5 border border-gold/30"
+                >
+                  <Sparkles className="w-7 h-7 text-gold" />
+                </motion.div>
+                <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
+                  Community <span className="text-gold">Events</span>
+                </h1>
+                <p className="text-primary-foreground/70 text-lg">What's happening in Cypress, Texas</p>
+                <p className="text-gold/80 text-sm mt-2 font-medium">{events.length} upcoming events</p>
+              </div>
+              <div className="flex gap-1 bg-primary-foreground/10 rounded-xl p-1.5 backdrop-blur-sm border border-primary-foreground/10">
+                <button
+                  onClick={() => setView('list')}
+                  className={cn(
+                    'flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
+                    view === 'list'
+                      ? 'bg-primary-foreground text-primary shadow-md'
+                      : 'text-primary-foreground/70 hover:text-primary-foreground'
+                  )}
+                >
+                  <List className="w-4 h-4" />
+                  <span className="hidden sm:inline">List</span>
+                </button>
+                <button
+                  onClick={() => setView('calendar')}
+                  className={cn(
+                    'flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
+                    view === 'calendar'
+                      ? 'bg-primary-foreground text-primary shadow-md'
+                      : 'text-primary-foreground/70 hover:text-primary-foreground'
+                  )}
+                >
+                  <CalendarDays className="w-4 h-4" />
+                  <span className="hidden sm:inline">Calendar</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
-      {view === 'list' ? (
-        <div className="max-w-4xl mx-auto px-6">
-          <StaggerChildren className="space-y-4">
-            {events.map((ev) => (
-              <StaggerItem key={ev.id}>
-                <EventCard ev={ev} />
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
-        </div>
-      ) : (
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8">
-            <GlassCard glow className="p-4 self-start">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                className="p-3 pointer-events-auto"
-                modifiers={{ event: eventDates }}
-                modifiersClassNames={{
-                  event: 'bg-gold/20 text-gold font-bold rounded-full',
-                }}
-              />
-              {selectedDate && (
-                <button
-                  onClick={() => setSelectedDate(undefined)}
-                  className="mt-2 w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Show all events
-                </button>
-              )}
-            </GlassCard>
-
-            <div className="space-y-4">
-              <h2 className="font-display text-xl font-bold text-foreground mb-2">
-                {selectedDate
-                  ? `Events on ${selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
-                  : 'All Upcoming Events'}
-              </h2>
-              {filteredEvents.length > 0 ? (
-                <StaggerChildren className="space-y-4">
-                  {filteredEvents.map((ev) => (
-                    <StaggerItem key={ev.id}>
-                      <EventCard ev={ev} />
-                    </StaggerItem>
-                  ))}
-                </StaggerChildren>
-              ) : (
-                <GlassCard className="p-8 text-center">
-                  <CalendarDays className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-muted-foreground">No events on this date</p>
+      <div className="mt-10">
+        {view === 'list' ? (
+          <div className="max-w-4xl mx-auto px-6">
+            <StaggerChildren className="space-y-5">
+              {events.map((ev, i) => (
+                <StaggerItem key={ev.id}>
+                  <EventCard ev={ev} index={i} />
+                </StaggerItem>
+              ))}
+            </StaggerChildren>
+          </div>
+        ) : (
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8">
+              <ScrollFadeIn>
+                <GlassCard glow className="p-5 self-start depth-shadow">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    className="p-3 pointer-events-auto"
+                    modifiers={{ event: eventDates }}
+                    modifiersClassNames={{
+                      event: 'bg-gold/20 text-gold font-bold rounded-full',
+                    }}
+                  />
+                  {selectedDate && (
+                    <button
+                      onClick={() => setSelectedDate(undefined)}
+                      className="mt-3 w-full text-sm text-muted-foreground hover:text-gold transition-colors font-medium"
+                    >
+                      ← Show all events
+                    </button>
+                  )}
                 </GlassCard>
-              )}
+              </ScrollFadeIn>
+
+              <div className="space-y-5">
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  {selectedDate
+                    ? `Events on ${selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
+                    : 'All Upcoming Events'}
+                </h2>
+                {filteredEvents.length > 0 ? (
+                  <StaggerChildren className="space-y-5">
+                    {filteredEvents.map((ev, i) => (
+                      <StaggerItem key={ev.id}>
+                        <EventCard ev={ev} index={i} />
+                      </StaggerItem>
+                    ))}
+                  </StaggerChildren>
+                ) : (
+                  <GlassCard className="p-12 text-center">
+                    <CalendarDays className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground text-lg">No events on this date</p>
+                    <p className="text-muted-foreground/60 text-sm mt-1">Try selecting a different date</p>
+                  </GlassCard>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-const EventCard = ({ ev }: { ev: typeof events[0] }) => (
-  <GlassCard glow hover3d className="p-6">
-    <div className="flex items-center gap-6">
-      <motion.div
-        whileHover={{ scale: 1.1, rotateZ: -3 }}
-        className="flex-shrink-0 w-16 h-16 bg-navy-gradient rounded-xl flex flex-col items-center justify-center"
-      >
-        <span className="text-2xl font-bold text-primary-foreground leading-none">{ev.day}</span>
-        <span className="text-xs text-gold font-semibold">{ev.month}</span>
-      </motion.div>
-      <div>
-        <h3 className="font-display text-lg font-bold text-foreground">{ev.title}</h3>
-        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{ev.time}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5" />
-            <span>{ev.location}</span>
+const EventCard = ({ ev, index }: { ev: typeof events[0]; index: number }) => (
+  <motion.div
+    whileHover={{ y: -4, scale: 1.01 }}
+    transition={{ duration: 0.2 }}
+  >
+    <GlassCard glow hover3d className="p-6 md:p-8">
+      <div className="flex items-center gap-6">
+        <motion.div
+          whileHover={{ scale: 1.1, rotateZ: -5 }}
+          className="flex-shrink-0 w-18 h-18 md:w-20 md:h-20 bg-navy-gradient rounded-2xl flex flex-col items-center justify-center depth-shadow"
+        >
+          <span className="text-2xl md:text-3xl font-bold text-primary-foreground leading-none font-display">{ev.day}</span>
+          <span className="text-xs text-gold font-semibold tracking-wider uppercase">{ev.month}</span>
+        </motion.div>
+        <div className="flex-1">
+          <h3 className="font-display text-lg md:text-xl font-bold text-foreground">{ev.title}</h3>
+          <div className="flex flex-wrap items-center gap-4 mt-3">
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
+                <Clock className="w-3.5 h-3.5 text-gold" />
+              </div>
+              <span>{ev.time}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
+                <MapPin className="w-3.5 h-3.5 text-gold" />
+              </div>
+              <span>{ev.location}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </GlassCard>
+    </GlassCard>
+  </motion.div>
 );
 
 export default Events;

@@ -1,10 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
-import { Star, MapPin, Phone, Clock, DollarSign, ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, MapPin, Phone, Clock, DollarSign, ArrowLeft, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
 import { businesses } from '@/data/businessData';
 import { ScrollFadeIn, StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import GlassCard from '@/components/GlassCard';
 
-// Generate deterministic dummy reviews per business
 const generateReviews = (bizId: string, bizName: string) => {
   const reviewTemplates = [
     { author: "Sarah M.", initials: "SM", text: `Absolutely love ${bizName}! The quality and service are outstanding. Will definitely be coming back.`, rating: 5, date: "Jan 15, 2025" },
@@ -14,13 +15,11 @@ const generateReviews = (bizId: string, bizName: string) => {
     { author: "Michelle T.", initials: "MT", text: "Nice atmosphere and convenient location. Would give 5 stars but parking can be tricky during peak hours.", rating: 4, date: "Sep 05, 2024" },
     { author: "David K.", initials: "DK", text: "Exceeded my expectations! The attention to detail really sets this place apart from the competition.", rating: 5, date: "Aug 18, 2024" },
   ];
-  // Use id hash to pick a subset
   const hash = bizId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
   const count = 3 + (hash % 4);
   return reviewTemplates.slice(0, count).map((r, i) => ({ ...r, id: `${bizId}_r${i}` }));
 };
 
-// Generate gallery images per business
 const galleryImages = [
   "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop",
   "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop",
@@ -46,10 +45,13 @@ const BusinessDetail = () => {
   if (!biz) {
     return (
       <div className="pt-20 pb-16 min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+          <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
+            <MapPin className="w-8 h-8 text-muted-foreground" />
+          </div>
           <h1 className="font-display text-3xl font-bold text-foreground mb-4">Business Not Found</h1>
           <Link to="/directory" className="text-gold font-semibold hover:underline">← Back to Directory</Link>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -61,110 +63,140 @@ const BusinessDetail = () => {
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
       {/* Hero image */}
-      <div className="relative h-[40vh] md:h-[50vh]">
-        <img src={images[galleryIndex]} alt={biz.name} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent" />
+      <div className="relative h-[45vh] md:h-[55vh] overflow-hidden">
+        <motion.img
+          key={galleryIndex}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          src={images[galleryIndex]}
+          alt={biz.name}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent" />
 
         {/* Gallery nav */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
-          <button onClick={() => setGalleryIndex(i => (i - 1 + images.length) % images.length)} className="p-1.5 rounded-full bg-card/80 backdrop-blur-sm text-foreground hover:bg-card transition-colors">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setGalleryIndex(i => (i - 1 + images.length) % images.length)}
+            className="p-2 rounded-xl glass text-foreground hover:bg-card transition-colors depth-shadow"
+          >
             <ChevronLeft className="w-4 h-4" />
-          </button>
-          <div className="flex gap-1.5">
+          </motion.button>
+          <div className="flex gap-2">
             {images.map((_, i) => (
-              <button key={i} onClick={() => setGalleryIndex(i)} className={`w-2 h-2 rounded-full transition-colors ${i === galleryIndex ? 'bg-gold' : 'bg-card/50'}`} />
+              <button key={i} onClick={() => setGalleryIndex(i)} className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${i === galleryIndex ? 'bg-gold scale-125' : 'bg-card/50 hover:bg-card/80'}`} />
             ))}
           </div>
-          <button onClick={() => setGalleryIndex(i => (i + 1) % images.length)} className="p-1.5 rounded-full bg-card/80 backdrop-blur-sm text-foreground hover:bg-card transition-colors">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setGalleryIndex(i => (i + 1) % images.length)}
+            className="p-2 rounded-xl glass text-foreground hover:bg-card transition-colors depth-shadow"
+          >
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </motion.button>
         </div>
 
         {/* Back button */}
-        <Link to="/directory" className="absolute top-4 left-4 flex items-center gap-1.5 bg-card/80 backdrop-blur-sm text-foreground px-3 py-2 rounded-full text-sm font-medium hover:bg-card transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Directory
-        </Link>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="absolute top-4 left-4"
+        >
+          <Link to="/directory" className="flex items-center gap-2 glass text-foreground px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-card transition-colors depth-shadow">
+            <ArrowLeft className="w-4 h-4" /> Directory
+          </Link>
+        </motion.div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 -mt-16 relative z-10">
+      <div className="max-w-5xl mx-auto px-6 -mt-20 relative z-10">
         {/* Main info card */}
         <ScrollFadeIn>
-          <div className="bg-card border border-border rounded-xl p-6 md:p-8 shadow-lg mb-8">
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <GlassCard glow className="p-6 md:p-8 depth-shadow-lg mb-8">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
               <div>
-                <span className="inline-block bg-gold/15 text-gold text-xs font-bold px-2.5 py-1 rounded-full mb-3">
-                  {biz.category}
-                </span>
-                <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">{biz.name}</h1>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-gold/90 text-primary text-xs font-bold px-3 py-1 rounded-full">
+                    {biz.category}
+                  </span>
+                  <span className={`text-xs px-3 py-1 rounded-full font-medium ${biz.isOpen ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    {biz.isOpen ? '● Open Now' : '● Closed'}
+                  </span>
+                </div>
+                <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">{biz.name}</h1>
                 <p className="text-muted-foreground text-lg leading-relaxed max-w-xl">{biz.description}</p>
               </div>
-              <div className="flex flex-col items-start md:items-end gap-2 flex-shrink-0">
+              <div className="flex flex-col items-start md:items-end gap-3 flex-shrink-0">
                 <div className="flex items-center gap-1.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} className={`w-5 h-5 ${i < Math.round(biz.rating) ? 'text-gold fill-gold' : 'text-border'}`} />
                   ))}
-                  <span className="text-foreground font-bold ml-1">{biz.rating}</span>
+                  <span className="text-foreground font-bold text-lg ml-1">{biz.rating}</span>
                 </div>
                 <span className="text-sm text-muted-foreground">{biz.reviewCount} reviews</span>
               </div>
             </div>
 
             <div className="mt-6 pt-6 border-t border-border grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="flex items-center gap-2 text-sm">
-                <MapPin className="w-4 h-4 text-gold flex-shrink-0" />
-                <span className="text-foreground">{biz.address}, Cypress, TX</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <DollarSign className="w-4 h-4 text-gold flex-shrink-0" />
-                <span className="text-foreground">{biz.priceRange} Price Range</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Clock className="w-4 h-4 text-gold flex-shrink-0" />
-                <span className={biz.isOpen ? 'text-green-600 font-medium' : 'text-destructive font-medium'}>
-                  {biz.isOpen ? 'Open Now' : 'Closed'}
-                </span>
-              </div>
-              {biz.phone && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="w-4 h-4 text-gold flex-shrink-0" />
-                  <span className="text-foreground">{biz.phone}</span>
+              {[
+                { icon: MapPin, text: `${biz.address}, Cypress, TX` },
+                { icon: DollarSign, text: `${biz.priceRange} Price Range` },
+                { icon: Clock, text: biz.isOpen ? 'Open Now' : 'Closed' },
+                ...(biz.phone ? [{ icon: Phone, text: biz.phone }] : []),
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3 text-sm bg-muted/50 rounded-xl px-4 py-3">
+                  <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-4 h-4 text-gold" />
+                  </div>
+                  <span className="text-foreground">{item.text}</span>
                 </div>
-              )}
+              ))}
             </div>
-          </div>
+          </GlassCard>
         </ScrollFadeIn>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left column: Reviews */}
+          {/* Left column */}
           <div className="lg:col-span-2 space-y-8">
             {/* Photo gallery */}
             <ScrollFadeIn>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">Photos</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {images.map((img, i) => (
-                  <button
+                  <motion.button
                     key={i}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setGalleryIndex(i)}
-                    className={`relative rounded-lg overflow-hidden h-24 md:h-32 border-2 transition-colors ${galleryIndex === i ? 'border-gold' : 'border-transparent hover:border-border'}`}
+                    className={`relative rounded-xl overflow-hidden h-28 md:h-36 border-2 transition-all ${galleryIndex === i ? 'border-gold depth-shadow' : 'border-transparent hover:border-border'}`}
                   >
                     <img src={img} alt={`${biz.name} photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </ScrollFadeIn>
 
             {/* Reviews */}
             <ScrollFadeIn>
-              <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                Reviews <span className="text-muted-foreground text-lg font-normal">({reviews.length})</span>
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  Reviews <span className="text-muted-foreground text-lg font-normal">({reviews.length})</span>
+                </h2>
+                <div className="flex items-center gap-1.5 bg-gold/10 px-3 py-1.5 rounded-full">
+                  <Star className="w-4 h-4 text-gold fill-gold" />
+                  <span className="text-sm font-bold text-gold">{avgRating}</span>
+                </div>
+              </div>
               <StaggerChildren className="space-y-4">
                 {reviews.map((review) => (
                   <StaggerItem key={review.id}>
-                    <div className="bg-card border border-border rounded-xl p-5">
+                    <GlassCard className="p-5">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center text-gold font-bold text-sm">
+                          <div className="w-10 h-10 rounded-xl bg-navy-gradient flex items-center justify-center text-gold font-bold text-sm">
                             {review.initials}
                           </div>
                           <div>
@@ -179,55 +211,61 @@ const BusinessDetail = () => {
                         </div>
                       </div>
                       <p className="text-sm text-foreground/80 leading-relaxed">{review.text}</p>
-                    </div>
+                    </GlassCard>
                   </StaggerItem>
                 ))}
               </StaggerChildren>
             </ScrollFadeIn>
           </div>
 
-          {/* Right column: Hours & Info */}
+          {/* Right column */}
           <div className="space-y-6">
             <ScrollFadeIn>
-              <div className="bg-card border border-border rounded-xl p-5">
+              <GlassCard glow className="p-5">
                 <h3 className="font-display text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                   <Clock className="w-5 h-5 text-gold" /> Business Hours
                 </h3>
-                <div className="space-y-2.5">
+                <div className="space-y-1">
                   {hoursData.map((h) => {
                     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
                     const isToday = h.day === today;
                     return (
-                      <div key={h.day} className={`flex items-center justify-between text-sm py-1.5 px-2 rounded ${isToday ? 'bg-gold/10 font-medium' : ''}`}>
+                      <div key={h.day} className={`flex items-center justify-between text-sm py-2.5 px-3 rounded-xl transition-colors ${isToday ? 'bg-gold/10 font-medium' : 'hover:bg-muted/50'}`}>
                         <span className={isToday ? 'text-gold' : 'text-foreground'}>{h.day}</span>
                         <span className={isToday ? 'text-gold' : 'text-muted-foreground'}>{h.hours}</span>
                       </div>
                     );
                   })}
                 </div>
-              </div>
+              </GlassCard>
             </ScrollFadeIn>
 
             <ScrollFadeIn>
-              <div className="bg-card border border-border rounded-xl p-5">
+              <GlassCard glow className="p-5">
                 <h3 className="font-display text-lg font-bold text-foreground mb-4">Location</h3>
-                <div className="bg-muted rounded-lg h-40 flex items-center justify-center mb-3">
-                  <Link to={`/map?lat=${biz.lat}&lng=${biz.lng}&biz=${biz.id}`} className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors">
-                    <MapPin className="w-8 h-8" />
-                    <span className="text-sm font-medium">View on Map</span>
-                  </Link>
-                </div>
-                <p className="text-sm text-foreground">{biz.address}</p>
+                <Link
+                  to={`/map?lat=${biz.lat}&lng=${biz.lng}&biz=${biz.id}`}
+                  className="block bg-muted rounded-xl h-44 flex items-center justify-center group hover:bg-muted/80 transition-colors"
+                >
+                  <div className="flex flex-col items-center gap-2 text-muted-foreground group-hover:text-gold transition-colors">
+                    <motion.div whileHover={{ y: -4 }}>
+                      <MapPin className="w-10 h-10" />
+                    </motion.div>
+                    <span className="text-sm font-medium">View on Map →</span>
+                  </div>
+                </Link>
+                <p className="text-sm text-foreground mt-3">{biz.address}</p>
                 <p className="text-sm text-muted-foreground">Cypress, TX</p>
-              </div>
+              </GlassCard>
             </ScrollFadeIn>
 
             <ScrollFadeIn>
               <Link
                 to="/directory"
-                className="block text-center bg-primary text-primary-foreground py-3 rounded-xl font-semibold hover:bg-navy-light transition-colors"
+                className="flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold hover:bg-navy-light transition-colors depth-shadow"
               >
-                ← Back to Directory
+                <ArrowLeft className="w-4 h-4" />
+                Back to Directory
               </Link>
             </ScrollFadeIn>
           </div>
