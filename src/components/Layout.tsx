@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import Navbar from './Navbar';
+import GuidedTour from './GuidedTour';
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
@@ -20,8 +21,9 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      
+      <ScrollToTop />
       <Navbar />
+      <GuidedTour />
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname}>
           <main>
