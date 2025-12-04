@@ -159,7 +159,7 @@ export const GuidedTour = () => {
         animate={{ scale: 1 }}
         transition={{ delay: 2, type: 'spring' }}
         onClick={startTour}
-        className="fixed bottom-6 right-6 z-[9998] w-14 h-14 rounded-2xl bg-navy-gradient text-gold flex items-center justify-center depth-shadow-lg hover:scale-110 transition-transform"
+        className="fixed bottom-6 right-24 z-[9997] w-12 h-12 rounded-2xl bg-navy-gradient text-gold flex items-center justify-center depth-shadow-lg hover:scale-110 transition-transform"
         title="Take a guided tour"
       >
         <HelpCircle className="w-6 h-6" />
