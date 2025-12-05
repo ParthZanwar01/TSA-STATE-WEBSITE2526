@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import Navbar from './Navbar';
 import GuidedTour from './GuidedTour';
-import FAQWidget from './FAQWidget';
+import ChatWidget from './ChatWidget';
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
@@ -25,7 +25,7 @@ const Layout = () => {
       <ScrollToTop />
       <Navbar />
       <GuidedTour />
-      <FAQWidget />
+      <ChatWidget />
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname}>
           <main>
