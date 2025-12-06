@@ -7,6 +7,7 @@ import { toast } from '@/hooks/use-toast';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
+import { ReCaptcha } from '@/components/ReCaptcha';
 
 const businessSchema = z.object({
   name: z.string().trim().min(2, "Business name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
@@ -32,6 +33,8 @@ const SubmitBusiness = () => {
   const [form, setForm] = useState<BusinessForm>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof BusinessForm, string>>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
   const navigate = useNavigate();
 
   const update = (field: keyof BusinessForm, value: string) => {
@@ -41,6 +44,10 @@ const SubmitBusiness = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaToken) {
+      toast({ title: 'Verification required', description: 'Please complete the CAPTCHA.', variant: 'destructive' });
+      return;
+    }
     const result = businessSchema.safeParse(form);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof BusinessForm, string>> = {};
@@ -219,12 +226,18 @@ const SubmitBusiness = () => {
               </div>
             </GlassCard>
 
+            {/* CAPTCHA verification */}
+            <GlassCard glow className="p-6 md:p-8">
+              <p className="text-sm font-medium text-foreground mb-3">Verify you&apos;re not a robot</p>
+              <ReCaptcha key={captchaKey} onVerify={setCaptchaToken} />
+            </GlassCard>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-end">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                onClick={() => { setForm(initialForm); setErrors({}); }}
+                onClick={() => { setForm(initialForm); setErrors({}); setCaptchaToken(null); setCaptchaKey((k) => k + 1); }}
                 className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border-2 border-border text-muted-foreground font-semibold hover:border-foreground hover:text-foreground transition-colors"
               >
                 Reset Form

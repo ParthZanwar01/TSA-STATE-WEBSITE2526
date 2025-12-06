@@ -6,7 +6,9 @@ import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { useAuth } from '@/hooks/AuthContext';
 import { useFavorites } from '@/hooks/useFavorites';
-import { Heart } from 'lucide-react';
+import { useUserReviews } from '@/hooks/useUserReviews';
+import { Heart, Star } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 const generateReviews = (bizId: string, bizName: string) => {
   const reviewTemplates = [
@@ -43,8 +45,12 @@ const BusinessDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { isFavorite, toggle } = useFavorites(user?.id ?? null);
+  const { reviews: userReviews, addReview } = useUserReviews(id || null);
   const biz = businesses.find(b => b.id === id);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState('');
 
   if (!biz) {
     return (
@@ -57,9 +63,23 @@ const BusinessDetail = () => {
     );
   }
 
-  const reviews = generateReviews(biz.id, biz.name);
+  const staticReviews = generateReviews(biz.id, biz.name);
+  const allReviews = [...staticReviews, ...userReviews.map((r) => ({ id: r.id, author: r.author, initials: r.initials, date: r.date, text: r.text, rating: r.rating }))];
   const images = [biz.image, ...galleryImages];
-  const avgRating = (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1);
+  const avgRating = allReviews.length ? (allReviews.reduce((a, r) => a + r.rating, 0) / allReviews.length).toFixed(1) : '0';
+
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !reviewText.trim() || reviewText.trim().length < 10) {
+      toast({ title: 'Review too short', description: 'Please write at least 10 characters.', variant: 'destructive' });
+      return;
+    }
+    addReview(user.id, user.name || user.email, reviewRating, reviewText.trim());
+    setReviewText('');
+    setReviewRating(5);
+    setShowReviewForm(false);
+    toast({ title: 'Thank you!', description: 'Your review has been posted.' });
+  };
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
@@ -191,16 +211,73 @@ const BusinessDetail = () => {
 
             {/* Reviews */}
             <ScrollFadeIn>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                 <h2 className="font-display text-2xl font-bold text-foreground">
-                  Reviews <span className="text-muted-foreground text-lg font-normal">({reviews.length})</span>
+                  Reviews <span className="text-muted-foreground text-lg font-normal">({allReviews.length})</span>
                 </h2>
-                <div className="flex items-center gap-1.5 bg-gold/10 px-3 py-1.5 rounded-full">
-                  <span className="text-sm font-bold text-gold">{avgRating}</span>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 bg-gold/10 px-3 py-1.5 rounded-full">
+                    <span className="text-sm font-bold text-gold">{avgRating}</span>
+                  </div>
+                  {user && !showReviewForm && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setShowReviewForm(true)}
+                      className="text-sm font-semibold text-gold hover:text-gold/80 transition-colors"
+                    >
+                      Leave a Review
+                    </motion.button>
+                  )}
                 </div>
               </div>
+              {user && showReviewForm && (
+                <GlassCard className="p-5 mb-4">
+                  <form onSubmit={handleSubmitReview} className="space-y-4">
+                    <div>
+                      <label className="text-sm font-semibold text-foreground mb-2 block">Your Rating</label>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <button key={n} type="button" onClick={() => setReviewRating(n)} className="p-1">
+                            <Star className={`w-6 h-6 ${n <= reviewRating ? 'fill-gold text-gold' : 'text-muted-foreground'}`} />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-foreground mb-2 block">Your Review (min 10 chars)</label>
+                      <textarea
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        placeholder="Share your experience..."
+                        rows={3}
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 resize-none"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="submit"
+                        className="bg-primary text-primary-foreground px-4 py-2 rounded-xl font-semibold text-sm hover:bg-navy-light transition-colors"
+                      >
+                        Submit Review
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="button"
+                        onClick={() => { setShowReviewForm(false); setReviewText(''); }}
+                        className="border border-border px-4 py-2 rounded-xl font-semibold text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Cancel
+                      </motion.button>
+                    </div>
+                  </form>
+                </GlassCard>
+              )}
               <StaggerChildren className="space-y-4">
-                {reviews.map((review) => (
+                {allReviews.map((review) => (
                   <StaggerItem key={review.id}>
                     <GlassCard className="p-5">
                       <div className="flex items-center justify-between mb-3">

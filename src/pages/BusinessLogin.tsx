@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import GlassCard from '@/components/GlassCard';
+import { ReCaptcha } from '@/components/ReCaptcha';
 import { useAuth } from '@/hooks/AuthContext';
 
 const BusinessLogin = () => {
@@ -12,11 +13,13 @@ const BusinessLogin = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaToken) return;
     if (!email || !password) return;
     setLoading(true);
     try {
@@ -32,6 +35,7 @@ const BusinessLogin = () => {
   };
 
   const handleDemoLogin = async () => {
+    if (!captchaToken) return;
     setLoading(true);
     try {
       await signIn('demo@locallink.com', 'demo123');
@@ -124,11 +128,16 @@ const BusinessLogin = () => {
               </div>
             )}
 
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">Verify you&apos;re not a robot</p>
+              <ReCaptcha onVerify={setCaptchaToken} size="compact" />
+            </div>
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              disabled={loading}
+              disabled={loading || !captchaToken}
               className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold hover:bg-navy-light transition-colors depth-shadow disabled:opacity-70"
             >
               {loading ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
@@ -140,7 +149,7 @@ const BusinessLogin = () => {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={handleDemoLogin}
-                disabled={loading}
+                disabled={loading || !captchaToken}
                 className="w-full flex items-center justify-center gap-2 border-2 border-gold text-gold py-3.5 rounded-xl font-semibold hover:bg-gold/10 transition-colors disabled:opacity-70"
               >
                 Try Demo Login

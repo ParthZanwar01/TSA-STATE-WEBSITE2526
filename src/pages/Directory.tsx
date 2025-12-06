@@ -16,15 +16,20 @@ const Directory = () => {
 
   const [search, setSearch] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [sortBy, setSortBy] = useState<'name' | 'rating' | 'reviews'>('name');
   const [flippedCard, setFlippedCard] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
-    return businesses.filter((b) => {
+    let result = businesses.filter((b) => {
       const matchesSearch = !search || b.name.toLowerCase().includes(search.toLowerCase()) || b.description.toLowerCase().includes(search.toLowerCase());
       const matchesCategory = !selectedCategory || b.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [search, selectedCategory]);
+    if (sortBy === 'rating') result = [...result].sort((a, b) => b.rating - a.rating);
+    else if (sortBy === 'reviews') result = [...result].sort((a, b) => b.reviewCount - a.reviewCount);
+    else result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    return result;
+  }, [search, selectedCategory, sortBy]);
 
   const allCategories = ['', ...new Set(businesses.map(b => b.category))];
 
@@ -68,7 +73,7 @@ const Directory = () => {
           className="bg-card border border-border rounded-2xl p-5 mb-10 depth-shadow"
         >
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground mb-4">
-            <span>Filters</span>
+            <span>Filters & Sort</span>
           </div>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-wrap gap-2 flex-1">
@@ -88,6 +93,15 @@ const Directory = () => {
                 </motion.button>
               ))}
             </div>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as 'name' | 'rating' | 'reviews')}
+              className="px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm outline-none focus:ring-2 focus:ring-gold/30 transition-all"
+            >
+              <option value="name">Sort: Name A–Z</option>
+              <option value="rating">Sort: Highest Rating</option>
+              <option value="reviews">Sort: Most Reviews</option>
+            </select>
             <div className="relative w-full md:w-80">
               <input
                 type="text"

@@ -1,3 +1,8 @@
+/**
+ * Glassmorphism-style card component used across the app for consistent UI.
+ * Supports optional glow and 3D hover effects.
+ */
+
 import { motion } from 'framer-motion';
 
 interface GlassCardProps {

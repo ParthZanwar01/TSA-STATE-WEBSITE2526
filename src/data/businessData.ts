@@ -1,3 +1,9 @@
+/**
+ * Business and related data for Cypress LocalLink directory.
+ * Contains static businesses, categories, events, and deals.
+ * User reviews are stored separately via useUserReviews (localStorage).
+ */
+
 export interface Business {
   id: string;
   name: string;

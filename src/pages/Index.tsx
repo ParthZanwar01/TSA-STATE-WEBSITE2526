@@ -1,7 +1,7 @@
 import { useState, Suspense, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
-import { businesses, categories, reviews, events } from '@/data/businessData';
+import { businesses, categories, reviews, events, deals } from '@/data/businessData';
 import { motion } from 'framer-motion';
 import MorphScene from '@/components/MorphScene';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
@@ -310,6 +310,43 @@ const Index = () => {
             </div>
           </div>
         </ScrollParallax>
+      </section>
+
+      {/* ─── DEALS & COUPONS ─── */}
+      <section className="py-24 px-6 relative">
+        <FloatingOrbs className="opacity-30" />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <ScrollFadeIn>
+            <div className="flex items-center justify-between mb-12">
+              <h2 className="font-display text-4xl font-bold text-foreground">Special Deals & Coupons</h2>
+              <MagneticButton strength={0.3}>
+                <Link to="/directory" className="text-gold font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                  See All
+                </Link>
+              </MagneticButton>
+            </div>
+          </ScrollFadeIn>
+          <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {deals.slice(0, 8).map((deal) => {
+              const biz = businesses.find(b => b.id === deal.business_id);
+              return (
+                <StaggerItem key={deal.id}>
+                  <GlassCard glow hover3d className="p-4 h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">{deal.discount}</span>
+                      {biz && (
+                        <Link to={`/business/${biz.id}`} className="text-xs text-gold font-medium hover:underline truncate max-w-[140px]">{biz.name}</Link>
+                      )}
+                    </div>
+                    <h4 className="font-display font-bold text-foreground text-sm mb-1">{deal.title}</h4>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{deal.description}</p>
+                    <p className="text-xs text-muted-foreground mt-2">Valid until {new Date(deal.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                  </GlassCard>
+                </StaggerItem>
+              );
+            })}
+          </StaggerChildren>
+        </div>
       </section>
 
       {/* ─── EVENTS WITH GLASS CARDS ─── */}

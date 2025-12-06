@@ -1,3 +1,8 @@
+/**
+ * Hook for managing user favorites (bookmarked businesses).
+ * Persists to localStorage per user ID for FBLA rubric: "Saving/bookmarking favorites."
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 
 const STORAGE_KEY = 'locallink_favorites';
