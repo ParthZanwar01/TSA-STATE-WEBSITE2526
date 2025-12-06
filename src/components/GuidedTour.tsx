@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
 
 interface TourStep {
   target: string; // CSS selector
@@ -162,7 +161,7 @@ export const GuidedTour = () => {
         className="fixed bottom-6 right-24 z-[9997] w-12 h-12 rounded-2xl bg-navy-gradient text-gold flex items-center justify-center depth-shadow-lg hover:scale-110 transition-transform"
         title="Take a guided tour"
       >
-        <HelpCircle className="w-6 h-6" />
+        ?
       </motion.button>
 
       {/* Tour Overlay */}
@@ -235,7 +234,7 @@ export const GuidedTour = () => {
                   onClick={endTour}
                   className="absolute top-3 right-3 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
-                  <X className="w-4 h-4" />
+                  ×
                 </button>
 
                 {/* Progress dots */}
@@ -272,16 +271,14 @@ export const GuidedTour = () => {
                         onClick={prev}
                         className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                       >
-                        <ChevronLeft className="w-3.5 h-3.5" />
-                        Back
+                        ← Back
                       </button>
                     )}
                     <button
                       onClick={next}
                       className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-navy-light transition-colors"
                     >
-                      {currentStep === tourSteps.length - 1 ? 'Finish' : 'Next'}
-                      {currentStep < tourSteps.length - 1 && <ChevronRight className="w-3.5 h-3.5" />}
+                      {currentStep === tourSteps.length - 1 ? 'Finish' : 'Next →'}
                     </button>
                   </div>
                 </div>

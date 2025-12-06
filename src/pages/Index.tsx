@@ -1,6 +1,5 @@
 import { useState, Suspense, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Star, Clock, MapPin, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
 import { businesses, categories, reviews, events } from '@/data/businessData';
 import { motion } from 'framer-motion';
@@ -98,7 +97,6 @@ const Index = () => {
               className="relative max-w-xl mx-auto mb-8"
             >
               <div className="flex items-center glass rounded-full overflow-hidden shadow-2xl glow-gold">
-                <Search className="w-5 h-5 text-primary-foreground/60 ml-5" />
                 <input
                   type="text"
                   placeholder="What are you looking for?"
@@ -194,7 +192,7 @@ const Index = () => {
           <div className="text-center mt-10">
             <MagneticButton strength={0.4}>
               <Link to="/directory" className="inline-flex items-center gap-2 text-gold font-semibold hover:gap-3 transition-all">
-                View All Businesses <ArrowRight className="w-4 h-4" />
+                View All Businesses
               </Link>
             </MagneticButton>
           </div>
@@ -265,8 +263,7 @@ const Index = () => {
                               Local Favorite
                             </motion.span>
                             <div className="flex items-center gap-2 mb-1">
-                              <Star className="w-4 h-4 text-gold fill-gold" />
-                              <span className="text-primary-foreground font-semibold text-sm">{biz.rating}</span>
+                              <span className="text-primary-foreground font-semibold text-sm">{biz.rating}/5</span>
                               <span className="text-primary-foreground/60 text-xs">{biz.category}</span>
                             </div>
                             <h3 className="font-display text-xl font-bold text-primary-foreground">{biz.name}</h3>
@@ -324,7 +321,7 @@ const Index = () => {
               <h2 className="font-display text-4xl font-bold text-foreground">Upcoming Events</h2>
               <MagneticButton strength={0.3}>
                 <Link to="/events" className="text-gold font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                  See All <ArrowRight className="w-4 h-4" />
+                  See All
                 </Link>
               </MagneticButton>
             </div>
@@ -345,11 +342,9 @@ const Index = () => {
                     <div className="min-w-0">
                       <h4 className="font-semibold text-foreground text-sm truncate">{ev.title}</h4>
                       <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                        <Clock className="w-3 h-3" />
                         <span>{ev.time}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground">
-                        <MapPin className="w-3 h-3" />
                         <span className="truncate">{ev.location}</span>
                       </div>
                     </div>
@@ -374,11 +369,6 @@ const Index = () => {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent flex flex-col items-center justify-end p-8 text-center">
-                  <MagneticButton strength={0.4}>
-                    <div className="mb-3">
-                      <MapPin className="w-8 h-8 text-gold" />
-                    </div>
-                  </MagneticButton>
                   <h3 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
                     Find Businesses Near You
                   </h3>
@@ -387,7 +377,7 @@ const Index = () => {
                   </p>
                   <MagneticButton strength={0.3}>
                     <span className="inline-flex items-center gap-2 glass-gold text-gold px-5 py-2 rounded-full text-sm font-bold group-hover:gap-3 group-hover:glow-gold transition-all">
-                      Open Map <ArrowRight className="w-4 h-4" />
+                      Open Map
                     </span>
                   </MagneticButton>
                 </div>
@@ -443,7 +433,7 @@ const Index = () => {
                   onClick={prevReview}
                   className="p-2 rounded-full glass text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  ←
                 </motion.button>
               </MagneticButton>
               <div className="flex gap-1.5">
@@ -463,7 +453,7 @@ const Index = () => {
                   onClick={nextReview}
                   className="p-2 rounded-full glass text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  →
                 </motion.button>
               </MagneticButton>
             </div>

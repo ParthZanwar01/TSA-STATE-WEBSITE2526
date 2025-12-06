@@ -1,10 +1,10 @@
 import { useState, Suspense } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Search, MapPin, LogIn } from 'lucide-react';
 import { motion } from 'framer-motion';
 import MorphScene from '@/components/MorphScene';
+import { useAuth } from '@/hooks/AuthContext';
 
-const navLinks = [
+const baseNavLinks = [
   { label: 'About', path: '/about' },
   { label: 'Directory', path: '/directory' },
   { label: 'Map', path: '/map' },
@@ -15,29 +15,18 @@ const navLinks = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const isHome = location.pathname === '/';
+  const { user, signOut } = useAuth();
+  const navLinks = [...baseNavLinks, ...(user ? [{ label: 'My Favorites', path: '/favorites' }] : [])];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${isHome ? 'bg-transparent' : 'bg-card/95 backdrop-blur-md border-b border-border'}`}>
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo with morph accent */}
         <Link to="/" className="flex items-center gap-2 relative">
-          <motion.div
-            className="w-8 h-8 rounded-full bg-navy-gradient flex items-center justify-center overflow-hidden relative"
-            whileHover={{ scale: 1.15, rotate: 10 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <MapPin className="w-4 h-4 text-gold relative z-10" />
-            <motion.div
-              className="absolute inset-0 bg-gold/20 rounded-full"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            />
-          </motion.div>
           <div className="font-display">
-            <span className={`text-lg font-bold ${isHome ? 'text-primary-foreground' : 'text-primary'}`}>Cypress</span>
+            <span className="text-lg font-bold text-primary">Cypress</span>
             <span className="text-lg font-bold text-gold"> Local</span>
-            <span className={`text-lg font-bold ${isHome ? 'text-primary-foreground' : 'text-primary'}`}>Link</span>
+            <span className="text-lg font-bold text-primary">Link</span>
           </div>
         </Link>
 
@@ -50,8 +39,6 @@ const Navbar = () => {
               className={`relative text-sm font-medium transition-colors duration-200 ${
                 location.pathname === link.path
                   ? 'text-gold'
-                  : isHome
-                  ? 'text-primary-foreground/80 hover:text-primary-foreground'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -65,36 +52,30 @@ const Navbar = () => {
               )}
             </Link>
           ))}
-          <Link
-            to="/directory"
-            className="p-2 rounded-full transition-colors duration-200 hover:bg-muted/30"
-          >
-            <Search className={`w-4 h-4 ${isHome ? 'text-primary-foreground/80' : 'text-muted-foreground'}`} />
-          </Link>
-          <Link
-            to="/login"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 ${
-              isHome
-                ? 'bg-gold/20 text-gold hover:bg-gold/30'
-                : 'bg-primary text-primary-foreground hover:bg-navy-light'
-            }`}
-          >
-            <LogIn className="w-3.5 h-3.5" />
-            Login
-          </Link>
+          {user ? (
+            <button
+              onClick={() => signOut()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 bg-primary text-primary-foreground hover:bg-navy-light"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 bg-primary text-primary-foreground hover:bg-navy-light"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         {/* Mobile toggle */}
         <motion.button
           onClick={() => setOpen(!open)}
-          className="md:hidden p-2"
+          className="md:hidden p-2 text-sm font-medium text-foreground"
           whileTap={{ scale: 0.9 }}
         >
-          {open ? (
-            <X className={`w-5 h-5 ${isHome ? 'text-primary-foreground' : 'text-foreground'}`} />
-          ) : (
-            <Menu className={`w-5 h-5 ${isHome ? 'text-primary-foreground' : 'text-foreground'}`} />
-          )}
+          {open ? 'Close' : 'Menu'}
         </motion.button>
       </div>
 

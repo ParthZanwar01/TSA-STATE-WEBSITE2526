@@ -1,12 +1,16 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Search, Star, MapPin, SlidersHorizontal, LayoutGrid } from 'lucide-react';
 import { businesses, categories } from '@/data/businessData';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { useAuth } from '@/hooks/AuthContext';
+import { useFavorites } from '@/hooks/useFavorites';
+import { Heart } from 'lucide-react';
 
 const Directory = () => {
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+  const { isFavorite, toggle } = useFavorites(user?.id ?? null);
   const initialCategory = searchParams.get('category') || '';
   const initialSearch = searchParams.get('search') || '';
 
@@ -39,14 +43,6 @@ const Directory = () => {
           >
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
               <div>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                  className="w-14 h-14 rounded-2xl bg-gold/20 backdrop-blur-sm flex items-center justify-center mb-5 border border-gold/30"
-                >
-                  <LayoutGrid className="w-7 h-7 text-gold" />
-                </motion.div>
                 <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
                   Business <span className="text-gold">Directory</span>
                 </h1>
@@ -72,7 +68,6 @@ const Directory = () => {
           className="bg-card border border-border rounded-2xl p-5 mb-10 depth-shadow"
         >
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground mb-4">
-            <SlidersHorizontal className="w-4 h-4 text-gold" />
             <span>Filters</span>
           </div>
           <div className="flex flex-col md:flex-row gap-4">
@@ -94,13 +89,12 @@ const Directory = () => {
               ))}
             </div>
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search by business name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all"
               />
             </div>
           </div>
@@ -134,6 +128,21 @@ const Directory = () => {
                     <div className="absolute inset-0 rounded-2xl overflow-hidden depth-shadow group-hover:depth-shadow-lg transition-shadow duration-300" style={{ backfaceVisibility: 'hidden' }}>
                       <img src={biz.image} alt={biz.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
+                      {user && (
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={(e) => { e.stopPropagation(); toggle(biz.id); }}
+                          className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-colors z-10 ${
+                            isFavorite(biz.id)
+                              ? 'bg-red-500/90 text-white'
+                              : 'bg-white/20 text-white hover:bg-white/40'
+                          }`}
+                          aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                        >
+                          <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                        </motion.button>
+                      )}
                       <div className="absolute bottom-0 left-0 right-0 p-6">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="bg-gold/90 text-primary text-xs font-bold px-2.5 py-0.5 rounded-full">{biz.category}</span>
@@ -141,13 +150,11 @@ const Directory = () => {
                         </div>
                         <h3 className="font-display text-lg font-bold text-primary-foreground">{biz.name}</h3>
                         <div className="flex items-center gap-2 mt-2">
-                          <Star className="w-3.5 h-3.5 text-gold fill-gold" />
-                          <span className="text-primary-foreground text-sm font-medium">{biz.rating}</span>
+                          <span className="text-primary-foreground text-sm font-medium">{biz.rating}/5</span>
                           <span className="text-primary-foreground/50 text-xs">({biz.reviewCount} reviews)</span>
                         </div>
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center gap-1 text-primary-foreground/60 text-xs">
-                            <MapPin className="w-3 h-3" />
                             <span className="truncate">{biz.address}</span>
                           </div>
                           <span className="text-gold text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Tap to flip →</span>
@@ -163,7 +170,6 @@ const Directory = () => {
                       <div>
                         <h3 className="font-display text-lg font-bold text-foreground mb-3">{biz.name}</h3>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                          <MapPin className="w-3 h-3" />
                           <span>{biz.address}</span>
                         </div>
                         <span className={`inline-block text-xs px-2.5 py-1 rounded-full mb-3 font-medium ${biz.isOpen ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
@@ -174,13 +180,30 @@ const Directory = () => {
                         </p>
                         <p className="text-sm text-foreground/80 italic leading-relaxed">"{biz.description}"</p>
                       </div>
-                      <Link
-                        to={`/business/${biz.id}`}
-                        onClick={(e) => { e.stopPropagation(); }}
-                        className="mt-4 w-full bg-primary text-primary-foreground text-sm font-semibold py-3 rounded-xl hover:bg-navy-light transition-colors block text-center depth-shadow"
-                      >
-                        View Full Profile →
-                      </Link>
+                      <div className="flex gap-2 mt-4">
+                        {user && (
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={(e) => { e.stopPropagation(); toggle(biz.id); }}
+                            className={`flex-shrink-0 p-2.5 rounded-xl transition-colors ${
+                              isFavorite(biz.id)
+                                ? 'bg-red-100 text-red-600'
+                                : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                            }`}
+                            aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                          >
+                            <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} />
+                          </motion.button>
+                        )}
+                        <Link
+                          to={`/business/${biz.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className={`flex-1 bg-primary text-primary-foreground text-sm font-semibold py-3 rounded-xl hover:bg-navy-light transition-colors block text-center depth-shadow ${!user ? 'w-full' : ''}`}
+                        >
+                          View Full Profile →
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -195,7 +218,6 @@ const Directory = () => {
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-lg font-display font-bold text-foreground mb-2">No businesses found</p>
             <p className="text-muted-foreground">Try adjusting your filters or search term</p>
           </motion.div>

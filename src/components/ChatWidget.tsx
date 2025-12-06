@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, ChevronRight, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ChatMessage {
@@ -210,13 +209,9 @@ export const ChatWidget = () => {
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
-            <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
-              <X className="w-6 h-6 text-primary-foreground" />
-            </motion.div>
+            <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} className="text-primary-foreground font-bold text-lg">×</motion.div>
           ) : (
-            <motion.div key="open" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-              <MessageCircle className="w-7 h-7 text-primary" />
-            </motion.div>
+            <motion.div key="open" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="text-primary font-semibold text-sm">Chat</motion.div>
           )}
         </AnimatePresence>
 
@@ -244,9 +239,6 @@ export const ChatWidget = () => {
           >
             {/* Header */}
             <div className="bg-navy-gradient px-6 py-5 flex items-center gap-3 flex-shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gold/20 flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-gold" />
-              </div>
               <div className="flex-1">
                 <h3 className="font-display text-base font-bold text-primary-foreground">Cypress LocalLink</h3>
                 <div className="flex items-center gap-1.5">
@@ -276,19 +268,12 @@ export const ChatWidget = () => {
                   className={cn('flex', msg.type === 'user' ? 'justify-end' : 'justify-start')}
                 >
                   <div className={cn('max-w-[85%]')}>
-                    {msg.type === 'bot' && (
-                      <div className="flex items-end gap-2 mb-1">
-                        <div className="w-7 h-7 rounded-lg bg-navy-gradient flex items-center justify-center flex-shrink-0">
-                          <MapPin className="w-3.5 h-3.5 text-gold" />
-                        </div>
-                      </div>
-                    )}
                     <div
                       className={cn(
                         'rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-line',
                         msg.type === 'user'
                           ? 'bg-primary text-primary-foreground rounded-br-md'
-                          : 'bg-muted text-foreground rounded-bl-md ml-9'
+                          : 'bg-muted text-foreground rounded-bl-md'
                       )}
                     >
                       {renderText(msg.text)}
@@ -296,7 +281,7 @@ export const ChatWidget = () => {
 
                     {/* Quick replies */}
                     {msg.options && msg.options.length > 0 && (
-                      <div className="mt-2 ml-9 flex flex-col gap-1.5">
+                      <div className="mt-2 flex flex-col gap-1.5">
                         {msg.options.map((opt, i) => (
                           <motion.button
                             key={i}
@@ -307,7 +292,7 @@ export const ChatWidget = () => {
                             className="flex items-center gap-2 text-left text-sm px-3.5 py-2.5 rounded-xl border border-border bg-card hover:bg-muted hover:border-gold/30 transition-all group"
                           >
                             <span className="flex-1 text-foreground">{opt.label}</span>
-                            <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-gold transition-colors" />
+                            <span className="text-muted-foreground group-hover:text-gold transition-colors">→</span>
                           </motion.button>
                         ))}
                       </div>
@@ -323,9 +308,6 @@ export const ChatWidget = () => {
                   animate={{ opacity: 1 }}
                   className="flex items-end gap-2"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-navy-gradient flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-3.5 h-3.5 text-gold" />
-                  </div>
                   <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1">
                     <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -353,9 +335,9 @@ export const ChatWidget = () => {
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   disabled={!inputValue.trim()}
-                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-navy-light transition-colors disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center hover:bg-navy-light transition-colors disabled:opacity-40"
                 >
-                  <Send className="w-4 h-4" />
+                  Send
                 </motion.button>
               </form>
               <p className="text-[10px] text-muted-foreground/40 text-center mt-2">

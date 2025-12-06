@@ -5,7 +5,6 @@ import Navbar from './Navbar';
 import GuidedTour from './GuidedTour';
 import ChatWidget from './ChatWidget';
 import { Link } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './PageTransition';
 
@@ -27,8 +26,8 @@ const Layout = () => {
       <GuidedTour />
       <ChatWidget />
       <AnimatePresence mode="wait">
-        <PageTransition key={location.pathname}>
-          <main>
+        <PageTransition key={location.key || location.pathname}>
+          <main className="min-h-[60vh]">
             <Outlet />
           </main>
         </PageTransition>
@@ -38,9 +37,6 @@ const Layout = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-                  <MapPin className="w-4 h-4 text-gold" />
-                </div>
                 <span className="font-display text-lg font-bold">
                   Cypress <span className="text-gold">Local</span>Link
                 </span>
@@ -66,7 +62,7 @@ const Layout = () => {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-primary-foreground/10 text-center text-sm text-primary-foreground/40">
-            © 2026 Cypress LocalLink. Made with ❤️ for the Cypress community.
+            © 2026 Cypress LocalLink. Made for the Cypress community.
           </div>
         </div>
       </footer>

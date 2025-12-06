@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { Search, Star, MapPin, Navigation, SlidersHorizontal } from 'lucide-react';
 import { businesses } from '@/data/businessData';
 import { motion } from 'framer-motion';
 import L from 'leaflet';
@@ -23,6 +22,17 @@ const FlyToLocation = ({ lat, lng }: { lat: number; lng: number }) => {
     map.flyTo([lat, lng], 17, { duration: 1.5 });
   }, [lat, lng, map]);
   return null;
+};
+
+/** Spread overlapping markers in a circular pattern around their base position */
+const getSpreadPosition = (lat: number, lng: number, id: string): [number, number] => {
+  const hash = id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const angle = ((hash % 36) * 10 * Math.PI) / 180;
+  const radius = 0.0005 + (hash % 5) * 0.0003; // ~50-200m spread
+  return [
+    lat + Math.cos(angle) * radius,
+    lng + Math.sin(angle) * radius,
+  ];
 };
 
 const MapPage = () => {
@@ -47,7 +57,7 @@ const MapPage = () => {
 
   const centerMap = () => {
     if (mapRef.current) {
-      mapRef.current.setView([29.9691, -95.6977], 14);
+      mapRef.current.setView([29.9691, -95.6977], 16);
     }
   };
 
@@ -63,9 +73,6 @@ const MapPage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="glass rounded-2xl px-5 py-3 depth-shadow flex items-center gap-3"
             >
-              <div className="w-8 h-8 rounded-lg bg-navy-gradient flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-gold" />
-              </div>
               <div>
                 <h2 className="font-display text-lg font-bold text-foreground leading-tight">Community Map</h2>
                 <p className="text-xs text-muted-foreground">{filtered.length} locations</p>
@@ -75,7 +82,7 @@ const MapPage = () => {
 
           <MapContainer
             center={[29.9691, -95.6977]}
-            zoom={14}
+            zoom={16}
             className="w-full h-full z-0"
             ref={mapRef}
           >
@@ -86,19 +93,22 @@ const MapPage = () => {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {filtered.map((biz) => (
-              <Marker key={biz.id} position={[biz.lat, biz.lng]}>
+            {filtered.map((biz) => {
+              const [displayLat, displayLng] = getSpreadPosition(biz.lat, biz.lng, biz.id);
+              return (
+              <Marker key={biz.id} position={[displayLat, displayLng]}>
                 <Popup>
                   <div className="font-body">
                     <strong className="font-display">{biz.name}</strong>
                     <br />
                     <span className="text-xs">{biz.address}</span>
                     <br />
-                    <span className="text-xs">⭐ {biz.rating} · {biz.category}</span>
+                    <span className="text-xs">{biz.rating}/5 · {biz.category}</span>
                   </div>
                 </Popup>
               </Marker>
-            ))}
+            );
+            })}
           </MapContainer>
 
           {/* Floating controls */}
@@ -107,10 +117,10 @@ const MapPage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={centerMap}
-              className="glass text-foreground p-3 rounded-xl depth-shadow hover:bg-card transition-colors"
+              className="glass text-foreground p-3 rounded-xl depth-shadow hover:bg-card transition-colors text-sm font-medium"
               title="Center map"
             >
-              <Navigation className="w-5 h-5" />
+              Center
             </motion.button>
           </div>
         </div>
@@ -124,20 +134,18 @@ const MapPage = () => {
         >
           <div className="p-5 border-b border-border">
             <div className="relative mb-4">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search businesses..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all"
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              <SlidersHorizontal className="w-4 h-4" />
               {showFilters ? 'Hide Filters' : 'Show Filters'}
             </button>
             {showFilters && (
@@ -173,7 +181,8 @@ const MapPage = () => {
                 className="flex items-center gap-4 px-5 py-4 hover:bg-muted/50 transition-colors cursor-pointer group"
                 onClick={() => {
                   if (mapRef.current) {
-                    mapRef.current.setView([biz.lat, biz.lng], 16);
+                    const [displayLat, displayLng] = getSpreadPosition(biz.lat, biz.lng, biz.id);
+                    mapRef.current.setView([displayLat, displayLng], 16);
                   }
                 }}
               >
@@ -186,14 +195,12 @@ const MapPage = () => {
                 <div className="min-w-0 flex-1">
                   <h4 className="font-semibold text-sm text-foreground truncate group-hover:text-gold transition-colors">{biz.name}</h4>
                   <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
-                    <Star className="w-3 h-3 text-gold fill-gold" />
-                    <span className="font-medium">{biz.rating}</span>
+                    <span className="font-medium">{biz.rating}/5</span>
                     <span>·</span>
                     <span className="truncate">{biz.category}</span>
                   </div>
                   <p className="text-xs text-muted-foreground/70 truncate mt-0.5">{biz.address}</p>
                 </div>
-                <MapPin className="w-4 h-4 text-muted-foreground/40 group-hover:text-gold transition-colors flex-shrink-0" />
               </motion.div>
             ))}
           </div>

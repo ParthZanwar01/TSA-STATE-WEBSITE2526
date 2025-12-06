@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Building2, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import GlassCard from '@/components/GlassCard';
-import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/AuthContext';
 
 const BusinessLogin = () => {
   const [email, setEmail] = useState('');
@@ -12,13 +11,34 @@ const BusinessLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signIn, signUp } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: isSignUp ? "Account creation coming soon!" : "Login coming soon!",
-      description: "Business management features are being built. Stay tuned!",
-    });
+    if (!email || !password) return;
+    setLoading(true);
+    try {
+      if (isSignUp) {
+        await signUp(email, password, name || undefined);
+      } else {
+        await signIn(email, password);
+      }
+      navigate('/directory');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    try {
+      await signIn('demo@locallink.com', 'demo123');
+      navigate('/directory');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,14 +55,6 @@ const BusinessLogin = () => {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="w-16 h-16 rounded-2xl bg-navy-gradient flex items-center justify-center mx-auto mb-5 depth-shadow"
-          >
-            <Building2 className="w-8 h-8 text-gold" />
-          </motion.div>
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">
             {isSignUp ? 'Create Account' : 'Business Portal'}
           </h1>
@@ -57,9 +69,6 @@ const BusinessLogin = () => {
             {isSignUp && (
               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
                 <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
-                  <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
-                    <Building2 className="w-3.5 h-3.5 text-gold" />
-                  </div>
                   Business Name
                 </label>
                 <input
@@ -74,9 +83,6 @@ const BusinessLogin = () => {
 
             <div>
               <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
-                <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
-                  <Mail className="w-3.5 h-3.5 text-gold" />
-                </div>
                 Email Address
               </label>
               <input
@@ -90,9 +96,6 @@ const BusinessLogin = () => {
 
             <div>
               <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
-                <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
-                  <Lock className="w-3.5 h-3.5 text-gold" />
-                </div>
                 Password
               </label>
               <div className="relative">
@@ -101,14 +104,14 @@ const BusinessLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all pr-12"
+                  className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all pr-14"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? 'Hide' : 'Show'}
                 </button>
               </div>
             </div>
@@ -125,11 +128,24 @@ const BusinessLogin = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold hover:bg-navy-light transition-colors depth-shadow"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold hover:bg-navy-light transition-colors depth-shadow disabled:opacity-70"
             >
-              {isSignUp ? 'Create Account' : 'Sign In'}
-              <ArrowRight className="w-4 h-4" />
+              {loading ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
             </motion.button>
+
+            {!isSignUp && (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="button"
+                onClick={handleDemoLogin}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 border-2 border-gold text-gold py-3.5 rounded-xl font-semibold hover:bg-gold/10 transition-colors disabled:opacity-70"
+              >
+                Try Demo Login
+              </motion.button>
+            )}
           </form>
 
           <div className="mt-6 pt-6 border-t border-border text-center">
@@ -146,6 +162,9 @@ const BusinessLogin = () => {
         </GlassCard>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
+          Or use demo@locallink.com / demo123
+        </p>
+        <p className="text-center text-xs text-muted-foreground mt-2">
           Not a business owner?{' '}
           <Link to="/" className="text-gold hover:underline">
             Return to home

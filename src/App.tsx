@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/AuthContext";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import Directory from "./pages/Directory";
@@ -12,12 +13,14 @@ import Events from "./pages/Events";
 import SubmitBusiness from "./pages/SubmitBusiness";
 import BusinessDetail from "./pages/BusinessDetail";
 import BusinessLogin from "./pages/BusinessLogin";
+import MyFavorites from "./pages/MyFavorites";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <AuthProvider>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -31,12 +34,14 @@ const App = () => (
             <Route path="/events" element={<Events />} />
             <Route path="/submit" element={<SubmitBusiness />} />
             <Route path="/business/:id" element={<BusinessDetail />} />
+            <Route path="/favorites" element={<MyFavorites />} />
             <Route path="/login" element={<BusinessLogin />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

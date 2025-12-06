@@ -1,21 +1,20 @@
 import { ScrollFadeIn, StaggerChildren, StaggerItem, TextReveal } from '@/components/ScrollAnimations';
-import { MapPin, Tag, Users, Star, Heart, Globe, Shield, ArrowRight } from 'lucide-react';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Link } from 'react-router-dom';
 
 const stats = [
-  { icon: MapPin, value: "92+", label: "Local Businesses" },
-  { icon: Tag, value: "10", label: "Categories" },
-  { icon: Users, value: "Monthly", label: "Community Events" },
-  { icon: Star, value: "500+", label: "5-Star Reviews" },
+  { value: "100+", label: "Local Businesses" },
+  { value: "50+", label: "Active Deals" },
+  { value: "Monthly", label: "Community Events" },
+  { value: "500+", label: "5-Star Reviews" },
 ];
 
 const values = [
-  { icon: Heart, title: "Community First", desc: "Every feature we build starts with the question: does this help our neighbors connect?" },
-  { icon: Globe, title: "Local Discovery", desc: "We spotlight hidden gems so you can explore beyond the big chains." },
-  { icon: Shield, title: "Trust & Quality", desc: "Real reviews from real residents. No paid placements, no bias." },
+  { title: "Community First", desc: "Every feature we build starts with the question: does this help our neighbors connect?" },
+  { title: "Local Discovery", desc: "We spotlight hidden gems so you can explore beyond the big chains." },
+  { title: "Trust & Quality", desc: "Real reviews from real residents. No paid placements, no bias." },
 ];
 
 const About = () => {
@@ -35,19 +34,11 @@ const About = () => {
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="relative z-10 text-center px-6 max-w-3xl"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="w-16 h-16 rounded-2xl bg-gold/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6 border border-gold/30"
-          >
-            <MapPin className="w-8 h-8 text-gold" />
-          </motion.div>
           <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-4">
             About Cypress <span className="text-gold">LocalLink</span>
           </h1>
           <p className="text-primary-foreground/80 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            A community resource hub connecting Cypress, Texas residents with local businesses, events, and resources.
+            This community resource hub connects Cypress, Texas residents with local businesses, non-profits, support services, and civic programs.
           </p>
         </motion.div>
       </div>
@@ -59,9 +50,6 @@ const About = () => {
             {stats.map((stat) => (
               <StaggerItem key={stat.label}>
                 <GlassCard glow hover3d className="p-8 text-center">
-                  <div className="w-12 h-12 rounded-xl bg-gold/15 flex items-center justify-center mx-auto mb-4">
-                    <stat.icon className="w-6 h-6 text-gold" />
-                  </div>
                   <div className="text-3xl md:text-4xl font-bold text-gold font-display mb-1">{stat.value}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </GlassCard>
@@ -86,9 +74,6 @@ const About = () => {
             {values.map((v) => (
               <StaggerItem key={v.title}>
                 <GlassCard glow hover3d className="p-8 h-full">
-                  <div className="w-14 h-14 rounded-2xl bg-navy-gradient flex items-center justify-center mb-6">
-                    <v.icon className="w-7 h-7 text-gold" />
-                  </div>
                   <h3 className="font-display text-xl font-bold text-foreground mb-3">{v.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{v.desc}</p>
                 </GlassCard>
@@ -222,7 +207,7 @@ const About = () => {
                 to="/directory"
                 className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-full font-semibold hover:bg-navy-light transition-colors depth-shadow"
               >
-                Browse Directory <ArrowRight className="w-4 h-4" />
+                Browse Directory
               </Link>
               <Link
                 to="/submit"

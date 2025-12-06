@@ -1,10 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
-import { Star, MapPin, Phone, Clock, DollarSign, ArrowLeft, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
 import { businesses } from '@/data/businessData';
 import { ScrollFadeIn, StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
+import { useAuth } from '@/hooks/AuthContext';
+import { useFavorites } from '@/hooks/useFavorites';
+import { Heart } from 'lucide-react';
 
 const generateReviews = (bizId: string, bizName: string) => {
   const reviewTemplates = [
@@ -39,6 +41,8 @@ const hoursData = [
 
 const BusinessDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const { isFavorite, toggle } = useFavorites(user?.id ?? null);
   const biz = businesses.find(b => b.id === id);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
@@ -46,9 +50,6 @@ const BusinessDetail = () => {
     return (
       <div className="pt-20 pb-16 min-h-screen flex items-center justify-center bg-background">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-            <MapPin className="w-8 h-8 text-muted-foreground" />
-          </div>
           <h1 className="font-display text-3xl font-bold text-foreground mb-4">Business Not Found</h1>
           <Link to="/directory" className="text-gold font-semibold hover:underline">← Back to Directory</Link>
         </motion.div>
@@ -83,7 +84,7 @@ const BusinessDetail = () => {
             onClick={() => setGalleryIndex(i => (i - 1 + images.length) % images.length)}
             className="p-2 rounded-xl glass text-foreground hover:bg-card transition-colors depth-shadow"
           >
-            <ChevronLeft className="w-4 h-4" />
+            ←
           </motion.button>
           <div className="flex gap-2">
             {images.map((_, i) => (
@@ -96,7 +97,7 @@ const BusinessDetail = () => {
             onClick={() => setGalleryIndex(i => (i + 1) % images.length)}
             className="p-2 rounded-xl glass text-foreground hover:bg-card transition-colors depth-shadow"
           >
-            <ChevronRight className="w-4 h-4" />
+            →
           </motion.button>
         </div>
 
@@ -107,7 +108,7 @@ const BusinessDetail = () => {
           className="absolute top-4 left-4"
         >
           <Link to="/directory" className="flex items-center gap-2 glass text-foreground px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-card transition-colors depth-shadow">
-            <ArrowLeft className="w-4 h-4" /> Directory
+            ← Directory
           </Link>
         </motion.div>
       </div>
@@ -130,11 +131,23 @@ const BusinessDetail = () => {
                 <p className="text-muted-foreground text-lg leading-relaxed max-w-xl">{biz.description}</p>
               </div>
               <div className="flex flex-col items-start md:items-end gap-3 flex-shrink-0">
-                <div className="flex items-center gap-1.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={`w-5 h-5 ${i < Math.round(biz.rating) ? 'text-gold fill-gold' : 'text-border'}`} />
-                  ))}
-                  <span className="text-foreground font-bold text-lg ml-1">{biz.rating}</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-foreground font-bold text-lg">{biz.rating}/5</span>
+                  {user && (
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => toggle(biz.id)}
+                      className={`p-2 rounded-full transition-colors ${
+                        isFavorite(biz.id)
+                          ? 'bg-red-100 text-red-600'
+                          : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                      }`}
+                      aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                    >
+                      <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} />
+                    </motion.button>
+                  )}
                 </div>
                 <span className="text-sm text-muted-foreground">{biz.reviewCount} reviews</span>
               </div>
@@ -142,15 +155,12 @@ const BusinessDetail = () => {
 
             <div className="mt-6 pt-6 border-t border-border grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { icon: MapPin, text: `${biz.address}, Cypress, TX` },
-                { icon: DollarSign, text: `${biz.priceRange} Price Range` },
-                { icon: Clock, text: biz.isOpen ? 'Open Now' : 'Closed' },
-                ...(biz.phone ? [{ icon: Phone, text: biz.phone }] : []),
+                { text: `${biz.address}, Cypress, TX` },
+                { text: `${biz.priceRange} Price Range` },
+                { text: biz.isOpen ? 'Open Now' : 'Closed' },
+                ...(biz.phone ? [{ text: biz.phone }] : []),
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3 text-sm bg-muted/50 rounded-xl px-4 py-3">
-                  <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-4 h-4 text-gold" />
-                  </div>
                   <span className="text-foreground">{item.text}</span>
                 </div>
               ))}
@@ -186,7 +196,6 @@ const BusinessDetail = () => {
                   Reviews <span className="text-muted-foreground text-lg font-normal">({reviews.length})</span>
                 </h2>
                 <div className="flex items-center gap-1.5 bg-gold/10 px-3 py-1.5 rounded-full">
-                  <Star className="w-4 h-4 text-gold fill-gold" />
                   <span className="text-sm font-bold text-gold">{avgRating}</span>
                 </div>
               </div>
@@ -205,9 +214,7 @@ const BusinessDetail = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-0.5">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? 'text-gold fill-gold' : 'text-border'}`} />
-                          ))}
+                          <span className="text-sm text-muted-foreground">{review.rating}/5</span>
                         </div>
                       </div>
                       <p className="text-sm text-foreground/80 leading-relaxed">{review.text}</p>
@@ -222,9 +229,7 @@ const BusinessDetail = () => {
           <div className="space-y-6">
             <ScrollFadeIn>
               <GlassCard glow className="p-5">
-                <h3 className="font-display text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-gold" /> Business Hours
-                </h3>
+                <h3 className="font-display text-lg font-bold text-foreground mb-4">Business Hours</h3>
                 <div className="space-y-1">
                   {hoursData.map((h) => {
                     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -248,9 +253,6 @@ const BusinessDetail = () => {
                   className="block bg-muted rounded-xl h-44 flex items-center justify-center group hover:bg-muted/80 transition-colors"
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground group-hover:text-gold transition-colors">
-                    <motion.div whileHover={{ y: -4 }}>
-                      <MapPin className="w-10 h-10" />
-                    </motion.div>
                     <span className="text-sm font-medium">View on Map →</span>
                   </div>
                 </Link>
@@ -264,8 +266,7 @@ const BusinessDetail = () => {
                 to="/directory"
                 className="flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold hover:bg-navy-light transition-colors depth-shadow"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Directory
+                ← Back to Directory
               </Link>
             </ScrollFadeIn>
           </div>

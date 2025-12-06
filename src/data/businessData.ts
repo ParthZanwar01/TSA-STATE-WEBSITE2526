@@ -34,24 +34,33 @@ export interface Event {
   location: string;
 }
 
+export interface Deal {
+  id: string;
+  business_id: string;
+  title: string;
+  description: string;
+  discount: string;
+  valid_until: string;
+}
+
 export const categories = [
-  { name: "Food & Dining", icon: "🍽️", slug: "Restaurant", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop" },
-  { name: "Retail", icon: "🛍️", slug: "Retail", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop" },
-  { name: "Health & Fitness", icon: "💪", slug: "Health & Fitness", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop" },
-  { name: "Services", icon: "🔧", slug: "Services", image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&h=300&fit=crop" },
-  { name: "Automotive", icon: "🚗", slug: "Automotive", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop" },
-  { name: "Beauty & Spa", icon: "💆", slug: "Beauty & Spa", image: "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=400&h=300&fit=crop" },
-  { name: "Non-Profits", icon: "🤝", slug: "Non-Profit", image: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=300&fit=crop" },
-  { name: "Entertainment", icon: "🎭", slug: "Entertainment", image: "https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=400&h=300&fit=crop" },
-  { name: "Home & Garden", icon: "🏡", slug: "Home & Garden", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop" },
-  { name: "Education", icon: "📚", slug: "Education", image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop" },
+  { name: "Food & Dining", slug: "Restaurant", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop" },
+  { name: "Retail", slug: "Retail", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop" },
+  { name: "Health & Fitness", slug: "Health & Fitness", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop" },
+  { name: "Services", slug: "Services", image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&h=300&fit=crop" },
+  { name: "Automotive", slug: "Automotive", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop" },
+  { name: "Beauty & Spa", slug: "Beauty & Spa", image: "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=400&h=300&fit=crop" },
+  { name: "Non-Profits", slug: "Non-Profit", image: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=300&fit=crop" },
+  { name: "Entertainment", slug: "Entertainment", image: "https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=400&h=300&fit=crop" },
+  { name: "Home & Garden", slug: "Home & Garden", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop" },
+  { name: "Education", slug: "Education", image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop" },
 ];
 
 export const businesses: Business[] = [
   // ── RESTAURANTS (20) ──
-  { id: "biz_rest_001", name: "Ambriza Social Mexican Kitchen", category: "Restaurant", rating: 4.8, reviewCount: 8, address: "Towne Lake Boardwalk", description: "Authentic Mexican flavors with a modern twist and lakeside views.", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9691, lng: -95.6977 },
-  { id: "biz_rest_002", name: "The Union Kitchen", category: "Restaurant", rating: 4.7, reviewCount: 12, address: "Towne Lake Boardwalk", description: "American comfort food with a Southern flair. Brunch favorites and craft cocktails.", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9695, lng: -95.6980 },
-  { id: "biz_rest_003", name: "Crumbl Cookies", category: "Restaurant", rating: 4.9, reviewCount: 24, address: "Towne Lake Boardwalk", description: "The world's best cookies. Rotating menu of fresh baked gourmet cookies.", image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9688, lng: -95.6973 },
+  { id: "biz_rest_001", name: "Ambriza Social Mexican Kitchen", category: "Restaurant", rating: 4.8, reviewCount: 487, address: "Towne Lake Boardwalk", description: "Authentic Mexican flavors with a modern twist and lakeside views.", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9691, lng: -95.6977, phone: "(281) 888-9999" },
+  { id: "biz_rest_002", name: "The Union Kitchen", category: "Restaurant", rating: 4.8, reviewCount: 345, address: "Towne Lake Boardwalk", description: "Neighborhood favorite serving American classics for brunch, lunch, and dinner. Great patio seating.", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9695, lng: -95.6980, phone: "(281) 123-4567" },
+  { id: "biz_rest_003", name: "Crumbl Cookies", category: "Restaurant", rating: 4.9, reviewCount: 528, address: "Towne Lake Boardwalk", description: "The world's best cookies. Rotating menu of fresh baked gourmet cookies.", image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9688, lng: -95.6973, phone: "(281) 555-0199" },
   { id: "biz_rest_004", name: "BBQ Pit Masters", category: "Restaurant", rating: 4.7, reviewCount: 16, address: "369 Smoke Ring Road", description: "Slow-smoked Texas BBQ. Brisket, ribs, sausage and all the fixings.", image: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9710, lng: -95.6950 },
   { id: "biz_rest_005", name: "Burger Barn", category: "Restaurant", rating: 4.5, reviewCount: 20, address: "789 Patty Lane", description: "Gourmet burgers made with local grass-fed beef. Craft shakes and loaded fries.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9675, lng: -95.6990 },
   { id: "biz_rest_006", name: "Mod Pizza", category: "Restaurant", rating: 4.3, reviewCount: 18, address: "Towne Lake Boardwalk", description: "Build your own artisan-style pizza with unlimited toppings.", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9693, lng: -95.6975 },
@@ -71,7 +80,7 @@ export const businesses: Business[] = [
   { id: "biz_rest_020", name: "Frozen Bliss Ice Cream", category: "Restaurant", rating: 4.7, reviewCount: 33, address: "123 Dessert Drive", description: "Handcrafted small-batch ice cream. Unique flavors rotating weekly.", image: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9685, lng: -95.6972 },
 
   // ── RETAIL (12) ──
-  { id: "biz_ret_001", name: "Artisan Crafts Market", category: "Retail", rating: 4.8, reviewCount: 13, address: "678 Maker Way", description: "Handmade crafts from local artisans. Pottery, textiles, jewelry, and home decor.", image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9685, lng: -95.6965 },
+  { id: "biz_ret_001", name: "The Book Corner", category: "Retail", rating: 4.9, reviewCount: 67, address: "789 Elm Street, Arts District", description: "Independent bookstore featuring local authors, rare finds, and weekly reading events. Coffee corner inside.", image: "https://images.unsplash.com/photo-1526243741027-444d633d7365?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9685, lng: -95.6965, phone: "(555) 345-6789" },
   { id: "biz_ret_002", name: "Cozy Corner Bookstore", category: "Retail", rating: 4.6, reviewCount: 9, address: "321 Reader Lane", description: "Independent bookstore with curated selection and cozy reading nooks.", image: "https://images.unsplash.com/photo-1526243741027-444d633d7365?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9678, lng: -95.6985 },
   { id: "biz_ret_003", name: "Cypress Flower Market", category: "Retail", rating: 4.7, reviewCount: 16, address: "456 Bloom Street", description: "Fresh flowers, arrangements, and plants. Wedding and event floristry.", image: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9700, lng: -95.6958 },
   { id: "biz_ret_004", name: "Pet Paradise", category: "Retail", rating: 4.5, reviewCount: 22, address: "789 Furry Friend Lane", description: "Premium pet supplies, grooming, and adoption events. All natural foods.", image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9715, lng: -95.6932 },
@@ -85,7 +94,7 @@ export const businesses: Business[] = [
   { id: "biz_ret_012", name: "Cypress Wine & Spirits", category: "Retail", rating: 4.7, reviewCount: 25, address: "567 Vineyard Blvd", description: "Curated wine selection, craft spirits, and weekly tasting events.", image: "https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9695, lng: -95.6952 },
 
   // ── HEALTH & FITNESS (10) ──
-  { id: "biz_fit_001", name: "Club Pilates", category: "Health & Fitness", rating: 4.8, reviewCount: 18, address: "Towne Lake Boardwalk", description: "Full-body Pilates workout. Reformer classes for all levels.", image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9692, lng: -95.6982 },
+  { id: "biz_fit_001", name: "Club Pilates", category: "Health & Fitness", rating: 4.8, reviewCount: 156, address: "Towne Lake Boardwalk", description: "Premium reformer-based pilates training for all fitness levels. Restore your body and mind.", image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9692, lng: -95.6982, phone: "(281) 234-5678" },
   { id: "biz_fit_002", name: "Aqua Fitness Center", category: "Health & Fitness", rating: 4.4, reviewCount: 22, address: "222 Splash Lane", description: "Olympic-size pool, water aerobics, and swim lessons.", image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9700, lng: -95.6960 },
   { id: "biz_fit_003", name: "CrossFit Cypress", category: "Health & Fitness", rating: 4.7, reviewCount: 15, address: "333 WOD Way", description: "High-intensity functional fitness. Experienced coaches, all skill levels.", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9708, lng: -95.6940 },
   { id: "biz_fit_004", name: "Yoga Garden Studio", category: "Health & Fitness", rating: 4.9, reviewCount: 26, address: "456 Zen Path", description: "Vinyasa, hot yoga, and meditation classes. Serene garden setting.", image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9665, lng: -95.7005 },
@@ -97,7 +106,7 @@ export const businesses: Business[] = [
   { id: "biz_fit_010", name: "Mind & Body Wellness", category: "Health & Fitness", rating: 4.8, reviewCount: 9, address: "456 Harmony Lane", description: "Holistic health services. Acupuncture, nutrition, and wellness coaching.", image: "https://images.unsplash.com/photo-1600618528240-fb9fc964b853?w=600&h=400&fit=crop", priceRange: "$$$", isOpen: true, lat: 29.9712, lng: -95.6932 },
 
   // ── BEAUTY & SPA (8) ──
-  { id: "biz_beauty_001", name: "Bella Hair Studio", category: "Beauty & Spa", rating: 4.8, reviewCount: 15, address: "567 Fashion Ave", description: "Full-service salon. Cuts, color, extensions, and bridal styling.", image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9680, lng: -95.6970 },
+  { id: "biz_beauty_001", name: "Bella Hair Studio", category: "Beauty & Spa", rating: 4.8, reviewCount: 156, address: "567 Fashion Ave", description: "Full-service hair salon offering cuts, color, styling, and spa treatments. Award-winning stylists.", image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9680, lng: -95.6970, phone: "(555) 567-8901" },
   { id: "biz_beauty_002", name: "Zen Day Spa", category: "Beauty & Spa", rating: 4.7, reviewCount: 11, address: "890 Serenity Blvd", description: "Relaxation and rejuvenation. Massages, facials, and body treatments.", image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=400&fit=crop", priceRange: "$$$", isOpen: true, lat: 29.9705, lng: -95.6955 },
   { id: "biz_beauty_003", name: "Nails by Nicole", category: "Beauty & Spa", rating: 4.6, reviewCount: 23, address: "123 Polish Place", description: "Manicures, pedicures, and nail art. Clean, relaxing atmosphere.", image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9670, lng: -95.6998 },
   { id: "biz_beauty_004", name: "Glow Skin Bar", category: "Beauty & Spa", rating: 4.8, reviewCount: 10, address: "456 Radiance Road", description: "Advanced skincare treatments. Facials, peels, and microneedling.", image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&h=400&fit=crop", priceRange: "$$$", isOpen: true, lat: 29.9698, lng: -95.6945 },
@@ -107,7 +116,7 @@ export const businesses: Business[] = [
   { id: "biz_beauty_008", name: "Color Me Beautiful Salon", category: "Beauty & Spa", rating: 4.6, reviewCount: 19, address: "890 Style Street", description: "Hair color specialists. Balayage, highlights, and vivid color experts.", image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9708, lng: -95.6942 },
 
   // ── AUTOMOTIVE (7) ──
-  { id: "biz_auto_001", name: "Classic Car Restoration", category: "Automotive", rating: 4.9, reviewCount: 7, address: "876 Vintage Way", description: "Vintage car restoration specialists. Full restorations, parts sourcing, and maintenance.", image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop", priceRange: "$$$", isOpen: true, lat: 29.9715, lng: -95.6945 },
+  { id: "biz_auto_001", name: "Premier Auto Care", category: "Automotive", rating: 4.6, reviewCount: 112, address: "321 Industrial Blvd", description: "Trusted auto repair and maintenance. ASE certified mechanics, fair prices, and honest service since 1998.", image: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9715, lng: -95.6945, phone: "(555) 456-7890" },
   { id: "biz_auto_002", name: "Cypress Auto Care", category: "Automotive", rating: 4.6, reviewCount: 32, address: "123 Motor Lane", description: "Full-service auto repair and maintenance. ASE certified mechanics.", image: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9668, lng: -95.7000 },
   { id: "biz_auto_003", name: "Express Oil Change", category: "Automotive", rating: 4.3, reviewCount: 45, address: "456 Quick Lube Drive", description: "Fast oil changes and basic maintenance. No appointment needed.", image: "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9700, lng: -95.6955 },
   { id: "biz_auto_004", name: "Sparkle Car Wash", category: "Automotive", rating: 4.4, reviewCount: 38, address: "789 Clean Street", description: "Full-service car wash and detailing. Monthly unlimited plans available.", image: "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=600&h=400&fit=crop", priceRange: "$", isOpen: true, lat: 29.9682, lng: -95.6980 },
@@ -128,7 +137,7 @@ export const businesses: Business[] = [
   { id: "biz_svc_010", name: "Sparks Electric Co.", category: "Services", rating: 4.6, reviewCount: 15, address: "456 Watt Drive", description: "Residential electrical services. Panel upgrades, lighting, and smart home.", image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&h=400&fit=crop", priceRange: "$$", isOpen: true, lat: 29.9678, lng: -95.6985 },
 
   // ── NON-PROFITS (8) ──
-  { id: "biz_np_001", name: "Cypress Community Food Bank", category: "Non-Profit", rating: 4.9, reviewCount: 30, address: "100 Community Way", description: "Free food pantry and emergency groceries for Cypress residents in need.", image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&h=400&fit=crop", priceRange: "Free", isOpen: true, lat: 29.9670, lng: -95.7000 },
+  { id: "biz_np_001", name: "Cypress Community Food Bank", category: "Non-Profit", rating: 4.9, reviewCount: 89, address: "100 Community Way", description: "Free food pantry and emergency groceries for Cypress residents in need. Volunteer-run, open weekly.", image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&h=400&fit=crop", priceRange: "Free", isOpen: true, lat: 29.9670, lng: -95.7000, phone: "(281) 555-0100" },
   { id: "biz_np_002", name: "Cypress Youth Foundation", category: "Non-Profit", rating: 4.8, reviewCount: 14, address: "234 Youth Way", description: "After-school programs, mentoring, and scholarships for Cypress youth.", image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop", priceRange: "Free", isOpen: true, lat: 29.9695, lng: -95.6962 },
   { id: "biz_np_003", name: "Habitat for Humanity Cypress", category: "Non-Profit", rating: 4.9, reviewCount: 18, address: "567 Build Hope Lane", description: "Building affordable homes and community. Volunteer and donate.", image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&h=400&fit=crop", priceRange: "Free", isOpen: true, lat: 29.9712, lng: -95.6938 },
   { id: "biz_np_004", name: "Cypress Animal Rescue", category: "Non-Profit", rating: 4.7, reviewCount: 25, address: "890 Rescue Road", description: "Animal rescue and adoption. Foster programs and community education.", image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=400&fit=crop", priceRange: "Free", isOpen: true, lat: 29.9662, lng: -95.7010 },
@@ -162,22 +171,44 @@ export const businesses: Business[] = [
 ];
 
 export const reviews: Review[] = [
-  { id: "r1", author: "Sarah Johnson", initials: "SJ", date: "Oct 12, 2023", text: "The sunset views at the Boardwalk are unmatched. Ambriza is our go-to spot!", rating: 5 },
-  { id: "r2", author: "Mike Davis", initials: "MD", date: "Nov 05, 2023", text: "Love the live music on weekends. Great atmosphere for the whole family.", rating: 5 },
-  { id: "r3", author: "Emily Chen", initials: "EC", date: "Dec 01, 2023", text: "Club Pilates changed my life. The instructors are amazing.", rating: 5 },
-  { id: "r4", author: "David Wilson", initials: "DW", date: "Jan 15, 2024", text: "Great place to hang out, though parking can get busy on Friday nights.", rating: 4 },
-  { id: "r5", author: "Jessica Taylor", initials: "JT", date: "Feb 02, 2024", text: "Crumbl Cookies is dangerous! In the best way possible.", rating: 5 },
-  { id: "r6", author: "Robert Martinez", initials: "RM", date: "Feb 20, 2024", text: "The green space is perfect for kids to run around while we eat.", rating: 5 },
-  { id: "r7", author: "Amanda White", initials: "AW", date: "Mar 10, 2024", text: "Union Kitchen never disappoints. The patio seating is lovely.", rating: 5 },
-  { id: "r8", author: "Chris Brown", initials: "CB", date: "Mar 25, 2024", text: "Nice variety of shops and restaurants. Always clean and safe.", rating: 4 },
-  { id: "r9", author: "Jennifer Lee", initials: "JL", date: "Apr 05, 2024", text: "The holiday events here are spectacular. My kids love it.", rating: 5 },
+  { id: "r1", author: "Sarah Johnson", initials: "SJ", date: "Oct 12, 2024", text: "The sunset views at the Boardwalk are unmatched. Ambriza is our go-to spot!", rating: 5 },
+  { id: "r2", author: "Mike Davis", initials: "MD", date: "Nov 05, 2024", text: "Love the live music on weekends. Great atmosphere for the whole family.", rating: 5 },
+  { id: "r3", author: "Emily Chen", initials: "EC", date: "Dec 01, 2024", text: "Club Pilates changed my life. The instructors are amazing.", rating: 5 },
+  { id: "r4", author: "David Wilson", initials: "DW", date: "Jan 15, 2025", text: "Great place to hang out, though parking can get busy on Friday nights.", rating: 4 },
+  { id: "r5", author: "Jessica Taylor", initials: "JT", date: "Feb 02, 2025", text: "Crumbl Cookies is dangerous! In the best way possible.", rating: 5 },
+  { id: "r6", author: "Robert Martinez", initials: "RM", date: "Feb 20, 2025", text: "The green space is perfect for kids to run around while we eat.", rating: 5 },
+  { id: "r7", author: "Amanda White", initials: "AW", date: "Mar 10, 2025", text: "Union Kitchen never disappoints. The patio seating is lovely.", rating: 5 },
+  { id: "r8", author: "Chris Brown", initials: "CB", date: "Mar 25, 2025", text: "Nice variety of shops and restaurants. Always clean and safe.", rating: 4 },
+  { id: "r9", author: "Jennifer Lee", initials: "JL", date: "Apr 05, 2025", text: "The holiday events here are spectacular. My kids love it.", rating: 5 },
+  { id: "r10", author: "Sarah M.", initials: "SM", date: "Jan 10, 2025", text: "Absolutely fantastic experience! Will definitely come back.", rating: 5 },
+  { id: "r11", author: "John D.", initials: "JD", date: "Feb 15, 2025", text: "Great service and friendly staff. Highly recommended!", rating: 5 },
+  { id: "r12", author: "Emily R.", initials: "ER", date: "Mar 01, 2025", text: "The Cypress Community Food Bank does amazing work for our community.", rating: 5 },
 ];
 
 export const events: Event[] = [
-  { id: "e1", title: "Library Story Time & Crafts", date: "2026-02-24", day: "24", month: "Feb", time: "10:30 AM", location: "Cypress Public Library" },
-  { id: "e2", title: "Yoga in the Park", date: "2026-02-25", day: "25", month: "Feb", time: "7:00 AM", location: "Sunrise Park" },
-  { id: "e3", title: "Downtown Farmers Market", date: "2026-02-26", day: "26", month: "Feb", time: "8:00 AM", location: "Main Street Plaza" },
-  { id: "e4", title: "Community Blood Drive", date: "2026-02-27", day: "27", month: "Feb", time: "9:00 AM", location: "Cypress Community Center" },
-  { id: "e5", title: "Local Art Walk", date: "2026-02-28", day: "28", month: "Feb", time: "5:00 PM", location: "Arts District" },
-  { id: "e6", title: "Live Music at the Bandshell", date: "2026-03-01", day: "1", month: "Mar", time: "7:00 PM", location: "Memorial Bandshell" },
+  { id: "evt_001", title: "Downtown Farmers Market", date: "2026-03-01", day: "1", month: "Mar", time: "8:00 AM", location: "Main Street Plaza" },
+  { id: "evt_002", title: "Small Business Networking Mixer", date: "2026-03-05", day: "5", month: "Mar", time: "6:00 PM", location: "Community Center" },
+  { id: "evt_003", title: "Outdoor Movie Night", date: "2026-03-08", day: "8", month: "Mar", time: "8:00 PM", location: "Central Park" },
+  { id: "evt_004", title: "Community Cleanup Day", date: "2026-03-12", day: "12", month: "Mar", time: "9:00 AM", location: "Various Locations" },
+  { id: "evt_005", title: "Local Art Walk", date: "2026-03-03", day: "3", month: "Mar", time: "5:00 PM", location: "Arts District" },
+  { id: "evt_006", title: "Food Truck Festival", date: "2026-03-19", day: "19", month: "Mar", time: "11:00 AM", location: "Riverside Park" },
+  { id: "evt_007", title: "Yoga in the Park", date: "2026-02-28", day: "28", month: "Feb", time: "7:00 AM", location: "Sunrise Park" },
+  { id: "evt_008", title: "Kids Coding Workshop", date: "2026-03-10", day: "10", month: "Mar", time: "10:00 AM", location: "Cypress Public Library" },
+  { id: "evt_009", title: "Live Music at the Bandshell", date: "2026-03-04", day: "4", month: "Mar", time: "7:00 PM", location: "Memorial Bandshell" },
+  { id: "evt_010", title: "Pet Adoption Event", date: "2026-03-06", day: "6", month: "Mar", time: "10:00 AM", location: "Happy Paws Pet Store" },
+  { id: "evt_011", title: "Community Blood Drive", date: "2026-03-02", day: "2", month: "Mar", time: "9:00 AM", location: "Cypress Community Center" },
+  { id: "evt_012", title: "Neighborhood Watch Meeting", date: "2026-03-07", day: "7", month: "Mar", time: "7:00 PM", location: "Cypress Town Hall" },
+  { id: "evt_013", title: "Library Story Time & Crafts", date: "2026-03-01", day: "1", month: "Mar", time: "10:30 AM", location: "Cypress Public Library" },
+];
+
+// Deals from FBLA (subset for display)
+export const deals: Deal[] = [
+  { id: "deal_001", business_id: "biz_rest_001", title: "20% Off Breakfast", description: "Start your day right! Get 20% off any breakfast item before 10 AM.", discount: "20%", valid_until: "2026-04-01" },
+  { id: "deal_002", business_id: "biz_fit_001", title: "First Month Free", description: "New members get their first month absolutely free. No commitment required.", discount: "100% First Month", valid_until: "2026-04-15" },
+  { id: "deal_003", business_id: "biz_ret_001", title: "Buy 2 Get 1 Free", description: "Purchase any two books and get a third book of equal or lesser value free.", discount: "Buy 2 Get 1", valid_until: "2026-03-15" },
+  { id: "deal_004", business_id: "biz_auto_001", title: "$25 Off Oil Change", description: "Full synthetic oil change at a discounted price. Includes filter and inspection.", discount: "$25 Off", valid_until: "2026-04-30" },
+  { id: "deal_005", business_id: "biz_beauty_001", title: "15% Off First Visit", description: "New clients receive 15% off any service. Haircuts, color, or spa treatments.", discount: "15%", valid_until: "2026-05-01" },
+  { id: "deal_006", business_id: "biz_rest_002", title: "Family Deal - $5 Off", description: "Get $5 off any large pizza with purchase of a family meal deal.", discount: "$5 Off", valid_until: "2026-03-20" },
+  { id: "deal_007", business_id: "biz_np_001", title: "Volunteer & Donate", description: "Support the Cypress Community Food Bank. Volunteer hours and donations welcome.", discount: "Community", valid_until: "2026-12-31" },
+  { id: "deal_008", business_id: "biz_np_004", title: "Adoption Fee Waived", description: "Adoption fees waived this month for cats and dogs. Find your new best friend!", discount: "Free Adoption", valid_until: "2026-03-31" },
 ];

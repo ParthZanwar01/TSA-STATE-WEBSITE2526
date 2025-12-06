@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircleQuestion, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FAQItem {
@@ -80,7 +79,7 @@ export const FAQWidget = () => {
         )}
         title="Frequently Asked Questions"
       >
-        {isOpen ? <X className="w-6 h-6" /> : <MessageCircleQuestion className="w-6 h-6" />}
+        {isOpen ? '×' : '?'}
       </motion.button>
 
       {/* Panel */}
@@ -136,7 +135,7 @@ export const FAQWidget = () => {
                         transition={{ duration: 0.2 }}
                         className="flex-shrink-0 mt-0.5"
                       >
-                        <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">∨</span>
                       </motion.div>
                     </button>
                     <AnimatePresence>

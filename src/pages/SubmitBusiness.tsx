@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
-import { MapPin, Phone, Clock, DollarSign, Tag, FileText, Building2, CheckCircle, Send, RotateCcw } from 'lucide-react';
 import { categories } from '@/data/businessData';
 import { toast } from '@/hooks/use-toast';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
@@ -64,14 +63,6 @@ const SubmitBusiness = () => {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center max-w-md"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring' }}
-            className="w-20 h-20 rounded-2xl bg-gold/20 flex items-center justify-center mx-auto mb-6"
-          >
-            <CheckCircle className="w-10 h-10 text-gold" />
-          </motion.div>
           <h1 className="font-display text-4xl font-bold text-foreground mb-3">Thank You!</h1>
           <p className="text-muted-foreground text-lg mb-8">
             Your business has been submitted for review. We'll reach out to <strong className="text-foreground">{form.ownerEmail}</strong> once it's approved.
@@ -90,15 +81,12 @@ const SubmitBusiness = () => {
   const inputClass = (field: keyof BusinessForm) =>
     `w-full px-4 py-3 rounded-xl border text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all ${errors[field] ? 'border-destructive ring-1 ring-destructive/30' : 'border-border'}`;
 
-  const Field = ({ label, field, icon: Icon, type = 'text', placeholder, required = false, children }: {
-    label: string; field: keyof BusinessForm; icon: React.ElementType; type?: string;
+  const Field = ({ label, field, type = 'text', placeholder, required = false, children }: {
+    label: string; field: keyof BusinessForm; type?: string;
     placeholder?: string; required?: boolean; children?: React.ReactNode;
   }) => (
     <div>
       <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
-        <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
-          <Icon className="w-3.5 h-3.5 text-gold" />
-        </div>
         {label} {required && <span className="text-destructive">*</span>}
       </label>
       {children || (
@@ -135,14 +123,6 @@ const SubmitBusiness = () => {
             transition={{ duration: 0.7 }}
             className="max-w-3xl mx-auto relative z-10"
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-              className="w-14 h-14 rounded-2xl bg-gold/20 backdrop-blur-sm flex items-center justify-center mb-5 border border-gold/30"
-            >
-              <Building2 className="w-7 h-7 text-gold" />
-            </motion.div>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
               Submit Your <span className="text-gold">Business</span>
             </h1>
@@ -156,18 +136,15 @@ const SubmitBusiness = () => {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Business Info */}
             <GlassCard glow className="p-6 md:p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-navy-gradient flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-gold" />
-                </div>
+              <div className="mb-6">
                 <h2 className="font-display text-xl font-bold text-foreground">Business Information</h2>
               </div>
 
               <div className="space-y-5">
-                <Field label="Business Name" field="name" icon={Building2} placeholder="e.g. Cypress Coffee Co." required />
+                <Field label="Business Name" field="name" placeholder="e.g. Cypress Coffee Co." required />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Category" field="category" icon={Tag} required>
+                  <Field label="Category" field="category" required>
                     <select
                       value={form.category}
                       onChange={e => update('category', e.target.value)}
@@ -180,7 +157,7 @@ const SubmitBusiness = () => {
                     </select>
                   </Field>
 
-                  <Field label="Price Range" field="priceRange" icon={DollarSign} required>
+                  <Field label="Price Range" field="priceRange" required>
                     <select
                       value={form.priceRange}
                       onChange={e => update('priceRange', e.target.value)}
@@ -195,16 +172,16 @@ const SubmitBusiness = () => {
                   </Field>
                 </div>
 
-                <Field label="Address" field="address" icon={MapPin} placeholder="e.g. 123 Main Street, Cypress, TX" required />
+                <Field label="Address" field="address" placeholder="e.g. 123 Main Street, Cypress, TX" required />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Phone Number" field="phone" icon={Phone} type="tel" placeholder="(281) 555-0123" />
-                  <Field label="Website" field="website" icon={FileText} type="url" placeholder="https://yourbusiness.com" />
+                  <Field label="Phone Number" field="phone" type="tel" placeholder="(281) 555-0123" />
+                  <Field label="Website" field="website" type="url" placeholder="https://yourbusiness.com" />
                 </div>
 
-                <Field label="Business Hours" field="hours" icon={Clock} placeholder="e.g. Mon-Fri 9am-6pm, Sat 10am-4pm" />
+                <Field label="Business Hours" field="hours" placeholder="e.g. Mon-Fri 9am-6pm, Sat 10am-4pm" />
 
-                <Field label="Description" field="description" icon={FileText} required>
+                <Field label="Description" field="description" required>
                   <textarea
                     value={form.description}
                     onChange={e => update('description', e.target.value)}
@@ -228,19 +205,16 @@ const SubmitBusiness = () => {
 
             {/* Owner Info */}
             <GlassCard glow className="p-6 md:p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-navy-gradient flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-gold" />
-                </div>
+              <div className="mb-6">
                 <h2 className="font-display text-xl font-bold text-foreground">Owner / Contact</h2>
               </div>
               <div className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Your Name" field="ownerName" icon={Building2} placeholder="Full name" required />
-                  <Field label="Email Address" field="ownerEmail" icon={FileText} type="email" placeholder="you@email.com" required />
+                  <Field label="Your Name" field="ownerName" placeholder="Full name" required />
+                  <Field label="Email Address" field="ownerEmail" type="email" placeholder="you@email.com" required />
                 </div>
                 <p className="text-xs text-muted-foreground bg-muted/50 rounded-lg px-4 py-3">
-                  🔒 Your contact info is kept private and used only for listing verification.
+                  Your contact info is kept private and used only for listing verification.
                 </p>
               </div>
             </GlassCard>
@@ -253,7 +227,6 @@ const SubmitBusiness = () => {
                 onClick={() => { setForm(initialForm); setErrors({}); }}
                 className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border-2 border-border text-muted-foreground font-semibold hover:border-foreground hover:text-foreground transition-colors"
               >
-                <RotateCcw className="w-4 h-4" />
                 Reset Form
               </motion.button>
               <motion.button
@@ -262,7 +235,6 @@ const SubmitBusiness = () => {
                 type="submit"
                 className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-xl font-semibold hover:bg-navy-light transition-colors depth-shadow"
               >
-                <Send className="w-4 h-4" />
                 Submit Business
               </motion.button>
             </div>

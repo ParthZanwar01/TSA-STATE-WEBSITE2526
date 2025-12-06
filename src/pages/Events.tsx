@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { events } from '@/data/businessData';
-import { Clock, MapPin, CalendarDays, List, Sparkles } from 'lucide-react';
 import { StaggerChildren, StaggerItem, ScrollFadeIn } from '@/components/ScrollAnimations';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
@@ -40,14 +39,6 @@ const Events = () => {
           >
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
               <div>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                  className="w-14 h-14 rounded-2xl bg-gold/20 backdrop-blur-sm flex items-center justify-center mb-5 border border-gold/30"
-                >
-                  <Sparkles className="w-7 h-7 text-gold" />
-                </motion.div>
                 <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
                   Community <span className="text-gold">Events</span>
                 </h1>
@@ -64,7 +55,6 @@ const Events = () => {
                       : 'text-primary-foreground/70 hover:text-primary-foreground'
                   )}
                 >
-                  <List className="w-4 h-4" />
                   <span className="hidden sm:inline">List</span>
                 </button>
                 <button
@@ -76,7 +66,6 @@ const Events = () => {
                       : 'text-primary-foreground/70 hover:text-primary-foreground'
                   )}
                 >
-                  <CalendarDays className="w-4 h-4" />
                   <span className="hidden sm:inline">Calendar</span>
                 </button>
               </div>
@@ -85,16 +74,53 @@ const Events = () => {
         </div>
       </div>
 
-      <div className="mt-10">
+      <div className="mt-10 px-6">
         {view === 'list' ? (
-          <div className="max-w-4xl mx-auto px-6">
-            <StaggerChildren className="space-y-5">
-              {events.map((ev, i) => (
-                <StaggerItem key={ev.id}>
-                  <EventCard ev={ev} index={i} />
-                </StaggerItem>
-              ))}
-            </StaggerChildren>
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
+            <ScrollFadeIn>
+              <GlassCard glow className="p-5 self-start depth-shadow sticky top-24">
+                <h3 className="font-display text-lg font-bold text-foreground mb-4">Calendar</h3>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="p-3 pointer-events-auto rounded-lg border border-border"
+                  modifiers={{ event: eventDates }}
+                  modifiersClassNames={{
+                    event: 'bg-gold/20 text-gold font-bold rounded-full',
+                  }}
+                />
+                {selectedDate && (
+                  <button
+                    onClick={() => setSelectedDate(undefined)}
+                    className="mt-3 w-full text-sm text-muted-foreground hover:text-gold transition-colors font-medium"
+                  >
+                    ← Show all events
+                  </button>
+                )}
+              </GlassCard>
+            </ScrollFadeIn>
+            <div className="space-y-5">
+              <h2 className="font-display text-2xl font-bold text-foreground">
+                {selectedDate
+                  ? `Events on ${selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
+                  : 'All Upcoming Events'}
+              </h2>
+              {filteredEvents.length > 0 ? (
+                <StaggerChildren className="space-y-5">
+                  {filteredEvents.map((ev, i) => (
+                    <StaggerItem key={ev.id}>
+                      <EventCard ev={ev} index={i} />
+                    </StaggerItem>
+                  ))}
+                </StaggerChildren>
+              ) : (
+                <GlassCard className="p-12 text-center">
+                  <p className="text-muted-foreground text-lg">No events on this date</p>
+                  <p className="text-muted-foreground/60 text-sm mt-1">Try selecting a different date</p>
+                </GlassCard>
+              )}
+            </div>
           </div>
         ) : (
           <div className="max-w-5xl mx-auto px-6">
@@ -138,7 +164,6 @@ const Events = () => {
                   </StaggerChildren>
                 ) : (
                   <GlassCard className="p-12 text-center">
-                    <CalendarDays className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                     <p className="text-muted-foreground text-lg">No events on this date</p>
                     <p className="text-muted-foreground/60 text-sm mt-1">Try selecting a different date</p>
                   </GlassCard>
@@ -170,15 +195,9 @@ const EventCard = ({ ev, index }: { ev: typeof events[0]; index: number }) => (
           <h3 className="font-display text-lg md:text-xl font-bold text-foreground">{ev.title}</h3>
           <div className="flex flex-wrap items-center gap-4 mt-3">
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
-                <Clock className="w-3.5 h-3.5 text-gold" />
-              </div>
               <span>{ev.time}</span>
             </div>
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
-                <MapPin className="w-3.5 h-3.5 text-gold" />
-              </div>
               <span>{ev.location}</span>
             </div>
           </div>
