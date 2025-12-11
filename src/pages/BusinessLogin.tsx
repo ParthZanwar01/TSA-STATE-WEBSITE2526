@@ -34,17 +34,6 @@ const BusinessLogin = () => {
     }
   };
 
-  const handleDemoLogin = async () => {
-    if (!captchaToken) return;
-    setLoading(true);
-    try {
-      await signIn('demo@locallink.com', 'demo123');
-      navigate('/directory');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="pt-20 min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
       {/* Background */}
@@ -142,19 +131,6 @@ const BusinessLogin = () => {
             >
               {loading ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
             </motion.button>
-
-            {!isSignUp && (
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="button"
-                onClick={handleDemoLogin}
-                disabled={loading || !captchaToken}
-                className="w-full flex items-center justify-center gap-2 border-2 border-gold text-gold py-3.5 rounded-xl font-semibold hover:bg-gold/10 transition-colors disabled:opacity-70"
-              >
-                Try Demo Login
-              </motion.button>
-            )}
           </form>
 
           <div className="mt-6 pt-6 border-t border-border text-center">
@@ -171,9 +147,6 @@ const BusinessLogin = () => {
         </GlassCard>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          Or use demo@locallink.com / demo123
-        </p>
-        <p className="text-center text-xs text-muted-foreground mt-2">
           Not a business owner?{' '}
           <Link to="/" className="text-gold hover:underline">
             Return to home

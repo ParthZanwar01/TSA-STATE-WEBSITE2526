@@ -126,7 +126,7 @@ const MorphBlob = ({
       uColor2: { value: new THREE.Vector3(...color2) },
       uColor3: { value: new THREE.Vector3(...color3) },
     }),
-    []
+    [speed, noiseStrength, color1, color2, color3]
   );
 
   useFrame((state) => {

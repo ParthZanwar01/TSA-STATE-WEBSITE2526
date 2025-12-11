@@ -130,7 +130,7 @@ export const ChatWidget = () => {
       if (!isOpen) setHasUnread(true);
     }, 5000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isOpen]);
 
   const addBotMessage = (text: string, options?: QuickReply[]) => {
     setIsTyping(true);

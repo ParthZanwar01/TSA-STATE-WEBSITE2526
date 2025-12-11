@@ -13,7 +13,7 @@ const businessSchema = z.object({
   name: z.string().trim().min(2, "Business name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
   category: z.string().min(1, "Please select a category"),
   address: z.string().trim().min(5, "Please enter a valid address").max(200, "Address must be less than 200 characters"),
-  phone: z.string().trim().regex(/^[\d\s\-\(\)\+]*$/, "Invalid phone number format").max(20, "Phone number too long").optional().or(z.literal("")),
+  phone: z.string().trim().regex(/^[\d\s\-()+]*$/, "Invalid phone number format").max(20, "Phone number too long").optional().or(z.literal("")),
   website: z.string().trim().url("Please enter a valid URL").max(255, "URL too long").optional().or(z.literal("")),
   priceRange: z.string().min(1, "Please select a price range"),
   description: z.string().trim().min(20, "Description must be at least 20 characters").max(500, "Description must be less than 500 characters"),
