@@ -33,9 +33,7 @@ INCLUDE_PATTERNS = [
     "src/components/TiltCard.tsx",
     "src/components/MagneticButton.tsx",
     "src/components/ScrollAnimations.tsx",
-    "src/components/ScrollFeatures.tsx",
     "src/components/ChatWidget.tsx",
-    "src/components/FAQWidget.tsx",
     "src/components/GuidedTour.tsx",
     "src/hooks/useAuth.ts",
     "src/hooks/useFavorites.ts",
@@ -150,7 +148,7 @@ def add_toc_field(doc: Document):
 
 
 def add_rubric_callout(doc: Document, text: str):
-    """Add a highlighted paragraph for FBLA rubric criteria."""
+    """Add a highlighted paragraph for FBLA rubric criteria. Uses GRAY_50 for B&W printing."""
     p = doc.add_paragraph()
     p.paragraph_format.space_before = Pt(8)
     p.paragraph_format.space_after = Pt(6)
@@ -160,7 +158,13 @@ def add_rubric_callout(doc: Document, text: str):
     run.font.bold = True
     run.font.size = Pt(10)
     run.font.name = "Calibri"
-    run.font.highlight_color = WD_COLOR_INDEX.YELLOW
+    run.font.highlight_color = WD_COLOR_INDEX.GRAY_50
+
+
+def add_heading_with_indicator(doc: Document, text: str, level: int, has_rubric: bool):
+    """Add heading; prefix with ◆ (diamond) if rubric-relevant. Prints clearly in B&W."""
+    heading_text = "◆  " + text if has_rubric else text
+    doc.add_heading(heading_text, level=level)
 
 
 def add_code_block(doc: Document, code: str):
@@ -201,6 +205,11 @@ def main():
         "Sort by reviews/ratings; Favorites; Deals/coupons; Bot verification."
     )
     doc.add_paragraph()
+    p = doc.add_paragraph()
+    r = p.add_run("◆ = Rubric-relevant code (gray shading marks criteria)")
+    r.font.bold = True
+    r.font.size = Pt(10)
+    doc.add_paragraph()
 
     # Table of Contents
     doc.add_heading("Table of Contents", level=1)
@@ -217,12 +226,13 @@ def main():
     for f in files:
         rel = f.relative_to(ROOT)
         rel_str = rel.as_posix()
+        has_rubric = rel_str in RUBRIC_HIGHLIGHTS
 
-        # Add heading for this file
-        doc.add_heading(rel_str, level=2)
+        # Add heading with ◆ indicator for rubric-relevant files
+        add_heading_with_indicator(doc, rel_str, level=2, has_rubric=has_rubric)
 
         # Add rubric callout if this file maps to rubric criteria
-        if rel_str in RUBRIC_HIGHLIGHTS:
+        if has_rubric:
             add_rubric_callout(doc, RUBRIC_HIGHLIGHTS[rel_str])
 
         # Add code

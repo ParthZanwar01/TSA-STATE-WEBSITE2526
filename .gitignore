@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 .env
+Cypress-LocalLink-Codebase.docx
 dist-ssr
 *.local
 

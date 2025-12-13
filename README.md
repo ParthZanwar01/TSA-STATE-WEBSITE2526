@@ -40,7 +40,7 @@ npm run preview   # preview production build
 ## Project Structure
 
 - `src/pages/` – Route components (Index, Directory, BusinessDetail, MapPage, Events, About, SubmitBusiness, BusinessLogin, Favorites)
-- `src/components/` – Reusable UI (Navbar, Layout, GlassCard, ChatWidget, FAQWidget, etc.)
+- `src/components/` – Reusable UI (Navbar, Layout, GlassCard, ChatWidget, etc.)
 - `src/data/businessData.ts` – Static business, event, and deal data
 - `src/hooks/` – useAuth, useFavorites, useUserReviews
 
