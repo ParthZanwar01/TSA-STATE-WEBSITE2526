@@ -21,14 +21,14 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo with morph accent */}
-        <Link to="/" className="flex items-center gap-2 relative">
+        {/* Logo - use anchor to avoid white screen on client-side nav to home */}
+        <a href="/" className="flex items-center gap-2 relative text-inherit no-underline hover:opacity-90 transition-opacity">
           <div className="font-display">
             <span className="text-lg font-bold text-primary">Cypress</span>
             <span className="text-lg font-bold text-gold"> Local</span>
             <span className="text-lg font-bold text-primary">Link</span>
           </div>
-        </Link>
+        </a>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">

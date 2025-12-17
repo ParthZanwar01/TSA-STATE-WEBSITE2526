@@ -26,7 +26,7 @@ const Layout = () => {
       <GuidedTour />
       <ChatWidget />
       <AnimatePresence mode="wait">
-        <PageTransition key={location.key || location.pathname}>
+        <PageTransition key={location.pathname}>
           <main className="min-h-[60vh]">
             <Outlet />
           </main>

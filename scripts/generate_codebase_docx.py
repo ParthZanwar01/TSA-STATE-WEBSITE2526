@@ -18,9 +18,6 @@ from docx.oxml.ns import qn
 ROOT = Path(__file__).resolve().parent.parent
 
 INCLUDE_PATTERNS = [
-    "src/main.tsx",
-    "src/App.tsx",
-    "src/index.css",
     "src/pages/*.tsx",
     "src/components/Navbar.tsx",
     "src/components/Layout.tsx",
@@ -40,24 +37,12 @@ INCLUDE_PATTERNS = [
     "src/hooks/useUserReviews.ts",
     "src/hooks/AuthContext.tsx",
     "src/hooks/use-toast.ts",
-    "src/lib/authApi.ts",
-    "src/lib/utils.ts",
-    "src/data/businessData.ts",
-    "index.html",
     "vite.config.ts",
     "tailwind.config.ts",
 ]
 
 # FBLA rubric criteria mapping: file path pattern -> callout text (highlighted before code)
 RUBRIC_HIGHLIGHTS = {
-    "src/data/businessData.ts": (
-        "FBLA Rubric: Program Readability — Identifiers & documentation (JSDoc); "
-        "Data storage interfaces (Business, Review, Event, Deal); Program documentation completeness."
-    ),
-    "src/lib/authApi.ts": (
-        "FBLA Rubric: Data storage with security — localStorage-based auth; "
-        "Appropriate data storage; Logical program sequence."
-    ),
     "src/hooks/useFavorites.ts": (
         "FBLA Rubric: Prompt — Saving/bookmarking favorites; Data storage (localStorage per user); "
         "Program structure."
@@ -103,9 +88,6 @@ RUBRIC_HIGHLIGHTS = {
     ),
     "src/components/Layout.tsx": (
         "FBLA Rubric: Logical program sequence; Conciseness; Navigation structure."
-    ),
-    "src/App.tsx": (
-        "FBLA Rubric: Logical program sequence; Program structure; Navigation (routing)."
     ),
 }
 
@@ -210,6 +192,50 @@ def main():
     r.font.bold = True
     r.font.size = Pt(10)
     doc.add_paragraph()
+
+    # Example SQL Tables
+    doc.add_heading("Example SQL Tables", level=1)
+    doc.add_paragraph(
+        "The app uses static data and localStorage. Below are example SQL table definitions "
+        "that could support a backend implementation."
+    )
+    doc.add_paragraph()
+
+    sql_example = """-- Example: businesses table (could support the directory)
+CREATE TABLE businesses (
+  id          VARCHAR(50) PRIMARY KEY,
+  name        VARCHAR(100) NOT NULL,
+  category    VARCHAR(50) NOT NULL,
+  rating      DECIMAL(2,1) DEFAULT 0,
+  review_count INT DEFAULT 0,
+  address     VARCHAR(200) NOT NULL,
+  description TEXT,
+  image       VARCHAR(500),
+  price_range VARCHAR(10),
+  lat         DECIMAL(10,7),
+  lng         DECIMAL(10,7),
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Example: user_reviews table (matches useUserReviews localStorage)
+CREATE TABLE user_reviews (
+  id          VARCHAR(50) PRIMARY KEY,
+  business_id VARCHAR(50) REFERENCES businesses(id),
+  user_id     VARCHAR(50) NOT NULL,
+  author      VARCHAR(100) NOT NULL,
+  rating      INT CHECK (rating >= 1 AND rating <= 5),
+  text        TEXT NOT NULL,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Example: favorites table (matches useFavorites localStorage)
+CREATE TABLE favorites (
+  user_id     VARCHAR(50) NOT NULL,
+  business_id VARCHAR(50) REFERENCES businesses(id),
+  PRIMARY KEY (user_id, business_id)
+);"""
+    add_code_block(doc, sql_example)
+    doc.add_page_break()
 
     # Table of Contents
     doc.add_heading("Table of Contents", level=1)
