@@ -34,6 +34,16 @@ const saveReviews = (reviews: UserReview[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
 };
 
+/** Load all user-submitted reviews (for admin). */
+export const getAllReviews = (): UserReview[] => loadReviews();
+
+/** Remove a review by id (for admin). Persists to localStorage. */
+export const removeReviewById = (reviewId: string): void => {
+  const all = loadReviews();
+  const next = all.filter((r) => r.id !== reviewId);
+  saveReviews(next);
+};
+
 export const useUserReviews = (businessId: string | null) => {
   const [reviews, setReviews] = useState<UserReview[]>([]);
 

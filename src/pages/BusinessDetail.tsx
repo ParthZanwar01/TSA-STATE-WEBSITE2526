@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { businesses } from '@/data/businessData';
+import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { ScrollFadeIn, StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -44,9 +44,10 @@ const hoursData = [
 const BusinessDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const { getBusinessById } = useBusinessStoreContext();
   const { isFavorite, toggle } = useFavorites(user?.id ?? null);
   const { reviews: userReviews, addReview } = useUserReviews(id || null);
-  const biz = businesses.find(b => b.id === id);
+  const biz = id ? getBusinessById(id) : undefined;
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);

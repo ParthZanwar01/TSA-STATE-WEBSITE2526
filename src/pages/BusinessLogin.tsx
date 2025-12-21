@@ -26,7 +26,12 @@ const BusinessLogin = () => {
       if (isSignUp) {
         await signUp(email, password, name || undefined);
       } else {
-        await signIn(email, password);
+        const result = await signIn(email, password);
+        const user = result?.data?.user;
+        if (user?.role === 'admin') {
+          navigate('/admin');
+          return;
+        }
       }
       navigate('/directory');
     } finally {

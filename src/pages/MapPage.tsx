@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { businesses } from '@/data/businessData';
+import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { motion } from 'framer-motion';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -46,14 +46,14 @@ const MapPage = () => {
   const targetLng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : null;
 
   const filtered = useMemo(() => {
-    return businesses.filter((b) => {
+    return allBusinesses.filter((b) => {
       const matchesSearch = !search || b.name.toLowerCase().includes(search.toLowerCase());
       const matchesCategory = !selectedCategory || b.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [search, selectedCategory]);
+  }, [search, selectedCategory, allBusinesses]);
 
-  const allCategories = ['', ...new Set(businesses.map(b => b.category))];
+  const allCategories = ['', ...new Set(allBusinesses.map(b => b.category))];
 
   const centerMap = () => {
     if (mapRef.current) {

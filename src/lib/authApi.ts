@@ -13,6 +13,8 @@ export interface User {
 const STORAGE_KEY = 'locallink_user';
 const DEMO_EMAIL = 'demo@locallink.com';
 const DEMO_PASSWORD = 'demo123';
+const ADMIN_EMAIL = 'admin@locallink.com';
+const ADMIN_PASSWORD = 'admin123';
 
 const generateId = () =>
   `user_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 10)}`;
@@ -36,6 +38,17 @@ export const authApi = {
       if (user.email === email) {
         return { user };
       }
+    }
+    // Admin login
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      const user: User = {
+        id: generateId(),
+        email: ADMIN_EMAIL,
+        name: 'Admin',
+        role: 'admin',
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      return { user };
     }
     // Demo login
     if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {

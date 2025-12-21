@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { businesses } from '@/data/businessData';
+import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { useAuth } from '@/hooks/AuthContext';
 import { useFavorites } from '@/hooks/useFavorites';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,7 +21,7 @@ const MyFavorites = () => {
 
   if (loading || !user) return null;
 
-  const favoriteBusinesses = businesses.filter((b) => favorites.includes(b.id));
+  const favoriteBusinesses = allBusinesses.filter((b) => favorites.includes(b.id));
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen relative overflow-hidden">

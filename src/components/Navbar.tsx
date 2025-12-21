@@ -16,7 +16,11 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
-  const navLinks = [...baseNavLinks, ...(user ? [{ label: 'My Favorites', path: '/favorites' }] : [])];
+  const navLinks = [
+    ...baseNavLinks,
+    ...(user ? [{ label: 'My Favorites', path: '/favorites' }] : []),
+    ...(user?.role === 'admin' ? [{ label: 'Admin', path: '/admin' }] : []),
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md border-b border-border">

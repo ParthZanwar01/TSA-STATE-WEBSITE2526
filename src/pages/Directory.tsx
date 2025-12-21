@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { businesses, categories } from '@/data/businessData';
+import { categories } from '@/data/businessData';
+import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { useAuth } from '@/hooks/AuthContext';
@@ -10,6 +11,7 @@ import { Heart } from 'lucide-react';
 const Directory = () => {
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
+  const { allBusinesses } = useBusinessStoreContext();
   const { isFavorite, toggle } = useFavorites(user?.id ?? null);
   const initialCategory = searchParams.get('category') || '';
   const initialSearch = searchParams.get('search') || '';
@@ -20,7 +22,7 @@ const Directory = () => {
   const [flippedCard, setFlippedCard] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
-    let result = businesses.filter((b) => {
+    let result = allBusinesses.filter((b) => {
       const matchesSearch = !search || b.name.toLowerCase().includes(search.toLowerCase()) || b.description.toLowerCase().includes(search.toLowerCase());
       const matchesCategory = !selectedCategory || b.category === selectedCategory;
       return matchesSearch && matchesCategory;
@@ -29,9 +31,9 @@ const Directory = () => {
     else if (sortBy === 'reviews') result = [...result].sort((a, b) => b.reviewCount - a.reviewCount);
     else result = [...result].sort((a, b) => a.name.localeCompare(b.name));
     return result;
-  }, [search, selectedCategory, sortBy]);
+  }, [search, selectedCategory, sortBy, allBusinesses]);
 
-  const allCategories = ['', ...new Set(businesses.map(b => b.category))];
+  const allCategories = ['', ...new Set(allBusinesses.map(b => b.category))];
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">

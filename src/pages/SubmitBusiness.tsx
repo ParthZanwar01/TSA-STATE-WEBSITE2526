@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
 import { categories } from '@/data/businessData';
 import { toast } from '@/hooks/use-toast';
+import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
@@ -30,6 +31,7 @@ const initialForm: BusinessForm = {
 };
 
 const SubmitBusiness = () => {
+  const { addPending } = useBusinessStoreContext();
   const [form, setForm] = useState<BusinessForm>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof BusinessForm, string>>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -58,6 +60,18 @@ const SubmitBusiness = () => {
       setErrors(fieldErrors);
       return;
     }
+    addPending({
+      name: form.name,
+      category: form.category,
+      address: form.address,
+      phone: form.phone || undefined,
+      website: form.website || undefined,
+      priceRange: form.priceRange,
+      description: form.description,
+      ownerName: form.ownerName,
+      ownerEmail: form.ownerEmail,
+      hours: form.hours || undefined,
+    });
     setSubmitted(true);
     toast({ title: "Submission received!", description: "We'll review your business listing shortly." });
   };

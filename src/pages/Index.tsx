@@ -1,7 +1,8 @@
 import { useState, Suspense, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
-import { businesses, categories, reviews, events, deals } from '@/data/businessData';
+import { categories, reviews, events, deals } from '@/data/businessData';
+import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { motion } from 'framer-motion';
 import MorphScene from '@/components/MorphScene';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
@@ -9,9 +10,9 @@ import TiltCard from '@/components/TiltCard';
 import MagneticButton from '@/components/MagneticButton';
 import GlassCard from '@/components/GlassCard';
 
-const topRated = businesses.filter(b => b.rating >= 4.8).slice(0, 3);
-
 const Index = () => {
+  const { allBusinesses } = useBusinessStoreContext();
+  const topRated = allBusinesses.filter(b => b.rating >= 4.8).slice(0, 3);
   const [searchQuery, setSearchQuery] = useState('');
   const [reviewIndex, setReviewIndex] = useState(0);
   const navigate = useNavigate();
@@ -328,7 +329,7 @@ const Index = () => {
           </ScrollFadeIn>
           <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {deals.slice(0, 8).map((deal) => {
-              const biz = businesses.find(b => b.id === deal.business_id);
+              const biz = allBusinesses.find(b => b.id === deal.business_id);
               return (
                 <StaggerItem key={deal.id}>
                   <GlassCard glow hover3d className="p-4 h-full">
