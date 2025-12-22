@@ -133,9 +133,9 @@ const Events = () => {
                   showOutsideDays
                   className="p-3 w-full"
                   classNames={{
-                    cell: "p-1 align-top",
+                    cell: "p-1 align-top min-w-[2.5rem]",
                     day: cn(
-                      "h-auto min-h-[5.5rem] w-full p-1 font-normal flex flex-col items-stretch rounded-lg border border-transparent hover:border-border hover:bg-muted/50"
+                      "h-auto min-h-[5.5rem] w-full p-1.5 font-normal flex flex-col items-stretch rounded-lg border border-border bg-card shadow-sm hover:border-gold/40 hover:shadow-md transition-all"
                     ),
                   }}
                   components={{
