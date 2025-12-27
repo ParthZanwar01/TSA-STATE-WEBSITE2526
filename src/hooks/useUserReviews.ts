@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { sanitizeText, sanitizeName } from '@/lib/sanitize';
 
 export interface UserReview {
   id: string;
@@ -56,7 +57,9 @@ export const useUserReviews = (businessId: string | null) => {
   const addReview = useCallback(
     (userId: string, author: string, rating: number, text: string) => {
       if (!businessId) return;
-      const initials = author
+      const safeAuthor = sanitizeName(author) || 'Anonymous';
+      const safeText = sanitizeText(text, 2000);
+      const initials = safeAuthor
         .split(' ')
         .map((n) => n[0])
         .join('')
@@ -65,11 +68,11 @@ export const useUserReviews = (businessId: string | null) => {
       const review: UserReview = {
         id: `ur_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
         businessId,
-        userId,
-        author,
-        initials,
-        rating,
-        text,
+        userId: sanitizeText(userId, 100),
+        author: safeAuthor,
+        initials: initials || '??',
+        rating: Math.min(5, Math.max(1, Math.round(rating))),
+        text: safeText,
         date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
       };
       const all = loadReviews();

@@ -10,12 +10,13 @@ const baseNavLinks = [
   { label: 'Map', path: '/map' },
   { label: 'Events', path: '/events' },
   { label: 'Submit', path: '/submit' },
+  { label: 'Reports', path: '/reports' },
 ];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const navLinks = [
     ...baseNavLinks,
     ...(user ? [{ label: 'My Favorites', path: '/favorites' }] : []),
@@ -56,7 +57,11 @@ const Navbar = () => {
               )}
             </Link>
           ))}
-          {user ? (
+          {authLoading ? (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-muted-foreground animate-pulse">
+              Loading…
+            </span>
+          ) : user ? (
             <button
               onClick={() => signOut()}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 bg-primary text-primary-foreground hover:bg-navy-light"

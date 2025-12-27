@@ -22,9 +22,15 @@ const Layout = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
-      <Navbar />
-      <GuidedTour />
-      <ChatWidget />
+      <div className="print:hidden">
+        <Navbar />
+      </div>
+      <div className="print:hidden">
+        <GuidedTour />
+      </div>
+      <div className="print:hidden">
+        <ChatWidget />
+      </div>
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname}>
           <main className="min-h-[60vh]">
@@ -32,7 +38,7 @@ const Layout = () => {
           </main>
         </PageTransition>
       </AnimatePresence>
-      <footer className="bg-primary text-primary-foreground py-16">
+      <footer className="bg-primary text-primary-foreground py-16 print:hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>

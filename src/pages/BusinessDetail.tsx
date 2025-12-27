@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { ScrollFadeIn, StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
 import { useState } from 'react';
@@ -84,6 +85,27 @@ const BusinessDetail = () => {
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 pb-4">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/directory">Directory</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{biz.name}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       {/* Hero image */}
       <div className="relative h-[45vh] md:h-[55vh] overflow-hidden">
         <motion.img

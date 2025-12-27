@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { categories } from '@/data/businessData';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
@@ -67,6 +68,19 @@ const Directory = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 mt-10">
+        <Breadcrumb className="mb-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Directory</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         {/* Filters */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}

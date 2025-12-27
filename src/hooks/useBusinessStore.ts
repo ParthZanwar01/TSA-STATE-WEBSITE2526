@@ -5,6 +5,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { businesses as staticBusinesses, type Business } from '@/data/businessData';
+import { sanitizeText } from '@/lib/sanitize';
 
 export interface PendingBusiness {
   id: string;
@@ -88,7 +89,16 @@ export function useBusinessStore() {
 
   const addPending = useCallback((data: Omit<PendingBusiness, 'id' | 'submittedAt'>) => {
     const item: PendingBusiness = {
-      ...data,
+      name: sanitizeText(data.name, 100),
+      category: sanitizeText(data.category, 50),
+      address: sanitizeText(data.address, 200),
+      description: sanitizeText(data.description, 500),
+      priceRange: sanitizeText(data.priceRange, 10),
+      ownerName: sanitizeText(data.ownerName, 100),
+      ownerEmail: sanitizeText(data.ownerEmail, 255),
+      phone: data.phone ? sanitizeText(data.phone, 20) : undefined,
+      website: data.website ? sanitizeText(data.website, 255) : undefined,
+      hours: data.hours ? sanitizeText(data.hours, 200) : undefined,
       id: `pending_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
       submittedAt: new Date().toISOString(),
     };

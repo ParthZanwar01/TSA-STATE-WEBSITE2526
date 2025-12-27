@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/AuthContext";
 import { BusinessStoreProvider } from "@/contexts/BusinessStoreContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import Directory from "./pages/Directory";
@@ -16,12 +17,14 @@ import BusinessDetail from "./pages/BusinessDetail";
 import BusinessLogin from "./pages/BusinessLogin";
 import MyFavorites from "./pages/MyFavorites";
 import Admin from "./pages/Admin";
+import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ErrorBoundary>
     <AuthProvider>
     <BusinessStoreProvider>
     <TooltipProvider>
@@ -39,6 +42,7 @@ const App = () => (
             <Route path="/business/:id" element={<BusinessDetail />} />
             <Route path="/favorites" element={<MyFavorites />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/reports" element={<Reports />} />
             <Route path="/login" element={<BusinessLogin />} />
           </Route>
           <Route path="*" element={<NotFound />} />
@@ -47,6 +51,7 @@ const App = () => (
     </TooltipProvider>
     </BusinessStoreProvider>
     </AuthProvider>
+    </ErrorBoundary>
   </QueryClientProvider>
 );
 
