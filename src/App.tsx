@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/AuthContext";
 import { BusinessStoreProvider } from "@/contexts/BusinessStoreContext";
+import { EventStoreProvider } from "@/contexts/EventStoreContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
@@ -13,6 +14,8 @@ import MapPage from "./pages/MapPage";
 import About from "./pages/About";
 import Events from "./pages/Events";
 import SubmitBusiness from "./pages/SubmitBusiness";
+import SubmitEvent from "./pages/SubmitEvent";
+import MySubmissions from "./pages/MySubmissions";
 import BusinessDetail from "./pages/BusinessDetail";
 import BusinessLogin from "./pages/BusinessLogin";
 import MyFavorites from "./pages/MyFavorites";
@@ -27,6 +30,7 @@ const App = () => (
     <ErrorBoundary>
     <AuthProvider>
     <BusinessStoreProvider>
+    <EventStoreProvider>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -39,6 +43,8 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/events" element={<Events />} />
             <Route path="/submit" element={<SubmitBusiness />} />
+            <Route path="/submit-event" element={<SubmitEvent />} />
+            <Route path="/my-submissions" element={<MySubmissions />} />
             <Route path="/business/:id" element={<BusinessDetail />} />
             <Route path="/favorites" element={<MyFavorites />} />
             <Route path="/admin" element={<Admin />} />
@@ -49,6 +55,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </EventStoreProvider>
     </BusinessStoreProvider>
     </AuthProvider>
     </ErrorBoundary>

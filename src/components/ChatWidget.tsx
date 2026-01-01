@@ -43,7 +43,7 @@ const mainOptions: QuickReply[] = [
       {
         label: 'Can I submit an event?',
         responseText:
-          'Event submissions are coming soon! For now, reach out through our About page to get your community event featured on the platform.',
+          'You can submit community events directly! Go to **Submit Event** in the navigation bar. Fill out the form with your event details and our team will review and add it to the calendar.',
       },
       { label: '← Back to main menu', responseText: '__MAIN_MENU__' },
     ],
@@ -51,7 +51,7 @@ const mainOptions: QuickReply[] = [
   {
     label: '🏢 I own a business',
     responseText:
-      'Welcome, business owner! Here\'s how Cypress LocalLink helps you:\n\n• **Free Listing** — Submit your business to our directory at no cost\n• **Business Portal** — Log in to manage your listing (coming soon)\n• **Community Visibility** — Get discovered by local residents\n\nWhat would you like to do?',
+      'Welcome, business owner! Here\'s how Cypress LocalLink helps you:\n\n• **Free Listing** — Submit your business to our directory at no cost\n• **My Submissions** — Log in to track your pending business and event submissions\n• **Community Visibility** — Get discovered by local residents\n\nWhat would you like to do?',
     followUp: [
       {
         label: 'How do I submit my business?',
@@ -61,7 +61,7 @@ const mainOptions: QuickReply[] = [
       {
         label: 'How do I manage my listing?',
         responseText:
-          'Click **"Login"** in the top navigation to access the Business Portal. Once logged in, you\'ll be able to update your business info, hours, photos, and more. Full management features are launching soon!',
+          'Click **"Login"** in the top navigation and sign in. Then go to **My Submissions** to see the status of your pending business and event submissions. Our team reviews all submissions before they go live.',
       },
       { label: '← Back to main menu', responseText: '__MAIN_MENU__' },
     ],

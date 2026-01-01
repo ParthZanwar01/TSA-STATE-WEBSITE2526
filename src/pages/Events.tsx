@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { events, type Event } from '@/data/businessData';
+import { events as staticEvents, type Event } from '@/data/businessData';
+import { useEventStoreContext } from '@/contexts/EventStoreContext';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
@@ -9,7 +10,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { List, CalendarDays } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const getEventsForDate = (date: Date): Event[] => {
+const getEventsForDate = (events: Event[], date: Date): Event[] => {
   const y = date.getFullYear();
   const m = date.getMonth();
   const d = date.getDate();
@@ -21,13 +22,15 @@ const getEventsForDate = (date: Date): Event[] => {
 
 function DayContent({
   date,
+  events,
   ...props
 }: {
   date: Date;
   displayMonth: Date;
   activeModifiers: Record<string, boolean>;
+  events: Event[];
 }) {
-  const dayEvents = getEventsForDate(date);
+  const dayEvents = getEventsForDate(events, date);
   const dayNum = date.getDate();
 
   return (
@@ -53,11 +56,12 @@ function DayContent({
   );
 }
 
-const sortedEvents = [...events].sort(
-  (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-);
-
 const Events = () => {
+  const { approvedEvents } = useEventStoreContext();
+  const events = [...staticEvents, ...approvedEvents];
+  const sortedEvents = [...events].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
   const [view, setView] = useState<'list' | 'calendar'>('calendar');
 
   return (
@@ -139,7 +143,7 @@ const Events = () => {
                     ),
                   }}
                   components={{
-                    DayContent,
+                    DayContent: (props) => <DayContent {...props} events={events} />,
                   }}
                 />
               )}

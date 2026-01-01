@@ -11,11 +11,12 @@ import { Heart } from 'lucide-react';
 const MyFavorites = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { allBusinesses } = useBusinessStoreContext();
   const { favorites, toggle } = useFavorites(user?.id ?? null);
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/login', { replace: true });
+      navigate(`/login?redirect=${encodeURIComponent('/favorites')}`, { replace: true });
     }
   }, [user, loading, navigate]);
 

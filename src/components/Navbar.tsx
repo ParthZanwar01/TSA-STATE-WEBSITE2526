@@ -10,6 +10,8 @@ const baseNavLinks = [
   { label: 'Map', path: '/map' },
   { label: 'Events', path: '/events' },
   { label: 'Submit', path: '/submit' },
+  { label: 'Submit Event', path: '/submit-event' },
+  { label: 'My Favorites', path: '/favorites' },
   { label: 'Reports', path: '/reports' },
 ];
 
@@ -19,7 +21,7 @@ const Navbar = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const navLinks = [
     ...baseNavLinks,
-    ...(user ? [{ label: 'My Favorites', path: '/favorites' }] : []),
+    ...(user ? [{ label: 'My Submissions', path: '/my-submissions' }] : []),
     ...(user?.role === 'admin' ? [{ label: 'Admin', path: '/admin' }] : []),
   ];
 

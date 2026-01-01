@@ -1,7 +1,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
+import { useAuth } from '@/hooks/AuthContext';
+import { useFavorites } from '@/hooks/useFavorites';
+import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -24,6 +27,16 @@ const FlyToLocation = ({ lat, lng }: { lat: number; lng: number }) => {
   return null;
 };
 
+/** Exposes the map instance via ref so parent can call setView, etc. */
+const MapRefController = ({ mapRef }: { mapRef: React.MutableRefObject<L.Map | null> }) => {
+  const map = useMap();
+  useEffect(() => {
+    mapRef.current = map;
+    return () => { mapRef.current = null; };
+  }, [map, mapRef]);
+  return null;
+};
+
 /** Spread overlapping markers in a circular pattern around their base position */
 const getSpreadPosition = (lat: number, lng: number, id: string): [number, number] => {
   const hash = id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
@@ -36,6 +49,9 @@ const getSpreadPosition = (lat: number, lng: number, id: string): [number, numbe
 };
 
 const MapPage = () => {
+  const { allBusinesses } = useBusinessStoreContext();
+  const { user } = useAuth();
+  const { isFavorite, toggle } = useFavorites(user?.id ?? null);
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -84,8 +100,8 @@ const MapPage = () => {
             center={[29.9691, -95.6977]}
             zoom={16}
             className="w-full h-full z-0"
-            ref={mapRef}
           >
+            <MapRefController mapRef={mapRef} />
             {targetLat !== null && targetLng !== null && (
               <FlyToLocation lat={targetLat} lng={targetLng} />
             )}
@@ -201,6 +217,30 @@ const MapPage = () => {
                   </div>
                   <p className="text-xs text-muted-foreground/70 truncate mt-0.5">{biz.address}</p>
                 </div>
+                {user ? (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={(e) => { e.stopPropagation(); toggle(biz.id); }}
+                    className={`flex-shrink-0 p-2 rounded-full transition-colors ${
+                      isFavorite(biz.id)
+                        ? 'bg-red-100 text-red-600'
+                        : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                    }`}
+                    aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                  >
+                    <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                  </motion.button>
+                ) : (
+                  <Link
+                    to={`/login?redirect=${encodeURIComponent('/map')}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex-shrink-0 p-2 rounded-full bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors"
+                    title="Sign in to add favorites"
+                  >
+                    <Heart className="w-4 h-4" strokeWidth={2} />
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>

@@ -151,3 +151,11 @@
       0 48px 96px hsl(var(--navy) / 0.06);
   }
 }
+
+/* Print styles */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

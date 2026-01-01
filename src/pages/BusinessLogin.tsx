@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import GlassCard from '@/components/GlassCard';
 import { ReCaptcha } from '@/components/ReCaptcha';
 import { useAuth } from '@/hooks/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 const BusinessLogin = () => {
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect');
+  const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,16 +28,19 @@ const BusinessLogin = () => {
     setLoading(true);
     try {
       if (isSignUp) {
-        await signUp(email, password, name || undefined);
-      } else {
-        const result = await signIn(email, password);
-        const user = result?.data?.user;
-        if (user?.role === 'admin') {
-          navigate('/admin');
-          return;
-        }
+        const result = await signUp(email, password, name || undefined);
+        if (result?.error) return; // Toast already shown by useAuth
+        navigate(redirectTo && redirectTo.startsWith('/') ? redirectTo : '/directory');
+        return;
       }
-      navigate('/directory');
+      const result = await signIn(email, password);
+      if (result?.error) return; // Toast already shown (e.g. wrong password)
+      const user = result?.data?.user;
+      if (user?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate(redirectTo && redirectTo.startsWith('/') ? redirectTo : '/directory');
+      }
     } finally {
       setLoading(false);
     }
@@ -116,7 +123,14 @@ const BusinessLogin = () => {
 
             {!isSignUp && (
               <div className="flex justify-end">
-                <button type="button" className="text-xs text-gold hover:text-gold/80 transition-colors font-medium">
+                <button
+                  type="button"
+                  onClick={() => toast({
+                    title: 'Forgot password?',
+                    description: 'Contact support@locallink.com for password reset assistance.',
+                  })}
+                  className="text-xs text-gold hover:text-gold/80 transition-colors font-medium"
+                >
                   Forgot password?
                 </button>
               </div>

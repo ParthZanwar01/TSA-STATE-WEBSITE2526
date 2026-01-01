@@ -3,7 +3,7 @@
  * Users select sections to include, apply filters, and view or export to CSV.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/hooks/AuthContext';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -49,8 +49,21 @@ const Reports = () => {
 
   const refreshData = () => setReviewsKey((k) => k + 1);
 
+  const [isPrinting, setIsPrinting] = useState(false);
+
+  useEffect(() => {
+    const handleAfterPrint = () => setIsPrinting(false);
+    window.addEventListener('afterprint', handleAfterPrint);
+    return () => window.removeEventListener('afterprint', handleAfterPrint);
+  }, []);
+
   const printReport = () => {
-    window.print();
+    setIsPrinting(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.print();
+      });
+    });
   };
   const favoriteBusinesses = useMemo(
     () => allBusinesses.filter((b) => favorites.includes(b.id)),
@@ -99,8 +112,12 @@ const Reports = () => {
   const hasAnySection = sections.businesses || sections.reviews || (sections.favorites && user);
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
-      <div className="relative overflow-hidden">
+    <div className="pt-20 pb-16 bg-background min-h-screen print:pt-0 print:pb-0">
+      {/* Print-only title */}
+      <h1 className="hidden print:block text-xl font-bold mb-4 px-6 pt-6">
+        Cypress LocalLink – Report ({new Date().toLocaleDateString()})
+      </h1>
+      <div className="relative overflow-hidden print:hidden">
         <div className="bg-primary py-16 md:py-20 px-6 relative">
           <FloatingOrbs className="opacity-15" />
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
@@ -125,9 +142,9 @@ const Reports = () => {
 
       <div className="max-w-5xl mx-auto px-6 mt-10">
         <ScrollFadeIn>
-          <GlassCard glow className="p-6 md:p-8 depth-shadow">
-            {/* Customization controls */}
-            <div className="mb-8 p-5 rounded-xl border border-border bg-muted/30">
+          <GlassCard glow className="p-6 md:p-8 depth-shadow print:!bg-white print:!shadow-none print:!border-gray-200">
+            {/* Customization controls - hidden when printing */}
+            <div className="mb-8 p-5 rounded-xl border border-border bg-muted/30 print:hidden">
               <h2 className="font-display font-bold text-foreground text-lg mb-4">Report options</h2>
               <div className="flex flex-wrap gap-6">
                 <div className="space-y-3">
@@ -217,11 +234,11 @@ const Reports = () => {
               <p className="text-muted-foreground py-8 text-center">Select at least one section to view or export.</p>
             )}
             {hasAnySection && (
-              <div className="space-y-8">
+              <div className="space-y-8 print:space-y-6">
                 {sections.businesses && (
                   <section>
                     <h3 className="font-display font-bold text-foreground text-lg mb-4">Businesses</h3>
-                    <div className="max-h-64 overflow-auto rounded-lg border border-border">
+                    <div className="max-h-64 overflow-auto rounded-lg border border-border print:max-h-none print:overflow-visible print:border-0">
                       <table className="w-full text-sm">
                         <thead className="bg-muted/50 sticky top-0">
                           <tr>
@@ -232,7 +249,7 @@ const Reports = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredBusinesses.slice(0, 50).map((b) => (
+                          {(isPrinting ? filteredBusinesses : filteredBusinesses.slice(0, 50)).map((b) => (
                             <tr key={b.id} className="border-t border-border hover:bg-muted/30">
                               <td className="p-3 font-medium">{b.name}</td>
                               <td className="p-3 text-muted-foreground">{b.category}</td>
@@ -242,8 +259,8 @@ const Reports = () => {
                           ))}
                         </tbody>
                       </table>
-                      {filteredBusinesses.length > 50 && (
-                        <p className="text-xs text-muted-foreground p-3 border-t border-border">
+                      {filteredBusinesses.length > 50 && !isPrinting && (
+                        <p className="text-xs text-muted-foreground p-3 border-t border-border print:hidden">
                           Showing 50 of {filteredBusinesses.length}. Export CSV for full list.
                         </p>
                       )}
@@ -253,7 +270,7 @@ const Reports = () => {
                 {sections.reviews && (
                   <section>
                     <h3 className="font-display font-bold text-foreground text-lg mb-4">Reviews</h3>
-                    <div className="max-h-64 overflow-auto rounded-lg border border-border">
+                    <div className="max-h-64 overflow-auto rounded-lg border border-border print:max-h-none print:overflow-visible print:border-0">
                       <table className="w-full text-sm">
                         <thead className="bg-muted/50 sticky top-0">
                           <tr>
@@ -264,18 +281,18 @@ const Reports = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {reviews.slice(0, 30).map((r) => (
+                          {(isPrinting ? reviews : reviews.slice(0, 30)).map((r) => (
                             <tr key={r.id} className="border-t border-border hover:bg-muted/30">
                               <td className="p-3 font-medium">{r.author}</td>
                               <td className="p-3">★ {r.rating}</td>
                               <td className="p-3 text-muted-foreground">{r.date}</td>
-                              <td className="p-3 text-muted-foreground line-clamp-1 max-w-xs">{r.text}</td>
+                              <td className="p-3 text-muted-foreground line-clamp-1 max-w-xs print:line-clamp-none print:max-w-none print:whitespace-normal">{r.text}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
-                      {reviews.length > 30 && (
-                        <p className="text-xs text-muted-foreground p-3 border-t border-border">
+                      {reviews.length > 30 && !isPrinting && (
+                        <p className="text-xs text-muted-foreground p-3 border-t border-border print:hidden">
                           Showing 30 of {reviews.length}. Export CSV for full list.
                         </p>
                       )}
@@ -285,7 +302,7 @@ const Reports = () => {
                 {sections.favorites && user && (
                   <section>
                     <h3 className="font-display font-bold text-foreground text-lg mb-4">Favorites</h3>
-                    <div className="rounded-lg border border-border overflow-hidden">
+                    <div className="rounded-lg border border-border overflow-hidden print:border-0">
                       {favoriteBusinesses.length === 0 ? (
                         <p className="p-6 text-muted-foreground text-center">No favorites saved yet.</p>
                       ) : (

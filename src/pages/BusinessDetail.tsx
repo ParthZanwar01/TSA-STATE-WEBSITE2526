@@ -72,7 +72,11 @@ const BusinessDetail = () => {
 
   const handleSubmitReview = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !reviewText.trim() || reviewText.trim().length < 10) {
+    if (!user) {
+      toast({ title: 'Sign in required', description: 'You must sign in to write a review.', variant: 'destructive' });
+      return;
+    }
+    if (!reviewText.trim() || reviewText.trim().length < 10) {
       toast({ title: 'Review too short', description: 'Please write at least 10 characters.', variant: 'destructive' });
       return;
     }
@@ -251,6 +255,14 @@ const BusinessDetail = () => {
                     >
                       Leave a Review
                     </motion.button>
+                  )}
+                  {!user && (
+                    <Link
+                      to={`/login?redirect=${encodeURIComponent(`/business/${biz.id}`)}`}
+                      className="text-sm font-semibold text-gold hover:text-gold/80 transition-colors"
+                    >
+                      Sign in to leave a review
+                    </Link>
                   )}
                 </div>
               </div>

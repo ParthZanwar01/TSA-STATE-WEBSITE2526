@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/AuthContext';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
+import { useEventStoreContext } from '@/contexts/EventStoreContext';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import GlassCard from '@/components/GlassCard';
 import { motion } from 'framer-motion';
@@ -19,7 +20,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Check, X, Pencil, Trash2, Shield, Clock, MessageSquare } from 'lucide-react';
+import { Check, X, Pencil, Trash2, Shield, Clock, MessageSquare, Calendar } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getAllReviews, removeReviewById, type UserReview } from '@/hooks/useUserReviews';
 import type { Business } from '@/data/businessData';
@@ -37,6 +38,11 @@ const Admin = () => {
     removeBusiness,
     isApprovedId,
   } = useBusinessStoreContext();
+  const {
+    pendingEvents,
+    approvePending: approveEvent,
+    rejectPending: rejectEvent,
+  } = useEventStoreContext();
 
   const [editBiz, setEditBiz] = useState<Business | null>(null);
   const [editForm, setEditForm] = useState<Partial<Business>>({});
@@ -76,6 +82,16 @@ const Admin = () => {
     if (!confirm('Remove this business from the directory? This cannot be undone.')) return;
     removeBusiness(id);
     toast({ title: 'Business removed', description: 'The business has been removed.', variant: 'destructive' });
+  };
+
+  const handleApproveEvent = (pendingId: string) => {
+    approveEvent(pendingId);
+    toast({ title: 'Event approved', description: 'The event has been added to the calendar.' });
+  };
+
+  const handleRejectEvent = (pendingId: string) => {
+    rejectEvent(pendingId);
+    toast({ title: 'Event rejected', description: 'The submission has been removed.', variant: 'destructive' });
   };
 
   const handleRemoveReview = (reviewId: string) => {
@@ -119,6 +135,10 @@ const Admin = () => {
               <TabsTrigger value="businesses" className="gap-2">
                 All Businesses ({allBusinesses.length})
               </TabsTrigger>
+              <TabsTrigger value="events" className="gap-2">
+                <Calendar className="h-4 w-4" />
+                Pending Events ({pendingEvents.length})
+              </TabsTrigger>
               <TabsTrigger value="reviews" className="gap-2">
                 <MessageSquare className="h-4 w-4" />
                 Reviews ({reviews.length})
@@ -159,6 +179,53 @@ const Admin = () => {
                         <Button
                           variant="destructive"
                           onClick={() => handleReject(p.id)}
+                        >
+                          <X className="h-4 w-4 mr-1" />
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              )}
+            </TabsContent>
+
+            <TabsContent value="events" className="space-y-4">
+              {pendingEvents.length === 0 ? (
+                <p className="text-muted-foreground py-8 text-center">No pending event submissions.</p>
+              ) : (
+                pendingEvents.map((p) => (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-5 rounded-xl border border-border bg-muted/30 space-y-3"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                      <div>
+                        <h3 className="font-display font-bold text-foreground text-lg">{p.title}</h3>
+                        <p className="text-sm text-muted-foreground mt-1">{p.date} · {p.time} at {p.location}</p>
+                        {p.description && (
+                          <p className="text-sm text-muted-foreground mt-1">{p.description.slice(0, 120)}{p.description.length > 120 ? '…' : ''}</p>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Contact: {p.submitterName} · {p.submitterEmail}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Submitted {new Date(p.submittedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex gap-2 shrink-0">
+                        <Button
+                          onClick={() => handleApproveEvent(p.id)}
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          <Check className="h-4 w-4 mr-1" />
+                          Approve
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          onClick={() => handleRejectEvent(p.id)}
                         >
                           <X className="h-4 w-4 mr-1" />
                           Reject
