@@ -7,7 +7,8 @@ import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Calendar } from '@/components/ui/calendar';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { List, CalendarDays } from 'lucide-react';
+import { List, CalendarDays, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const getEventsForDate = (events: Event[], date: Date): Event[] => {
@@ -34,10 +35,10 @@ function DayContent({
   const dayNum = date.getDate();
 
   return (
-    <div className="flex flex-col w-full h-full min-h-[5rem] p-1.5 text-left">
-      <span className="text-sm font-medium">{dayNum}</span>
+    <div className="flex flex-col w-full h-full min-h-0 p-1.5 text-left overflow-hidden">
+      <span className="text-sm font-medium flex-shrink-0">{dayNum}</span>
       {dayEvents.length > 0 && (
-        <div className="flex-1 overflow-hidden mt-0.5 space-y-0.5">
+        <div className="flex-1 min-h-0 overflow-hidden mt-0.5 space-y-0.5">
           {dayEvents.slice(0, 3).map((ev) => (
             <div
               key={ev.id}
@@ -91,7 +92,14 @@ const Events = () => {
       <div className="mt-10 px-6">
         <ScrollFadeIn>
           <div className="max-w-5xl mx-auto">
-            <div className="flex justify-end mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+              <Link
+                to="/submit-event"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-navy-light transition-colors depth-shadow"
+              >
+                <Plus className="h-4 w-4" />
+                Submit Event
+              </Link>
               <ToggleGroup
                 type="single"
                 value={view}
@@ -137,9 +145,10 @@ const Events = () => {
                   showOutsideDays
                   className="p-3 w-full"
                   classNames={{
-                    cell: "p-1 align-top min-w-[2.5rem]",
+                    row: "flex w-full mt-2 h-[5.5rem]",
+                    cell: "flex-1 min-w-0 h-[5.5rem] p-1 align-top",
                     day: cn(
-                      "h-auto min-h-[5.5rem] w-full p-1.5 font-normal flex flex-col items-stretch rounded-lg border border-border bg-card shadow-sm hover:border-gold/40 hover:shadow-md transition-all"
+                      "h-full min-h-0 w-full p-1.5 font-normal flex flex-col items-stretch rounded-lg border border-border bg-card shadow-sm hover:border-gold/40 hover:shadow-md transition-all overflow-hidden"
                     ),
                   }}
                   components={{
