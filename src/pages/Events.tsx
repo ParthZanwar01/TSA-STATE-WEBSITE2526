@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { events as staticEvents, type Event } from '@/data/businessData';
+import { events as staticEvents, deals } from '@/data/businessData';
+import type { Event } from '@/data/businessData';
 import { useEventStoreContext } from '@/contexts/EventStoreContext';
+import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Calendar } from '@/components/ui/calendar';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { List, CalendarDays, Plus } from 'lucide-react';
+import { List, CalendarDays, Plus, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -59,6 +61,7 @@ function DayContent({
 
 const Events = () => {
   const { approvedEvents } = useEventStoreContext();
+  const { allBusinesses } = useBusinessStoreContext();
   const events = [...staticEvents, ...approvedEvents];
   const sortedEvents = [...events].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -92,14 +95,7 @@ const Events = () => {
       <div className="mt-10 px-6">
         <ScrollFadeIn>
           <div className="max-w-5xl mx-auto">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-              <Link
-                to="/submit-event"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-navy-light transition-colors depth-shadow"
-              >
-                <Plus className="h-4 w-4" />
-                Submit Event
-              </Link>
+            <div className="flex flex-wrap items-center justify-end gap-4 mb-4">
               <ToggleGroup
                 type="single"
                 value={view}
@@ -157,6 +153,59 @@ const Events = () => {
                 />
               )}
             </GlassCard>
+
+            {/* Deals & Discounts */}
+            <ScrollFadeIn>
+              <h2 className="font-display text-2xl font-bold text-foreground mt-16 mb-6 flex items-center gap-2">
+                <Tag className="h-6 w-6 text-gold" />
+                Deals & Discounts
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {deals.slice(0, 6).map((deal) => {
+                  const biz = allBusinesses.find((b) => b.id === deal.business_id);
+                  return (
+                    <Link
+                      key={deal.id}
+                      to={biz ? `/business/${biz.id}` : '#'}
+                      className="block"
+                    >
+                      <GlassCard glow className="p-4 h-full depth-shadow hover:border-gold/40 transition-colors">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">
+                            {deal.discount}
+                          </span>
+                          {biz && (
+                            <span className="text-xs text-muted-foreground truncate max-w-[140px]">{biz.name}</span>
+                          )}
+                        </div>
+                        <h3 className="font-semibold text-foreground text-sm mb-1">{deal.title}</h3>
+                        <p className="text-xs text-muted-foreground line-clamp-2">{deal.description}</p>
+                        <p className="text-xs text-muted-foreground/70 mt-2">
+                          Valid until {new Date(deal.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </p>
+                      </GlassCard>
+                    </Link>
+                  );
+                })}
+              </div>
+            </ScrollFadeIn>
+
+            {/* Submit Event - bottom of page */}
+            <div className="mt-16 flex flex-col sm:flex-row gap-4 items-center justify-between p-6 rounded-xl border border-border bg-muted/30">
+              <div>
+                <h3 className="font-display font-bold text-foreground text-lg mb-1">Have an event to share?</h3>
+                <p className="text-sm text-muted-foreground">
+                  Submit your community event to be featured on our calendar.
+                </p>
+              </div>
+              <Link
+                to="/submit-event"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-navy-light transition-colors depth-shadow shrink-0"
+              >
+                <Plus className="h-4 w-4" />
+                Submit Event
+              </Link>
+            </div>
           </div>
         </ScrollFadeIn>
       </div>
