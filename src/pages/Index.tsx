@@ -3,15 +3,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
 import { categories, reviews, events, deals } from '@/data/businessData';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
+import { useAuth } from '@/hooks/AuthContext';
+import { useFavorites } from '@/hooks/useFavorites';
 import { motion } from 'framer-motion';
 import MorphScene from '@/components/MorphScene';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import TiltCard from '@/components/TiltCard';
 import MagneticButton from '@/components/MagneticButton';
 import GlassCard from '@/components/GlassCard';
+import { Heart } from 'lucide-react';
 
 const Index = () => {
+  const { user } = useAuth();
   const { allBusinesses } = useBusinessStoreContext();
+  const { isFavorite, toggle } = useFavorites(user?.id ?? null);
   const topRated = allBusinesses.filter(b => b.rating >= 4.8).slice(0, 3);
   const [searchQuery, setSearchQuery] = useState('');
   const [reviewIndex, setReviewIndex] = useState(0);
@@ -242,9 +247,10 @@ const Index = () => {
                   style={{ perspective: 1000 }}
                 >
                   <TiltCard intensity={10}>
-                    <Link to={`/business/${biz.id}`} className="group block">
-                      <div className="relative rounded-2xl overflow-hidden depth-shadow-lg">
-                        <img
+                    <div className="group block relative">
+                      <Link to={`/business/${biz.id}`} className="block">
+                        <div className="relative rounded-2xl overflow-hidden depth-shadow-lg">
+                          <img
                           src={biz.image}
                           alt={biz.name}
                           className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700"
@@ -272,7 +278,32 @@ const Index = () => {
                           </div>
                         </div>
                       </div>
-                    </Link>
+                      </Link>
+                      {user ? (
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={(e) => { e.preventDefault(); toggle(biz.id); }}
+                          className={`absolute top-4 right-4 p-2.5 rounded-full z-10 backdrop-blur-sm transition-colors ${
+                            isFavorite(biz.id)
+                              ? 'bg-red-500/90 text-white'
+                              : 'bg-white/20 text-white hover:bg-white/40'
+                          }`}
+                          aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                        >
+                          <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                        </motion.button>
+                      ) : (
+                        <Link
+                          to={`/login?redirect=${encodeURIComponent('/')}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="absolute top-4 right-4 p-2.5 rounded-full z-10 bg-white/20 text-white hover:bg-white/40 backdrop-blur-sm transition-colors"
+                          title="Sign in to add favorites"
+                        >
+                          <Heart className="w-5 h-5" strokeWidth={2} />
+                        </Link>
+                      )}
+                    </div>
                   </TiltCard>
                 </motion.div>
               </ScrollRotate3D>
@@ -332,17 +363,45 @@ const Index = () => {
               const biz = allBusinesses.find(b => b.id === deal.business_id);
               return (
                 <StaggerItem key={deal.id}>
-                  <GlassCard glow hover3d className="p-4 h-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">{deal.discount}</span>
-                      {biz && (
-                        <Link to={`/business/${biz.id}`} className="text-xs text-gold font-medium hover:underline truncate max-w-[140px]">{biz.name}</Link>
-                      )}
-                    </div>
-                    <h4 className="font-display font-bold text-foreground text-sm mb-1">{deal.title}</h4>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{deal.description}</p>
-                    <p className="text-xs text-muted-foreground mt-2">Valid until {new Date(deal.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                  </GlassCard>
+                  <div className="relative">
+                    <GlassCard glow hover3d className="p-4 h-full">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">{deal.discount}</span>
+                        {biz && (
+                          <Link to={`/business/${biz.id}`} className="text-xs text-gold font-medium hover:underline truncate max-w-[120px]">{biz.name}</Link>
+                        )}
+                      </div>
+                      <h4 className="font-display font-bold text-foreground text-sm mb-1">{deal.title}</h4>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{deal.description}</p>
+                      <p className="text-xs text-muted-foreground mt-2">Valid until {new Date(deal.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    </GlassCard>
+                    {biz && (
+                      user ? (
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={(e) => { e.preventDefault(); toggle(biz.id); }}
+                          className={`absolute top-3 right-3 p-2 rounded-full z-10 transition-colors ${
+                            isFavorite(biz.id)
+                              ? 'bg-red-100 text-red-600'
+                              : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                          }`}
+                          aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                        >
+                          <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                        </motion.button>
+                      ) : (
+                        <Link
+                          to={`/login?redirect=${encodeURIComponent('/')}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="absolute top-3 right-3 p-2 rounded-full bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors z-10"
+                          title="Sign in to add favorites"
+                        >
+                          <Heart className="w-4 h-4" strokeWidth={2} />
+                        </Link>
+                      )
+                    )}
+                  </div>
                 </StaggerItem>
               );
             })}

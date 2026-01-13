@@ -3,13 +3,15 @@ import { events as staticEvents, deals } from '@/data/businessData';
 import type { Event } from '@/data/businessData';
 import { useEventStoreContext } from '@/contexts/EventStoreContext';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
+import { useAuth } from '@/hooks/AuthContext';
+import { useFavorites } from '@/hooks/useFavorites';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Calendar } from '@/components/ui/calendar';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { List, CalendarDays, Plus, Tag } from 'lucide-react';
+import { List, CalendarDays, Plus, Tag, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -60,8 +62,10 @@ function DayContent({
 }
 
 const Events = () => {
+  const { user } = useAuth();
   const { approvedEvents } = useEventStoreContext();
   const { allBusinesses } = useBusinessStoreContext();
+  const { isFavorite, toggle } = useFavorites(user?.id ?? null);
   const events = [...staticEvents, ...approvedEvents];
   const sortedEvents = [...events].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -164,27 +168,51 @@ const Events = () => {
                 {deals.slice(0, 6).map((deal) => {
                   const biz = allBusinesses.find((b) => b.id === deal.business_id);
                   return (
-                    <Link
-                      key={deal.id}
-                      to={biz ? `/business/${biz.id}` : '#'}
-                      className="block"
-                    >
-                      <GlassCard glow className="p-4 h-full depth-shadow hover:border-gold/40 transition-colors">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">
-                            {deal.discount}
-                          </span>
-                          {biz && (
-                            <span className="text-xs text-muted-foreground truncate max-w-[140px]">{biz.name}</span>
-                          )}
-                        </div>
-                        <h3 className="font-semibold text-foreground text-sm mb-1">{deal.title}</h3>
-                        <p className="text-xs text-muted-foreground line-clamp-2">{deal.description}</p>
-                        <p className="text-xs text-muted-foreground/70 mt-2">
-                          Valid until {new Date(deal.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </p>
-                      </GlassCard>
-                    </Link>
+                    <div key={deal.id} className="relative group">
+                      <Link to={biz ? `/business/${biz.id}` : '#'} className="block">
+                        <GlassCard glow className="p-4 h-full depth-shadow hover:border-gold/40 transition-colors">
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">
+                              {deal.discount}
+                            </span>
+                            {biz && (
+                              <span className="text-xs text-muted-foreground truncate max-w-[120px]">{biz.name}</span>
+                            )}
+                          </div>
+                          <h3 className="font-semibold text-foreground text-sm mb-1">{deal.title}</h3>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{deal.description}</p>
+                          <p className="text-xs text-muted-foreground/70 mt-2">
+                            Valid until {new Date(deal.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </p>
+                        </GlassCard>
+                      </Link>
+                      {biz && (
+                        user ? (
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(biz.id); }}
+                            className={`absolute top-3 right-3 p-2 rounded-full transition-colors z-10 ${
+                              isFavorite(biz.id)
+                                ? 'bg-red-100 text-red-600'
+                                : 'bg-card/80 text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                            }`}
+                            aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                          >
+                            <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                          </motion.button>
+                        ) : (
+                          <Link
+                            to={`/login?redirect=${encodeURIComponent('/events')}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="absolute top-3 right-3 p-2 rounded-full bg-card/80 text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors z-10"
+                            title="Sign in to add favorites"
+                          >
+                            <Heart className="w-4 h-4" strokeWidth={2} />
+                          </Link>
+                        )
+                      )}
+                    </div>
                   );
                 })}
               </div>
