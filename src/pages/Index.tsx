@@ -251,11 +251,11 @@ const Index = () => {
                       <Link to={`/business/${biz.id}`} className="block">
                         <div className="relative rounded-2xl overflow-hidden depth-shadow-lg">
                           <img
-                          src={biz.image}
-                          alt={biz.name}
-                          className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700"
-                          loading="lazy"
-                        />
+                            src={biz.image}
+                            alt={biz.name}
+                            className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700"
+                            loading="lazy"
+                          />
                         <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
                         {/* Glass overlay at bottom */}
                         <div className="absolute bottom-0 left-0 right-0 p-6">
