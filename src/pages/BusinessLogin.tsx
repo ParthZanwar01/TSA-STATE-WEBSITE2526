@@ -94,7 +94,7 @@ const BusinessLogin = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@business.com"
+                placeholder={isSignUp ? "you@business.com" : "demo@locallink.com"}
                 className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all"
               />
             </div>
@@ -108,7 +108,7 @@ const BusinessLogin = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder={isSignUp ? "••••••••" : "demo123"}
                   className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all pr-14"
                 />
                 <button
