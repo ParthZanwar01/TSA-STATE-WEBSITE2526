@@ -158,8 +158,7 @@ const Directory = () => {
                     <div className="absolute inset-0 rounded-2xl overflow-hidden depth-shadow group-hover:depth-shadow-lg transition-shadow duration-300" style={{ backfaceVisibility: 'hidden' }}>
                       <img src={biz.image} alt={biz.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
-                      {user && (
-                        <motion.button
+                      <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={(e) => { e.stopPropagation(); toggle(biz.id); }}
@@ -172,7 +171,6 @@ const Directory = () => {
                         >
                           <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
                         </motion.button>
-                      )}
                       <div className="absolute bottom-0 left-0 right-0 p-6">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="bg-gold/90 text-primary text-xs font-bold px-2.5 py-0.5 rounded-full">{biz.category}</span>
@@ -211,8 +209,7 @@ const Directory = () => {
                         <p className="text-sm text-foreground/80 italic leading-relaxed">"{biz.description}"</p>
                       </div>
                       <div className="flex gap-2 mt-4">
-                        {user && (
-                          <motion.button
+                        <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={(e) => { e.stopPropagation(); toggle(biz.id); }}
@@ -225,11 +222,10 @@ const Directory = () => {
                           >
                             <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} />
                           </motion.button>
-                        )}
                         <Link
                           to={`/business/${biz.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className={`flex-1 bg-primary text-primary-foreground text-sm font-semibold py-3 rounded-xl hover:bg-navy-light transition-colors block text-center depth-shadow ${!user ? 'w-full' : ''}`}
+                          className="flex-1 bg-primary text-primary-foreground text-sm font-semibold py-3 rounded-xl hover:bg-navy-light transition-colors block text-center depth-shadow"
                         >
                           View Full Profile →
                         </Link>

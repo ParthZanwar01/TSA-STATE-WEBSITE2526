@@ -10,6 +10,7 @@ const MAX_EMAIL_LENGTH = 255;
 /** Sanitize text: trim, limit length, strip control chars. */
 export function sanitizeText(text: string, maxLen = MAX_TEXT_LENGTH): string {
   return String(text ?? '')
+    // eslint-disable-next-line no-control-regex -- intentionally stripping control chars for security
     .replace(/[\x00-\x1F\x7F]/g, '')
     .trim()
     .slice(0, maxLen);

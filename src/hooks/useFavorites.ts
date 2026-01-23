@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const STORAGE_KEY = 'locallink_favorites';
+const GUEST_ID = 'guest';
 
 const getStorageKey = (userId: string) => `${STORAGE_KEY}_${userId}`;
 
@@ -25,28 +26,24 @@ const saveFavorites = (userId: string, ids: string[]) => {
 };
 
 export const useFavorites = (userId: string | null) => {
+  const effectiveId = userId ?? GUEST_ID;
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!userId) {
-      setFavorites([]);
-      return;
-    }
-    setFavorites(loadFavorites(userId));
-  }, [userId]);
+    setFavorites(loadFavorites(effectiveId));
+  }, [effectiveId]);
 
   const toggle = useCallback(
     (businessId: string) => {
-      if (!userId) return;
       setFavorites((prev) => {
         const next = prev.includes(businessId)
           ? prev.filter((id) => id !== businessId)
           : [...prev, businessId];
-        saveFavorites(userId, next);
+        saveFavorites(effectiveId, next);
         return next;
       });
     },
-    [userId]
+    [effectiveId]
   );
 
   const isFavorite = useCallback(

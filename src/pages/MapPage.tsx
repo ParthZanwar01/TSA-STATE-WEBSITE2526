@@ -114,12 +114,19 @@ const MapPage = () => {
               return (
               <Marker key={biz.id} position={[displayLat, displayLng]}>
                 <Popup>
-                  <div className="font-body">
+                  <div className="font-body min-w-[180px]">
                     <strong className="font-display">{biz.name}</strong>
                     <br />
                     <span className="text-xs">{biz.address}</span>
                     <br />
                     <span className="text-xs">{biz.rating}/5 · {biz.category}</span>
+                    <br />
+                    <Link
+                      to={`/business/${biz.id}`}
+                      className="inline-block mt-2 text-xs text-gold font-semibold hover:underline"
+                    >
+                      View full profile →
+                    </Link>
                   </div>
                 </Popup>
               </Marker>
@@ -195,13 +202,11 @@ const MapPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: Math.min(i * 0.02, 0.4) }}
                 className="flex items-center gap-4 px-5 py-4 hover:bg-muted/50 transition-colors cursor-pointer group"
-                onClick={() => {
-                  if (mapRef.current) {
-                    const [displayLat, displayLng] = getSpreadPosition(biz.lat, biz.lng, biz.id);
-                    mapRef.current.setView([displayLat, displayLng], 16);
-                  }
-                }}
               >
+                <Link
+                  to={`/business/${biz.id}`}
+                  className="flex items-center gap-4 flex-1 min-w-0"
+                >
                 <img
                   src={biz.image}
                   alt={biz.name}
@@ -217,30 +222,20 @@ const MapPage = () => {
                   </div>
                   <p className="text-xs text-muted-foreground/70 truncate mt-0.5">{biz.address}</p>
                 </div>
-                {user ? (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={(e) => { e.stopPropagation(); toggle(biz.id); }}
-                    className={`flex-shrink-0 p-2 rounded-full transition-colors ${
-                      isFavorite(biz.id)
-                        ? 'bg-red-100 text-red-600'
-                        : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
-                    }`}
-                    aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
-                  >
-                    <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
-                  </motion.button>
-                ) : (
-                  <Link
-                    to={`/login?redirect=${encodeURIComponent('/map')}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex-shrink-0 p-2 rounded-full bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors"
-                    title="Sign in to add favorites"
-                  >
-                    <Heart className="w-4 h-4" strokeWidth={2} />
-                  </Link>
-                )}
+                </Link>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={(e) => { e.stopPropagation(); toggle(biz.id); }}
+                  className={`flex-shrink-0 p-2 rounded-full transition-colors ${
+                    isFavorite(biz.id)
+                      ? 'bg-red-100 text-red-600'
+                      : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                  }`}
+                  aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                >
+                  <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                </motion.button>
               </motion.div>
             ))}
           </div>

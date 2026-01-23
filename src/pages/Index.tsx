@@ -279,30 +279,19 @@ const Index = () => {
                         </div>
                       </div>
                       </Link>
-                      {user ? (
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => { e.preventDefault(); toggle(biz.id); }}
-                          className={`absolute top-4 right-4 p-2.5 rounded-full z-10 backdrop-blur-sm transition-colors ${
-                            isFavorite(biz.id)
-                              ? 'bg-red-500/90 text-white'
-                              : 'bg-white/20 text-white hover:bg-white/40'
-                          }`}
-                          aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
-                        >
-                          <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
-                        </motion.button>
-                      ) : (
-                        <Link
-                          to={`/login?redirect=${encodeURIComponent('/')}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="absolute top-4 right-4 p-2.5 rounded-full z-10 bg-white/20 text-white hover:bg-white/40 backdrop-blur-sm transition-colors"
-                          title="Sign in to add favorites"
-                        >
-                          <Heart className="w-5 h-5" strokeWidth={2} />
-                        </Link>
-                      )}
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e) => { e.preventDefault(); toggle(biz.id); }}
+                        className={`absolute top-4 right-4 p-2.5 rounded-full z-10 backdrop-blur-sm transition-colors ${
+                          isFavorite(biz.id)
+                            ? 'bg-red-500/90 text-white'
+                            : 'bg-white/20 text-white hover:bg-white/40'
+                        }`}
+                        aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                      >
+                        <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                      </motion.button>
                     </div>
                   </TiltCard>
                 </motion.div>
@@ -365,42 +354,31 @@ const Index = () => {
                 <StaggerItem key={deal.id}>
                   <div className="relative">
                     <GlassCard glow hover3d className="p-4 h-full">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">{deal.discount}</span>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full shrink-0">{deal.discount}</span>
                         {biz && (
-                          <Link to={`/business/${biz.id}`} className="text-xs text-gold font-medium hover:underline truncate max-w-[120px]">{biz.name}</Link>
+                          <div className="flex items-center gap-1.5 min-w-0 flex-1 justify-end">
+                            <Link to={`/business/${biz.id}`} className="text-xs text-gold font-medium hover:underline truncate min-w-0">{biz.name}</Link>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={(e) => { e.preventDefault(); toggle(biz.id); }}
+                              className={`shrink-0 p-1.5 rounded-full transition-colors ${
+                                isFavorite(biz.id)
+                                  ? 'bg-red-100 text-red-600'
+                                  : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                              }`}
+                              aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                            >
+                              <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                            </motion.button>
+                          </div>
                         )}
                       </div>
                       <h4 className="font-display font-bold text-foreground text-sm mb-1">{deal.title}</h4>
                       <p className="text-xs text-muted-foreground line-clamp-2">{deal.description}</p>
                       <p className="text-xs text-muted-foreground mt-2">Valid until {new Date(deal.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                     </GlassCard>
-                    {biz && (
-                      user ? (
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => { e.preventDefault(); toggle(biz.id); }}
-                          className={`absolute top-3 right-3 p-2 rounded-full z-10 transition-colors ${
-                            isFavorite(biz.id)
-                              ? 'bg-red-100 text-red-600'
-                              : 'bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50'
-                          }`}
-                          aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
-                        >
-                          <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
-                        </motion.button>
-                      ) : (
-                        <Link
-                          to={`/login?redirect=${encodeURIComponent('/')}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="absolute top-3 right-3 p-2 rounded-full bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors z-10"
-                          title="Sign in to add favorites"
-                        >
-                          <Heart className="w-4 h-4" strokeWidth={2} />
-                        </Link>
-                      )
-                    )}
                   </div>
                 </StaggerItem>
               );
@@ -425,7 +403,7 @@ const Index = () => {
           </ScrollFadeIn>
 
           <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {events.map((ev) => (
+            {events.slice(0, 6).map((ev) => (
               <StaggerItem key={ev.id}>
                 <GlassCard glow hover3d className="p-4">
                   <div className="flex items-center gap-4">

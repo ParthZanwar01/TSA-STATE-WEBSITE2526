@@ -180,8 +180,7 @@ const BusinessDetail = () => {
               <div className="flex flex-col items-start md:items-end gap-3 flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <span className="text-foreground font-bold text-lg">{biz.rating}/5</span>
-                  {user && (
-                    <motion.button
+                  <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => toggle(biz.id)}
@@ -194,7 +193,6 @@ const BusinessDetail = () => {
                     >
                       <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} />
                     </motion.button>
-                  )}
                 </div>
                 <span className="text-sm text-muted-foreground">{biz.reviewCount} reviews</span>
               </div>

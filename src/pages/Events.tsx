@@ -171,12 +171,28 @@ const Events = () => {
                     <div key={deal.id} className="relative group">
                       <Link to={biz ? `/business/${biz.id}` : '#'} className="block">
                         <GlassCard glow className="p-4 h-full depth-shadow hover:border-gold/40 transition-colors">
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full">
+                          <div className="flex items-center justify-between gap-2 mb-2">
+                            <span className="bg-gold/90 text-primary text-xs font-bold px-2 py-0.5 rounded-full shrink-0">
                               {deal.discount}
                             </span>
                             {biz && (
-                              <span className="text-xs text-muted-foreground truncate max-w-[120px]">{biz.name}</span>
+                              <div className="flex items-center gap-1.5 min-w-0 flex-1 justify-end">
+                                <span className="text-xs text-muted-foreground truncate min-w-0">{biz.name}</span>
+                                <motion.button
+                                  type="button"
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(biz.id); }}
+                                  className={`shrink-0 p-1.5 rounded-full transition-colors ${
+                                    isFavorite(biz.id)
+                                      ? 'bg-red-100 text-red-600'
+                                      : 'bg-card/80 text-muted-foreground hover:text-red-500 hover:bg-red-50'
+                                  }`}
+                                  aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
+                                >
+                                  <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
+                                </motion.button>
+                              </div>
                             )}
                           </div>
                           <h3 className="font-semibold text-foreground text-sm mb-1">{deal.title}</h3>
@@ -186,32 +202,6 @@ const Events = () => {
                           </p>
                         </GlassCard>
                       </Link>
-                      {biz && (
-                        user ? (
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(biz.id); }}
-                            className={`absolute top-3 right-3 p-2 rounded-full transition-colors z-10 ${
-                              isFavorite(biz.id)
-                                ? 'bg-red-100 text-red-600'
-                                : 'bg-card/80 text-muted-foreground hover:text-red-500 hover:bg-red-50'
-                            }`}
-                            aria-label={isFavorite(biz.id) ? 'Remove from favorites' : 'Add to favorites'}
-                          >
-                            <Heart className={`w-4 h-4 ${isFavorite(biz.id) ? 'fill-current' : ''}`} strokeWidth={2} />
-                          </motion.button>
-                        ) : (
-                          <Link
-                            to={`/login?redirect=${encodeURIComponent('/events')}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="absolute top-3 right-3 p-2 rounded-full bg-card/80 text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors z-10"
-                            title="Sign in to add favorites"
-                          >
-                            <Heart className="w-4 h-4" strokeWidth={2} />
-                          </Link>
-                        )
-                      )}
                     </div>
                   );
                 })}

@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { useAuth } from '@/hooks/AuthContext';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -9,18 +8,11 @@ import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { Heart } from 'lucide-react';
 
 const MyFavorites = () => {
-  const navigate = useNavigate();
   const { user, loading } = useAuth();
   const { allBusinesses } = useBusinessStoreContext();
   const { favorites, toggle } = useFavorites(user?.id ?? null);
 
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate(`/login?redirect=${encodeURIComponent('/favorites')}`, { replace: true });
-    }
-  }, [user, loading, navigate]);
-
-  if (loading || !user) return null;
+  if (loading) return null;
 
   const favoriteBusinesses = allBusinesses.filter((b) => favorites.includes(b.id));
 
@@ -41,7 +33,7 @@ const MyFavorites = () => {
             My <span className="text-gold">Favorites</span>
           </h1>
           <p className="text-muted-foreground">
-            Hi, {user.name || user.email}. Here are the businesses you've favorited.
+            {user ? `Hi, ${user.name || user.email}. Here are the businesses you've favorited.` : 'Here are the businesses you\'ve favorited.'}
           </p>
         </motion.div>
 
