@@ -3,7 +3,7 @@
  * Users select sections to include, apply filters, and view or export to CSV.
  */
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '@/hooks/AuthContext';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
-import { FileText, Download, RefreshCw, Printer } from 'lucide-react';
+import { FileText, Download, RefreshCw } from 'lucide-react';
 import { categories } from '@/data/businessData';
 
 type ReportSection = 'businesses' | 'reviews' | 'favorites';
@@ -49,22 +49,6 @@ const Reports = () => {
 
   const refreshData = () => setReviewsKey((k) => k + 1);
 
-  const [isPrinting, setIsPrinting] = useState(false);
-
-  useEffect(() => {
-    const handleAfterPrint = () => setIsPrinting(false);
-    window.addEventListener('afterprint', handleAfterPrint);
-    return () => window.removeEventListener('afterprint', handleAfterPrint);
-  }, []);
-
-  const printReport = () => {
-    setIsPrinting(true);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.print();
-      });
-    });
-  };
   const favoriteBusinesses = useMemo(
     () => allBusinesses.filter((b) => favorites.includes(b.id)),
     [allBusinesses, favorites]
@@ -210,14 +194,6 @@ const Reports = () => {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={printReport}
-                    disabled={!hasAnySection}
-                    className="gap-2 print:hidden"
-                  >
-                    <Printer className="h-4 w-4" />
-                    Print
-                  </Button>
-                  <Button
                     onClick={exportCSV}
                     disabled={!hasAnySection}
                     className="gap-2"
@@ -249,7 +225,7 @@ const Reports = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {(isPrinting ? filteredBusinesses : filteredBusinesses.slice(0, 50)).map((b) => (
+                          {filteredBusinesses.slice(0, 50).map((b) => (
                             <tr key={b.id} className="border-t border-border hover:bg-muted/30">
                               <td className="p-3 font-medium">{b.name}</td>
                               <td className="p-3 text-muted-foreground">{b.category}</td>
@@ -259,7 +235,7 @@ const Reports = () => {
                           ))}
                         </tbody>
                       </table>
-                      {filteredBusinesses.length > 50 && !isPrinting && (
+                      {filteredBusinesses.length > 50 && (
                         <p className="text-xs text-muted-foreground p-3 border-t border-border print:hidden">
                           Showing 50 of {filteredBusinesses.length}. Export CSV for full list.
                         </p>
@@ -281,7 +257,7 @@ const Reports = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {(isPrinting ? reviews : reviews.slice(0, 30)).map((r) => (
+                          {reviews.slice(0, 30).map((r) => (
                             <tr key={r.id} className="border-t border-border hover:bg-muted/30">
                               <td className="p-3 font-medium">{r.author}</td>
                               <td className="p-3">★ {r.rating}</td>
@@ -291,7 +267,7 @@ const Reports = () => {
                           ))}
                         </tbody>
                       </table>
-                      {reviews.length > 30 && !isPrinting && (
+                      {reviews.length > 30 && (
                         <p className="text-xs text-muted-foreground p-3 border-t border-border print:hidden">
                           Showing 30 of {reviews.length}. Export CSV for full list.
                         </p>

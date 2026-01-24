@@ -10,7 +10,6 @@ const baseNavLinks = [
   { label: 'Map', path: '/map' },
   { label: 'Events', path: '/events' },
   { label: 'Submit', path: '/submit' },
-  { label: 'Submit Event', path: '/submit-event' },
   { label: 'My Favorites', path: '/favorites' },
   { label: 'Reports', path: '/reports' },
 ];
