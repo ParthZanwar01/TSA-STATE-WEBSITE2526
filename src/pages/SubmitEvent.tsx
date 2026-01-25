@@ -238,7 +238,7 @@ const SubmitEvent = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground mb-2">Verify you&apos;re not a robot</p>
-                <ReCaptcha key={captchaKey} onVerify={setCaptchaToken} size="compact" />
+                <ReCaptcha key={captchaKey} onVerify={setCaptchaToken} size="normal" />
               </div>
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <motion.button

@@ -13,10 +13,12 @@ interface ReCaptchaProps {
   onExpire?: () => void;
   theme?: 'light' | 'dark';
   size?: 'compact' | 'normal' | 'invisible';
+  className?: string;
 }
 
-export const ReCaptcha = ({ onVerify, onExpire, theme = 'light', size = 'normal' }: ReCaptchaProps) => (
-  <ReCAPTCHA
+export const ReCaptcha = ({ onVerify, onExpire, theme = 'light', size = 'normal', className = '' }: ReCaptchaProps) => (
+  <div className={`w-full flex justify-start [&>div]:origin-left [&>div]:scale-x-[1.35] ${className}`}>
+    <ReCAPTCHA
       sitekey={SITE_KEY}
       theme={theme}
       size={size}
@@ -26,5 +28,6 @@ export const ReCaptcha = ({ onVerify, onExpire, theme = 'light', size = 'normal'
         onExpire?.();
       }}
       onErrored={() => onVerify(null)}
-  />
+    />
+  </div>
 );

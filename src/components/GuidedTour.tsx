@@ -65,6 +65,16 @@ export const GuidedTour = () => {
     }
   }, []);
 
+  // Listen for custom event from ChatWidget (e.g. "Start the guided tour")
+  useEffect(() => {
+    const handler = () => {
+      setCurrentStep(0);
+      setIsActive(true);
+    };
+    window.addEventListener('start-guided-tour', handler);
+    return () => window.removeEventListener('start-guided-tour', handler);
+  }, []);
+
   const positionTooltip = useCallback(() => {
     const step = tourSteps[currentStep];
     const el = document.querySelector(step.target);

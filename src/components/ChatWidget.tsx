@@ -91,8 +91,7 @@ const mainOptions: QuickReply[] = [
     followUp: [
       {
         label: 'Start the guided tour',
-        responseText:
-          'Click the **?** button in the bottom-right corner of the screen to launch the interactive guided tour. It will walk you through each feature step by step with highlighted elements and tooltips!',
+        responseText: '__START_TOUR__',
       },
       { label: '← Back to main menu', responseText: '__MAIN_MENU__' },
     ],
@@ -152,6 +151,9 @@ export const ChatWidget = () => {
 
     if (reply.responseText === '__MAIN_MENU__') {
       addBotMessage("Sure! What else would you like to know?", mainOptions);
+    } else if (reply.responseText === '__START_TOUR__') {
+      addBotMessage("Starting the guided tour for you! 👋", mainOptions[4].followUp);
+      window.dispatchEvent(new CustomEvent('start-guided-tour'));
     } else {
       addBotMessage(reply.responseText, reply.followUp);
     }
@@ -173,8 +175,13 @@ export const ChatWidget = () => {
       addBotMessage(mainOptions[2].responseText, mainOptions[2].followUp);
     } else if (lower.includes('what') || lower.includes('about') || lower.includes('who')) {
       addBotMessage(mainOptions[3].responseText, mainOptions[3].followUp);
-    } else if (lower.includes('map') || lower.includes('navigate') || lower.includes('tour')) {
-      addBotMessage(mainOptions[4].responseText, mainOptions[4].followUp);
+    } else if (lower.includes('map') || lower.includes('navigate') || lower.includes('tour') || lower.includes('guided')) {
+      if (lower.includes('start') || lower.includes('launch') || lower.includes('take') || lower.includes('run') || lower.includes('begin')) {
+        addBotMessage("Starting the guided tour for you! 👋", mainOptions[4].followUp);
+        window.dispatchEvent(new CustomEvent('start-guided-tour'));
+      } else {
+        addBotMessage(mainOptions[4].responseText, mainOptions[4].followUp);
+      }
     } else {
       addBotMessage(
         "I'm not sure about that yet, but here are some topics I can help with! 😊",

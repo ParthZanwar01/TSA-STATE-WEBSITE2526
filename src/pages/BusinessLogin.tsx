@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
@@ -6,6 +6,7 @@ import GlassCard from '@/components/GlassCard';
 import { ReCaptcha } from '@/components/ReCaptcha';
 import { useAuth } from '@/hooks/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { validatePassword } from '@/lib/passwordValidation';
 
 const BusinessLogin = () => {
   const [searchParams] = useSearchParams();
@@ -138,7 +139,7 @@ const BusinessLogin = () => {
 
             <div>
               <p className="text-sm font-medium text-foreground mb-2">Verify you&apos;re not a robot</p>
-              <ReCaptcha onVerify={setCaptchaToken} size="compact" />
+              <ReCaptcha onVerify={setCaptchaToken} size="normal" />
             </div>
 
             <motion.button
