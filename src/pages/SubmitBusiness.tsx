@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
 import { categories } from '@/data/businessData';
 import { toast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/AuthContext';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
@@ -32,7 +31,6 @@ const initialForm: BusinessForm = {
 };
 
 const SubmitBusiness = () => {
-  const { user } = useAuth();
   const { addPending } = useBusinessStoreContext();
   const [form, setForm] = useState<BusinessForm>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof BusinessForm, string>>>({});
@@ -77,37 +75,6 @@ const SubmitBusiness = () => {
     setSubmitted(true);
     toast({ title: "Submission received!", description: "We'll review your business listing shortly." });
   };
-
-  if (!user) {
-    return (
-      <div className="pt-20 pb-16 bg-background min-h-screen flex items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center max-w-md"
-        >
-          <h1 className="font-display text-4xl font-bold text-foreground mb-3">Sign in required</h1>
-          <p className="text-muted-foreground text-lg mb-8">
-            You need an account to submit your business to the directory. Sign in or create an account to get started.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to={`/login?redirect=${encodeURIComponent('/submit')}`}
-              className="inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-4 rounded-full font-semibold hover:bg-navy-light transition-colors depth-shadow"
-            >
-              Sign in
-            </Link>
-            <Link
-              to="/"
-              className="inline-flex items-center justify-center border border-border px-8 py-4 rounded-full font-semibold text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Back to Home
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
 
   if (submitted) {
     return (
