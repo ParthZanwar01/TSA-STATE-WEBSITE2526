@@ -22,10 +22,21 @@ const BusinessLogin = () => {
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
+  const pwValidation = useMemo(() => (isSignUp ? validatePassword(password) : null), [isSignUp, password]);
+  const isPasswordStrong = pwValidation?.isStrong ?? true;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!captchaToken) return;
     if (!email || !password) return;
+    if (isSignUp && !isPasswordStrong) {
+      toast({
+        title: 'Password too weak',
+        description: 'Please meet all password requirements to create a strong account.',
+        variant: 'destructive',
+      });
+      return;
+    }
     setLoading(true);
     try {
       if (isSignUp) {
