@@ -131,6 +131,45 @@ const BusinessLogin = () => {
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
               </div>
+              {isSignUp && pwValidation && (
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min((pwValidation.strength + 1) / 4, 1) * 100}%` }}
+                        transition={{ duration: 0.3 }}
+                        className={`h-full rounded-full ${
+                          pwValidation.strength <= 0 ? 'bg-destructive' :
+                          pwValidation.strength === 1 ? 'bg-amber-500' :
+                          pwValidation.strength === 2 ? 'bg-yellow-500' :
+                          pwValidation.isStrong ? 'bg-green-500' : 'bg-green-500'
+                        }`}
+                      />
+                    </div>
+                    <span className={`text-xs font-medium ${
+                      pwValidation.isStrong ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
+                    }`}>
+                      {pwValidation.strength <= 0 ? 'Weak' :
+                       pwValidation.strength === 1 ? 'Fair' :
+                       pwValidation.strength === 2 ? 'Good' : 'Strong'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs">
+                    {pwValidation.rules.map((r) => (
+                      <div key={r.id} className={`flex items-center gap-1.5 ${r.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                        <span>{r.met ? '✓' : '○'}</span>
+                        <span>{r.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {pwValidation.isStrong && (
+                    <p className="text-xs font-medium text-green-600 dark:text-green-400 flex items-center gap-1.5">
+                      ✓ Your password is strong
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             {!isSignUp && (
@@ -157,7 +196,7 @@ const BusinessLogin = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              disabled={loading || !captchaToken}
+              disabled={loading || !captchaToken || (isSignUp && !isPasswordStrong)}
               className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold hover:bg-navy-light transition-colors depth-shadow disabled:opacity-70"
             >
               {loading ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
