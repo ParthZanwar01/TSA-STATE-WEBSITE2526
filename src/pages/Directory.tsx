@@ -4,7 +4,7 @@ import { categories } from '@/data/businessData';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { PageHeader } from '@/components/PageHeader';
 import { useAuth } from '@/hooks/AuthContext';
 import { useFavorites } from '@/hooks/useFavorites';
 import { Heart } from 'lucide-react';
@@ -38,34 +38,25 @@ const Directory = () => {
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
-      {/* Header */}
-      <div className="relative overflow-hidden">
-        <div className="bg-primary py-16 md:py-20 px-6 relative">
-          <FloatingOrbs className="opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="max-w-7xl mx-auto relative z-10"
-          >
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-              <div>
-                <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
-                  Business <span className="text-gold">Directory</span>
-                </h1>
-                <p className="text-primary-foreground/70 text-lg">Discover all local businesses in Cypress, Texas</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="bg-gold/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-gold/30">
-                  <span className="text-gold font-bold text-lg">{filtered.length}</span>
-                  <span className="text-primary-foreground/60 text-sm ml-1.5">businesses</span>
-                </div>
+      <PageHeader
+        image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&h=600&fit=crop"
+        children={
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
+                Business <span className="text-gold">Directory</span>
+              </h1>
+              <p className="text-primary-foreground/70 text-lg">Discover all local businesses in Cypress, Texas</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="bg-gold/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-gold/30">
+                <span className="text-gold font-bold text-lg">{filtered.length}</span>
+                <span className="text-primary-foreground/60 text-sm ml-1.5">businesses</span>
               </div>
             </div>
-          </motion.div>
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       <div className="max-w-7xl mx-auto px-6 mt-10">
         <Breadcrumb className="mb-6">

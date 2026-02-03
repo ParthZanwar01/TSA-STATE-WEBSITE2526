@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/AuthContext';
 import { useFavorites } from '@/hooks/useFavorites';
 import { motion, AnimatePresence } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { PageHeader } from '@/components/PageHeader';
 import { Heart } from 'lucide-react';
 
 const MyFavorites = () => {
@@ -17,25 +17,14 @@ const MyFavorites = () => {
   const favoriteBusinesses = allBusinesses.filter((b) => favorites.includes(b.id));
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-gold/5 pointer-events-none" />
-      <FloatingOrbs className="opacity-10 pointer-events-none" />
+    <div className="pt-20 pb-16 bg-background min-h-screen">
+      <PageHeader
+        image="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&h=600&fit=crop"
+        title={<>My <span className="text-gold">Favorites</span></>}
+        subtitle={user ? `Hi, ${user.name || user.email}. Here are the businesses you've favorited.` : "Here are the businesses you've favorited."}
+      />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-2">
-            My <span className="text-gold">Favorites</span>
-          </h1>
-          <p className="text-muted-foreground">
-            {user ? `Hi, ${user.name || user.email}. Here are the businesses you've favorited.` : 'Here are the businesses you\'ve favorited.'}
-          </p>
-        </motion.div>
+      <div className="max-w-5xl mx-auto px-6 mt-10">
 
         {favoriteBusinesses.length === 0 ? (
           <motion.div

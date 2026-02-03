@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
+import { PageHeader } from '@/components/PageHeader';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/AuthContext';
 import { useEventStoreContext } from '@/contexts/EventStoreContext';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { ReCaptcha } from '@/components/ReCaptcha';
@@ -130,26 +130,20 @@ const SubmitEvent = () => {
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
-      <div className="relative overflow-hidden">
-        <div className="bg-primary py-16 md:py-20 px-6 relative">
-          <FloatingOrbs className="opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="max-w-7xl mx-auto relative z-10 flex items-center gap-4"
-          >
-            <Calendar className="h-12 w-12 text-gold" />
+      <PageHeader
+        image="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&h=600&fit=crop"
+        children={
+          <div className="flex items-center gap-4">
+            <Calendar className="h-12 w-12 text-gold flex-shrink-0" />
             <div>
               <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-2">
                 Submit Community <span className="text-gold">Event</span>
               </h1>
               <p className="text-primary-foreground/70 text-lg">Share your event with the Cypress community</p>
             </div>
-          </motion.div>
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       <div className="max-w-2xl mx-auto px-6 mt-10">
         <ScrollFadeIn>

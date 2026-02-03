@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/AuthContext';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { useEventStoreContext } from '@/contexts/EventStoreContext';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { PageHeader } from '@/components/PageHeader';
 import GlassCard from '@/components/GlassCard';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -40,26 +40,20 @@ const MySubmissions = () => {
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
-      <div className="relative overflow-hidden">
-        <div className="bg-primary py-16 md:py-20 px-6 relative">
-          <FloatingOrbs className="opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="max-w-7xl mx-auto relative z-10 flex items-center gap-4"
-          >
-            <FileText className="h-12 w-12 text-gold" />
+      <PageHeader
+        image="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1920&h=600&fit=crop"
+        children={
+          <div className="flex items-center gap-4">
+            <FileText className="h-12 w-12 text-gold flex-shrink-0" />
             <div>
               <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-2">
                 My <span className="text-gold">Submissions</span>
               </h1>
               <p className="text-primary-foreground/70 text-lg">Track your business and event submissions</p>
             </div>
-          </motion.div>
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       <div className="max-w-4xl mx-auto px-6 mt-10">
         <ScrollFadeIn>

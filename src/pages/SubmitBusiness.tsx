@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
+import { PageHeader } from '@/components/PageHeader';
 import { categories } from '@/data/businessData';
 import { toast } from '@/hooks/use-toast';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
@@ -29,6 +30,39 @@ const initialForm: BusinessForm = {
   name: '', category: '', address: '', phone: '', website: '',
   priceRange: '', description: '', ownerName: '', ownerEmail: '', hours: '',
 };
+
+const inputClass = (field: keyof BusinessForm, hasError: boolean) =>
+  `w-full px-4 py-3 rounded-xl border text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all ${hasError ? 'border-destructive ring-1 ring-destructive/30' : 'border-border'}`;
+
+const Field = ({ label, field, type = 'text', placeholder, required = false, children, value, onChange, error }: {
+  label: string; field: keyof BusinessForm; type?: string;
+  placeholder?: string; required?: boolean; children?: React.ReactNode;
+  value: string; onChange: (value: string) => void; error?: string;
+}) => (
+  <div>
+    <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
+      {label} {required && <span className="text-destructive">*</span>}
+    </label>
+    {children || (
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={inputClass(field, !!error)}
+      />
+    )}
+    {error && (
+      <motion.p
+        initial={{ opacity: 0, y: -5 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-destructive text-xs mt-1.5 font-medium"
+      >
+        {error}
+      </motion.p>
+    )}
+  </div>
+);
 
 const SubmitBusiness = () => {
   const { addPending } = useBusinessStoreContext();
@@ -99,58 +133,13 @@ const SubmitBusiness = () => {
     );
   }
 
-  const inputClass = (field: keyof BusinessForm) =>
-    `w-full px-4 py-3 rounded-xl border text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all ${errors[field] ? 'border-destructive ring-1 ring-destructive/30' : 'border-border'}`;
-
-  const Field = ({ label, field, type = 'text', placeholder, required = false, children }: {
-    label: string; field: keyof BusinessForm; type?: string;
-    placeholder?: string; required?: boolean; children?: React.ReactNode;
-  }) => (
-    <div>
-      <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
-        {label} {required && <span className="text-destructive">*</span>}
-      </label>
-      {children || (
-        <input
-          type={type}
-          value={form[field] as string}
-          onChange={e => update(field, e.target.value)}
-          placeholder={placeholder}
-          className={inputClass(field)}
-        />
-      )}
-      {errors[field] && (
-        <motion.p
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-destructive text-xs mt-1.5 font-medium"
-        >
-          {errors[field]}
-        </motion.p>
-      )}
-    </div>
-  );
-
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
-      {/* Header */}
-      <div className="relative overflow-hidden">
-        <div className="bg-primary py-16 md:py-20 px-6 relative">
-          <FloatingOrbs className="opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="max-w-3xl mx-auto relative z-10"
-          >
-            <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
-              Submit Your <span className="text-gold">Business</span>
-            </h1>
-            <p className="text-primary-foreground/70 text-lg">Join the Cypress LocalLink directory and connect with your community</p>
-          </motion.div>
-        </div>
-      </div>
+      <PageHeader
+        image="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=600&fit=crop"
+        title={<>Submit Your <span className="text-gold">Business</span></>}
+        subtitle="Join the Cypress LocalLink directory and connect with your community"
+      />
 
       <div className="max-w-3xl mx-auto px-6 mt-10">
         <ScrollFadeIn>
@@ -162,14 +151,14 @@ const SubmitBusiness = () => {
               </div>
 
               <div className="space-y-5">
-                <Field label="Business Name" field="name" placeholder="e.g. Cypress Coffee Co." required />
+                <Field label="Business Name" field="name" value={form.name} onChange={v => update('name', v)} error={errors.name} placeholder="e.g. Cypress Coffee Co." required />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Category" field="category" required>
+                  <Field label="Category" field="category" value={form.category} onChange={v => update('category', v)} error={errors.category} required>
                     <select
                       value={form.category}
                       onChange={e => update('category', e.target.value)}
-                      className={inputClass('category')}
+                      className={inputClass('category', !!errors.category)}
                     >
                       <option value="">Select a category</option>
                       {categories.map(c => (
@@ -178,11 +167,11 @@ const SubmitBusiness = () => {
                     </select>
                   </Field>
 
-                  <Field label="Price Range" field="priceRange" required>
+                  <Field label="Price Range" field="priceRange" value={form.priceRange} onChange={v => update('priceRange', v)} error={errors.priceRange} required>
                     <select
                       value={form.priceRange}
                       onChange={e => update('priceRange', e.target.value)}
-                      className={inputClass('priceRange')}
+                      className={inputClass('priceRange', !!errors.priceRange)}
                     >
                       <option value="">Select price range</option>
                       <option value="$">$ — Budget-friendly</option>
@@ -193,22 +182,22 @@ const SubmitBusiness = () => {
                   </Field>
                 </div>
 
-                <Field label="Address" field="address" placeholder="e.g. 123 Main Street, Cypress, TX" required />
+                <Field label="Address" field="address" value={form.address} onChange={v => update('address', v)} error={errors.address} placeholder="e.g. 123 Main Street, Cypress, TX" required />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Phone Number" field="phone" type="tel" placeholder="(281) 555-0123" />
-                  <Field label="Website" field="website" type="url" placeholder="https://yourbusiness.com" />
+                  <Field label="Phone Number" field="phone" type="tel" value={form.phone} onChange={v => update('phone', v)} error={errors.phone} placeholder="(281) 555-0123" />
+                  <Field label="Website" field="website" type="url" value={form.website} onChange={v => update('website', v)} error={errors.website} placeholder="https://yourbusiness.com" />
                 </div>
 
-                <Field label="Business Hours" field="hours" placeholder="e.g. Mon-Fri 9am-6pm, Sat 10am-4pm" />
+                <Field label="Business Hours" field="hours" value={form.hours} onChange={v => update('hours', v)} error={errors.hours} placeholder="e.g. Mon-Fri 9am-6pm, Sat 10am-4pm" />
 
-                <Field label="Description" field="description" required>
+                <Field label="Description" field="description" value={form.description} onChange={v => update('description', v)} error={errors.description} required>
                   <textarea
                     value={form.description}
                     onChange={e => update('description', e.target.value)}
                     placeholder="Tell customers what makes your business special (20-500 characters)"
                     rows={4}
-                    className={`${inputClass('description')} resize-none`}
+                    className={`${inputClass('description', !!errors.description)} resize-none`}
                   />
                   <div className="flex justify-between mt-1.5">
                     {errors.description && (
@@ -231,8 +220,8 @@ const SubmitBusiness = () => {
               </div>
               <div className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Your Name" field="ownerName" placeholder="Full name" required />
-                  <Field label="Email Address" field="ownerEmail" type="email" placeholder="you@email.com" required />
+                  <Field label="Your Name" field="ownerName" value={form.ownerName} onChange={v => update('ownerName', v)} error={errors.ownerName} placeholder="Full name" required />
+                  <Field label="Email Address" field="ownerEmail" type="email" value={form.ownerEmail} onChange={v => update('ownerEmail', v)} error={errors.ownerEmail} placeholder="you@email.com" required />
                 </div>
                 <p className="text-xs text-muted-foreground bg-muted/50 rounded-lg px-4 py-3">
                   Your contact info is kept private and used only for listing verification.

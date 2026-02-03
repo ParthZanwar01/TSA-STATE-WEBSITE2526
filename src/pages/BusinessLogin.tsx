@@ -78,6 +78,18 @@ const BusinessLogin = () => {
           <p className="text-muted-foreground">
             {isSignUp ? 'Join Cypress LocalLink as a business owner' : 'Manage your business listing on Cypress LocalLink'}
           </p>
+          {!isSignUp && (
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('demo@locallink.com');
+                setPassword('demo123');
+              }}
+              className="mt-4 text-xs text-gold hover:text-gold/80 font-medium underline underline-offset-2 transition-colors"
+            >
+              Use demo account
+            </button>
+          )}
         </div>
 
         {/* Form */}

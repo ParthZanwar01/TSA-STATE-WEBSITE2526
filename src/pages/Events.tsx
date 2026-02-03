@@ -6,11 +6,12 @@ import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { useAuth } from '@/hooks/AuthContext';
 import { useFavorites } from '@/hooks/useFavorites';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { PageHeader } from '@/components/PageHeader';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Calendar } from '@/components/ui/calendar';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { format } from 'date-fns';
 import { List, CalendarDays, Plus, Tag, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -74,27 +75,11 @@ const Events = () => {
 
   return (
     <div className="pt-20 pb-16 bg-background min-h-screen">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden">
-        <div className="bg-primary py-16 md:py-20 px-6 relative">
-          <FloatingOrbs className="opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="max-w-7xl mx-auto relative z-10"
-          >
-            <div>
-              <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
-                Community <span className="text-gold">Events</span>
-              </h1>
-              <p className="text-primary-foreground/70 text-lg">What&apos;s happening in Cypress, Texas</p>
-              <p className="text-gold/80 text-sm mt-2 font-medium">{events.length} upcoming events</p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+      <PageHeader
+        image="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&h=600&fit=crop"
+        title={<>Community <span className="text-gold">Events</span></>}
+        subtitle={`What's happening in Cypress, Texas — ${events.length} upcoming events`}
+      />
 
       <div className="mt-10 px-6">
         <ScrollFadeIn>
@@ -142,10 +127,16 @@ const Events = () => {
               ) : (
                 <Calendar
                   mode="single"
-                  showOutsideDays
+                  showOutsideDays={false}
+                  weekStartsOn={1}
+                  formatters={{
+                    formatWeekdayName: (date, options) => format(date, 'EEE', { locale: options?.locale }),
+                  }}
                   className="p-3 w-full"
                   classNames={{
-                    row: "flex w-full mt-2 h-[5.5rem]",
+                    head_row: "flex w-full",
+                    head_cell: "flex-1 min-w-0 text-muted-foreground rounded-md font-medium text-[0.75rem] py-2",
+                    row: "flex w-full mt-1 h-[5.5rem]",
                     cell: "flex-1 min-w-0 h-[5.5rem] p-1 align-top",
                     day: cn(
                       "h-full min-h-0 w-full p-1.5 font-normal flex flex-col items-stretch rounded-lg border border-border bg-card shadow-sm hover:border-gold/40 hover:shadow-md transition-all overflow-hidden"

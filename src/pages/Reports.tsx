@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/AuthContext';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { useFavorites } from '@/hooks/useFavorites';
 import { getAllReviews } from '@/hooks/useUserReviews';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { PageHeader } from '@/components/PageHeader';
 import GlassCard from '@/components/GlassCard';
 import { motion } from 'framer-motion';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -101,27 +101,23 @@ const Reports = () => {
       <h1 className="hidden print:block text-xl font-bold mb-4 px-6 pt-6">
         Cypress LocalLink – Report ({new Date().toLocaleDateString()})
       </h1>
-      <div className="relative overflow-hidden print:hidden">
-        <div className="bg-primary py-16 md:py-20 px-6 relative">
-          <FloatingOrbs className="opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-navy-light opacity-80" />
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="max-w-7xl mx-auto relative z-10 flex items-center gap-4"
-          >
-            <FileText className="h-12 w-12 text-gold" />
-            <div>
-              <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-2">
-                Custom <span className="text-gold">Reports</span>
-              </h1>
-              <p className="text-primary-foreground/70 text-lg">
-                View and export data on businesses, reviews, and favorites
-              </p>
+      <div className="print:hidden">
+        <PageHeader
+          image="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&h=600&fit=crop"
+          children={
+            <div className="flex items-center gap-4">
+              <FileText className="h-12 w-12 text-gold flex-shrink-0" />
+              <div>
+                <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-2">
+                  Custom <span className="text-gold">Reports</span>
+                </h1>
+                <p className="text-primary-foreground/70 text-lg">
+                  View and export data on businesses, reviews, and favorites
+                </p>
+              </div>
             </div>
-          </motion.div>
-        </div>
+          }
+        />
       </div>
 
       <div className="max-w-5xl mx-auto px-6 mt-10">

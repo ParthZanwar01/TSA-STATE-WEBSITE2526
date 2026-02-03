@@ -1,5 +1,5 @@
 import { ScrollFadeIn, StaggerChildren, StaggerItem, TextReveal } from '@/components/ScrollAnimations';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { PageHeader } from '@/components/PageHeader';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Link } from 'react-router-dom';
@@ -20,28 +20,20 @@ const values = [
 const About = () => {
   return (
     <div className="pt-20 bg-background">
-      {/* Hero */}
-      <div className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=800&fit=crop)' }}
-        />
-        <div className="absolute inset-0 bg-hero-overlay" />
-        <FloatingOrbs className="opacity-10" />
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="relative z-10 text-center px-6 max-w-3xl"
-        >
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-4">
-            About Cypress <span className="text-gold">LocalLink</span>
-          </h1>
-          <p className="text-primary-foreground/80 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            This community resource hub connects Cypress, Texas residents with local businesses, non-profits, support services, and civic programs.
-          </p>
-        </motion.div>
-      </div>
+      <PageHeader
+        image="https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=800&fit=crop"
+        className="min-h-[60vh] [&>div]:min-h-[60vh]"
+        children={
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-4">
+              About Cypress <span className="text-gold">LocalLink</span>
+            </h1>
+            <p className="text-primary-foreground/80 text-lg md:text-xl leading-relaxed">
+              This community resource hub connects Cypress, Texas residents with local businesses, non-profits, support services, and civic programs.
+            </p>
+          </div>
+        }
+      />
 
       {/* Stats */}
       <section className="py-20 px-6 relative">
@@ -136,8 +128,8 @@ const About = () => {
       </section>
 
       {/* Solution */}
-      <section className="py-20 px-6 bg-muted">
-        <div className="max-w-5xl mx-auto">
+      <section className="py-20 px-6 bg-muted overflow-visible">
+        <div className="max-w-5xl mx-auto overflow-visible">
           <ScrollFadeIn>
             <div className="text-center mb-16">
               <span className="text-gold text-sm font-semibold tracking-wider uppercase">Our Solution</span>
@@ -150,28 +142,36 @@ const About = () => {
             </div>
           </ScrollFadeIn>
 
-          <StaggerChildren className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StaggerChildren className="grid grid-cols-1 md:grid-cols-3 gap-8 overflow-visible">
             {[
               { title: "Discover", desc: "Find local businesses easily with our comprehensive, searchable directory", img: "https://images.unsplash.com/photo-1526243741027-444d633d7365?w=400&h=300&fit=crop" },
               { title: "Evaluate", desc: "Read authentic community reviews from your Cypress neighbors", img: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400&h=300&fit=crop" },
               { title: "Support", desc: "Shop local and strengthen the Cypress economy and community", img: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=400&h=300&fit=crop" },
             ].map((item, i) => (
-              <StaggerItem key={item.title}>
+              <StaggerItem key={item.title} className="overflow-visible pt-2">
                 <motion.div
                   whileHover={{ y: -8 }}
                   className="bg-card border border-border rounded-2xl overflow-hidden depth-shadow group"
                 >
-                  <div className="relative h-48 overflow-hidden">
-                    <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4">
+                  <div className="relative h-48 overflow-hidden bg-muted">
+                    <div className="absolute inset-0 bg-gradient-to-b from-muted to-muted-foreground/10" aria-hidden />
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="relative z-10 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-primary/60 to-transparent z-20" />
+                    <div className="absolute bottom-4 left-4 z-30">
                       <span className="bg-gold/90 text-primary font-bold text-xs px-3 py-1 rounded-full">
                         0{i + 1}
                       </span>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="font-display text-xl font-bold text-foreground mb-2">{item.title}</h3>
+                  <div className="p-6 flex flex-col">
+                    <h3 className="font-display text-xl font-bold text-foreground mb-2 leading-tight">{item.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                   </div>
                 </motion.div>
