@@ -17,7 +17,7 @@ interface ReCaptchaProps {
 }
 
 export const ReCaptcha = ({ onVerify, onExpire, theme = 'light', size = 'normal', className = '' }: ReCaptchaProps) => (
-  <div className={`w-full flex justify-start [&>div]:origin-left [&>div]:scale-x-[1.35] ${className}`}>
+  <div className={`w-full min-w-0 ${className}`}>
     <ReCAPTCHA
       sitekey={SITE_KEY}
       theme={theme}

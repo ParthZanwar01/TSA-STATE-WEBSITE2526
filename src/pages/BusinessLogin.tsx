@@ -78,23 +78,23 @@ const BusinessLogin = () => {
           <p className="text-muted-foreground">
             {isSignUp ? 'Join Cypress LocalLink as a business owner' : 'Manage your business listing on Cypress LocalLink'}
           </p>
-          {!isSignUp && (
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('demo@locallink.com');
-                setPassword('demo123');
-              }}
-              className="mt-4 text-xs text-gold hover:text-gold/80 font-medium underline underline-offset-2 transition-colors"
-            >
-              Use demo account
-            </button>
-          )}
         </div>
 
         {/* Form */}
         <GlassCard glow className="p-8 depth-shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-5">
+            {!isSignUp && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('demo@locallink.com');
+                  setPassword('demo123');
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border-2 border-gold/40 bg-gold/5 text-gold font-semibold text-sm hover:bg-gold/10 hover:border-gold/60 transition-colors"
+              >
+                Use demo account
+              </button>
+            )}
             {isSignUp && (
               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
                 <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
