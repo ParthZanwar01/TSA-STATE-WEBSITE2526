@@ -86,11 +86,22 @@ const BusinessLogin = () => {
             {!isSignUp && (
               <button
                 type="button"
-                onClick={() => {
+                onClick={async () => {
                   setEmail('demo@locallink.com');
                   setPassword('demo123');
+                  setLoading(true);
+                  try {
+                    const result = await signIn('demo@locallink.com', 'demo123');
+                    if (result?.error) return; // Toast already shown
+                    const user = result?.data?.user;
+                    if (user?.role === 'admin') navigate('/admin');
+                    else navigate(redirectTo && redirectTo.startsWith('/') ? redirectTo : '/directory');
+                  } finally {
+                    setLoading(false);
+                  }
                 }}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border-2 border-gold/40 bg-gold/5 text-gold font-semibold text-sm hover:bg-gold/10 hover:border-gold/60 transition-colors"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border-2 border-gold/40 bg-gold/5 text-gold font-semibold text-sm hover:bg-gold/10 hover:border-gold/60 transition-colors disabled:opacity-70"
               >
                 Use demo account
               </button>
