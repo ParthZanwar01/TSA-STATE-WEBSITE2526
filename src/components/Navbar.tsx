@@ -25,7 +25,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md border-0 shadow-none">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo - use anchor to avoid white screen on client-side nav to home */}
         <a href="/" className="flex items-center gap-2 relative text-inherit no-underline hover:opacity-90 transition-opacity">
