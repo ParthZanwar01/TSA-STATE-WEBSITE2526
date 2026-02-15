@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
 import { PageHeader } from '@/components/PageHeader';
 import { categories } from '@/data/businessData';
+import { isValidPhone, hasStreetNumber, isValidPersonName, hasMeaningfulName } from '@/lib/validation';
 import { toast } from '@/hooks/use-toast';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
@@ -11,18 +12,23 @@ import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { ReCaptcha } from '@/components/ReCaptcha';
 
-const businessSchema = z.object({
-  name: z.string().trim().min(2, "Business name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
-  category: z.string().min(1, "Please select a category"),
-  address: z.string().trim().min(5, "Please enter a valid address").max(200, "Address must be less than 200 characters"),
-  phone: z.string().trim().regex(/^[\d\s\-()+]*$/, "Invalid phone number format").max(20, "Phone number too long").optional().or(z.literal("")),
-  website: z.string().trim().url("Please enter a valid URL").max(255, "URL too long").optional().or(z.literal("")),
-  priceRange: z.string().min(1, "Please select a price range"),
-  description: z.string().trim().min(20, "Description must be at least 20 characters").max(500, "Description must be less than 500 characters"),
-  ownerName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
-  ownerEmail: z.string().trim().email("Please enter a valid email address").max(255, "Email too long"),
-  hours: z.string().trim().max(200, "Hours description too long").optional().or(z.literal("")),
-});
+const businessSchema = z
+  .object({
+    name: z.string().trim().min(2, "Business name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
+    category: z.string().min(1, "Please select a category"),
+    address: z.string().trim().min(5, "Please enter a valid address").max(200, "Address must be less than 200 characters"),
+    phone: z.string().trim().regex(/^[\d\s\-()+]*$/, "Invalid phone format: use digits, spaces, hyphens, or parentheses").max(20, "Phone number too long").optional().or(z.literal("")),
+    website: z.string().trim().url("Please enter a valid URL (e.g. https://example.com)").max(255, "URL too long").optional().or(z.literal("")),
+    priceRange: z.string().min(1, "Please select a price range"),
+    description: z.string().trim().min(20, "Description must be at least 20 characters").max(500, "Description must be less than 500 characters"),
+    ownerName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
+    ownerEmail: z.string().trim().email("Please enter a valid email address").max(255, "Email too long"),
+    hours: z.string().trim().max(200, "Hours description too long").optional().or(z.literal("")),
+  })
+  .refine((data) => hasMeaningfulName(data.name), { message: "Business name should contain at least one letter", path: ["name"] })
+  .refine((data) => hasStreetNumber(data.address), { message: "Address should include a street number (e.g. 123 Main St)", path: ["address"] })
+  .refine((data) => isValidPhone(data.phone ?? ""), { message: "Phone number must have at least 10 digits", path: ["phone"] })
+  .refine((data) => isValidPersonName(data.ownerName), { message: "Name should not contain numbers", path: ["ownerName"] });
 
 type BusinessForm = z.infer<typeof businessSchema>;
 

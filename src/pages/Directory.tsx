@@ -17,7 +17,7 @@ const Directory = () => {
   const initialCategory = searchParams.get('category') || '';
   const initialSearch = searchParams.get('search') || '';
 
-  const [search, setSearch] = useState(initialSearch);
+  const [search, setSearch] = useState(initialSearch.slice(0, 100));
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState<'name' | 'rating' | 'reviews'>('name');
   const [flippedCard, setFlippedCard] = useState<string | null>(null);
@@ -114,7 +114,7 @@ const Directory = () => {
                 type="text"
                 placeholder="Search by business name..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value.slice(0, 100))}
                 className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all"
               />
             </div>
@@ -234,9 +234,18 @@ const Directory = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-center py-20"
+            role="status"
+            aria-live="polite"
+            aria-label="No businesses match your search"
           >
             <p className="text-lg font-display font-bold text-foreground mb-2">No businesses found</p>
-            <p className="text-muted-foreground">Try adjusting your filters or search term</p>
+            <p className="text-muted-foreground mb-2">
+              {search
+                ? `No businesses match "${search.trim() || 'your search'}". Try a different term or select "All" to browse all categories.`
+                : selectedCategory
+                  ? `No businesses in the selected category. Try "All" or another category.`
+                  : 'Try adjusting your filters or search term to see more results.'}
+            </p>
           </motion.div>
         )}
       </div>

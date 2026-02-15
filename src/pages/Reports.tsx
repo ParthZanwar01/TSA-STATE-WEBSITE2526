@@ -30,6 +30,11 @@ const Reports = () => {
   });
   const [category, setCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState<'name' | 'rating' | 'reviews'>('name');
+  const [minRating, setMinRating] = useState<string>('');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
+  const [minReviewRating, setMinReviewRating] = useState<string>('');
+  const [reviewSort, setReviewSort] = useState<'date-desc' | 'date-asc' | 'rating-desc' | 'rating-asc'>('date-desc');
 
   const toggleSection = (key: ReportSection) => {
     setSections((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -38,11 +43,38 @@ const Reports = () => {
   const filteredBusinesses = useMemo(() => {
     let list = allBusinesses;
     if (category) list = list.filter((b) => b.category === category);
+    const minR = minRating ? Number(minRating) : 0;
+    if (minR > 0) list = list.filter((b) => b.rating >= minR);
     if (sortBy === 'rating') list = [...list].sort((a, b) => b.rating - a.rating);
     else if (sortBy === 'reviews') list = [...list].sort((a, b) => b.reviewCount - a.reviewCount);
     else list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     return list;
-  }, [allBusinesses, category, sortBy]);
+  }, [allBusinesses, category, sortBy, minRating]);
+
+  const parseReviewDate = (dateStr: string): number => {
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? 0 : d.getTime();
+  };
+
+  const filteredReviews = useMemo(() => {
+    let list = reviews;
+    if (dateFrom) {
+      const from = new Date(dateFrom).getTime();
+      list = list.filter((r) => parseReviewDate(r.date) >= from);
+    }
+    if (dateTo) {
+      const to = new Date(dateTo + 'T23:59:59').getTime();
+      list = list.filter((r) => parseReviewDate(r.date) <= to);
+    }
+    const minR = minReviewRating ? Number(minReviewRating) : 0;
+    if (minR > 0) list = list.filter((r) => r.rating >= minR);
+    list = [...list];
+    if (reviewSort === 'date-desc') list.sort((a, b) => parseReviewDate(b.date) - parseReviewDate(a.date));
+    else if (reviewSort === 'date-asc') list.sort((a, b) => parseReviewDate(a.date) - parseReviewDate(b.date));
+    else if (reviewSort === 'rating-desc') list.sort((a, b) => b.rating - a.rating);
+    else list.sort((a, b) => a.rating - b.rating);
+    return list;
+  }, [reviews, dateFrom, dateTo, minReviewRating, reviewSort]);
 
   const [reviewsKey, setReviewsKey] = useState(0);
   const reviews = useMemo(() => getAllReviews(), [reviewsKey]);
@@ -69,7 +101,7 @@ const Reports = () => {
     if (sections.reviews) {
       lines.push('REVIEWS');
       lines.push('Business ID,Author,Rating,Date,Text');
-      reviews.forEach((r) => {
+      filteredReviews.forEach((r) => {
         const safe = (s: string) => `"${(s || '').replace(/"/g, '""')}"`;
         lines.push(`${r.businessId},${safe(r.author)},${r.rating},${r.date},${safe(r.text)}`);
       });
@@ -142,7 +174,7 @@ const Reports = () => {
                         checked={sections.reviews}
                         onCheckedChange={() => toggleSection('reviews')}
                       />
-                      <span className="text-sm">Reviews ({reviews.length})</span>
+                      <span className="text-sm">Reviews ({filteredReviews.length})</span>
                     </label>
                     {user && (
                       <label className="flex items-center gap-2 cursor-pointer">
@@ -169,6 +201,18 @@ const Reports = () => {
                       ))}
                     </select>
                     <select
+                      value={minRating}
+                      onChange={(e) => setMinRating(e.target.value)}
+                      className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
+                    >
+                      <option value="">Min rating (all)</option>
+                      <option value="1">1+ stars</option>
+                      <option value="2">2+ stars</option>
+                      <option value="3">3+ stars</option>
+                      <option value="4">4+ stars</option>
+                      <option value="5">5 stars only</option>
+                    </select>
+                    <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                       className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
@@ -176,6 +220,50 @@ const Reports = () => {
                       <option value="name">Sort by name</option>
                       <option value="rating">Sort by rating</option>
                       <option value="reviews">Sort by review count</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-sm font-medium text-foreground">Review filters & date range</p>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2 items-center">
+                      <input
+                        type="date"
+                        value={dateFrom}
+                        onChange={(e) => setDateFrom(e.target.value)}
+                        className="px-3 py-2 rounded-lg border border-border bg-background text-sm w-full"
+                        placeholder="From"
+                      />
+                      <span className="text-muted-foreground text-sm">to</span>
+                      <input
+                        type="date"
+                        value={dateTo}
+                        onChange={(e) => setDateTo(e.target.value)}
+                        className="px-3 py-2 rounded-lg border border-border bg-background text-sm w-full"
+                        placeholder="To"
+                      />
+                    </div>
+                    <select
+                      value={minReviewRating}
+                      onChange={(e) => setMinReviewRating(e.target.value)}
+                      className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
+                    >
+                      <option value="">Min review rating (all)</option>
+                      <option value="1">1+ stars</option>
+                      <option value="2">2+ stars</option>
+                      <option value="3">3+ stars</option>
+                      <option value="4">4+ stars</option>
+                      <option value="5">5 stars only</option>
+                    </select>
+                    <select
+                      value={reviewSort}
+                      onChange={(e) => setReviewSort(e.target.value as typeof reviewSort)}
+                      className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
+                    >
+                      <option value="date-desc">Sort: newest first</option>
+                      <option value="date-asc">Sort: oldest first</option>
+                      <option value="rating-desc">Sort: highest rating</option>
+                      <option value="rating-asc">Sort: lowest rating</option>
                     </select>
                   </div>
                 </div>
@@ -253,7 +341,7 @@ const Reports = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {reviews.slice(0, 30).map((r) => (
+                          {filteredReviews.slice(0, 30).map((r) => (
                             <tr key={r.id} className="border-t border-border hover:bg-muted/30">
                               <td className="p-3 font-medium">{r.author}</td>
                               <td className="p-3">★ {r.rating}</td>
@@ -263,9 +351,9 @@ const Reports = () => {
                           ))}
                         </tbody>
                       </table>
-                      {reviews.length > 30 && (
+                      {filteredReviews.length > 30 && (
                         <p className="text-xs text-muted-foreground p-3 border-t border-border print:hidden">
-                          Showing 30 of {reviews.length}. Export CSV for full list.
+                          Showing 30 of {filteredReviews.length}. Export CSV for full list.
                         </p>
                       )}
                     </div>

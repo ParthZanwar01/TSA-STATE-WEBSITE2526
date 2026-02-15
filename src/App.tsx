@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/AuthContext";
 import { BusinessStoreProvider } from "@/contexts/BusinessStoreContext";
 import { EventStoreProvider } from "@/contexts/EventStoreContext";
+import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
@@ -21,6 +22,7 @@ import BusinessLogin from "./pages/BusinessLogin";
 import MyFavorites from "./pages/MyFavorites";
 import Admin from "./pages/Admin";
 import Reports from "./pages/Reports";
+import Accessibility from "./pages/Accessibility";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +52,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/login" element={<BusinessLogin />} />
+            <Route path="/accessibility" element={<Accessibility />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -58,6 +61,7 @@ const App = () => (
     </EventStoreProvider>
     </BusinessStoreProvider>
     </AuthProvider>
+    </AccessibilityProvider>
     </ErrorBoundary>
   </QueryClientProvider>
 );

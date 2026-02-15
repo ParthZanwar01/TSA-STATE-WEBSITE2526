@@ -33,7 +33,13 @@ const Layout = () => {
       </div>
       <AnimatePresence mode="wait">
         <PageTransition key={location.pathname}>
-          <main className="min-h-[60vh]">
+          <a
+          href="#main-content"
+          className="sr-only focus:fixed focus:left-4 focus:top-20 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-gold focus:w-auto focus:h-auto focus:min-w-[180px]"
+        >
+          Skip to main content
+        </a>
+        <main id="main-content" className="min-h-[60vh]" role="main" aria-label="Main content">
             <Outlet />
           </main>
         </PageTransition>
@@ -58,6 +64,7 @@ const Layout = () => {
                 <Link to="/map" className="block text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">Community Map</Link>
                 <Link to="/events" className="block text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">Events</Link>
                 <Link to="/about" className="block text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">About</Link>
+                <Link to="/accessibility" className="block text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">Accessibility</Link>
               </div>
             </div>
             <div>

@@ -10,16 +10,22 @@ import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { ReCaptcha } from '@/components/ReCaptcha';
 import { Calendar } from 'lucide-react';
+import { isDateTodayOrFuture, isValidTimeFormat, isValidPersonName, hasMeaningfulName } from '@/lib/validation';
 
-const eventSchema = z.object({
-  title: z.string().trim().min(2, 'Event title must be at least 2 characters').max(100, 'Title must be less than 100 characters'),
-  date: z.string().min(1, 'Please select a date'),
-  time: z.string().trim().min(1, 'Please enter event time'),
-  location: z.string().trim().min(3, 'Please enter a valid location').max(200, 'Location must be less than 200 characters'),
-  description: z.string().trim().max(500, 'Description must be less than 500 characters').optional().or(z.literal('')),
-  submitterName: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name must be less than 100 characters'),
-  submitterEmail: z.string().trim().email('Please enter a valid email address').max(255, 'Email too long'),
-});
+const eventSchema = z
+  .object({
+    title: z.string().trim().min(2, 'Event title must be at least 2 characters').max(100, 'Title must be less than 100 characters'),
+    date: z.string().min(1, 'Please select a date'),
+    time: z.string().trim().min(1, 'Please enter event time (e.g. 10:00 AM or 14:30)'),
+    location: z.string().trim().min(3, 'Please enter a valid location').max(200, 'Location must be less than 200 characters'),
+    description: z.string().trim().max(500, 'Description must be less than 500 characters').optional().or(z.literal('')),
+    submitterName: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name must be less than 100 characters'),
+    submitterEmail: z.string().trim().email('Please enter a valid email address').max(255, 'Email too long'),
+  })
+  .refine((data) => hasMeaningfulName(data.title), { message: 'Event title should contain at least one letter', path: ['title'] })
+  .refine((data) => isDateTodayOrFuture(data.date), { message: 'Event date must be today or in the future', path: ['date'] })
+  .refine((data) => isValidTimeFormat(data.time), { message: 'Enter a valid time (e.g. 10:00 AM or 14:30)', path: ['time'] })
+  .refine((data) => isValidPersonName(data.submitterName), { message: 'Name should not contain numbers', path: ['submitterName'] });
 
 type EventForm = z.infer<typeof eventSchema>;
 

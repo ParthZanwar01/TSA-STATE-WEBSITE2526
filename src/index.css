@@ -158,6 +158,28 @@
   }
 }
 
+/* High-contrast mode for accessibility (FBLA rubric: UX Design & Rationale) */
+[data-high-contrast="true"] {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 20%;
+  --border: 0 0% 20%;
+  --primary: 220 80% 30%;
+  --primary-foreground: 0 0% 100%;
+}
+[data-high-contrast="true"] .text-muted-foreground {
+  color: hsl(0 0% 20%) !important;
+}
+[data-high-contrast="true"] .bg-muted {
+  background-color: hsl(0 0% 96%) !important;
+}
+[data-high-contrast="true"] .border-border {
+  border-color: hsl(0 0% 20%) !important;
+}
+
 /* Print styles */
 @media print {
   body {

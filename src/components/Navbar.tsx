@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MorphScene from '@/components/MorphScene';
 import { useAuth } from '@/hooks/AuthContext';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { Contrast } from 'lucide-react';
 
 const baseNavLinks = [
   { label: 'About', path: '/about' },
@@ -18,6 +20,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { user, loading: authLoading, signOut } = useAuth();
+  const { highContrast, setHighContrast } = useAccessibility();
   const navLinks = [
     ...baseNavLinks,
     ...(user ? [{ label: 'My Submissions', path: '/my-submissions' }] : []),
@@ -25,10 +28,10 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md [border:none] [box-shadow:none]">
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md [border:none] [box-shadow:none]" aria-label="Main navigation" role="navigation">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo - use anchor to avoid white screen on client-side nav to home */}
-        <a href="/" className="flex items-center gap-2 relative text-inherit no-underline hover:opacity-90 transition-opacity">
+        <a href="/" className="flex items-center gap-2 relative text-inherit no-underline hover:opacity-90 transition-opacity" aria-label="Cypress LocalLink - Home">
           <div className="font-display">
             <span className="text-lg font-bold text-primary">Cypress</span>
             <span className="text-lg font-bold text-gold"> Local</span>
@@ -58,6 +61,14 @@ const Navbar = () => {
               )}
             </Link>
           ))}
+          <button
+            onClick={() => setHighContrast(!highContrast)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={highContrast ? 'Disable high contrast mode' : 'Enable high contrast mode'}
+            title={highContrast ? 'High contrast on' : 'High contrast off'}
+          >
+            <Contrast className="h-4 w-4" />
+          </button>
           {authLoading ? (
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-muted-foreground animate-pulse">
               Loading…
@@ -84,6 +95,8 @@ const Navbar = () => {
           onClick={() => setOpen(!open)}
           className="md:hidden p-2 text-sm font-medium text-foreground"
           whileTap={{ scale: 0.9 }}
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
         >
           {open ? 'Close' : 'Menu'}
         </motion.button>
