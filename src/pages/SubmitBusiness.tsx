@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
 import { PageHeader } from '@/components/PageHeader';
 import { categories } from '@/data/businessData';
-import { isValidPhone, hasStreetNumber, isValidPersonName, hasMeaningfulName } from '@/lib/validation';
+import { isValidPhone, hasStreetNumber, isValidPersonName, hasMeaningfulName, hasValidUrlProtocol, hasMeaningfulText } from '@/lib/validation';
 import { toast } from '@/hooks/use-toast';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
@@ -28,7 +28,9 @@ const businessSchema = z
   .refine((data) => hasMeaningfulName(data.name), { message: "Business name should contain at least one letter", path: ["name"] })
   .refine((data) => hasStreetNumber(data.address), { message: "Address should include a street number (e.g. 123 Main St)", path: ["address"] })
   .refine((data) => isValidPhone(data.phone ?? ""), { message: "Phone number must have at least 10 digits", path: ["phone"] })
-  .refine((data) => isValidPersonName(data.ownerName), { message: "Name should not contain numbers", path: ["ownerName"] });
+  .refine((data) => isValidPersonName(data.ownerName), { message: "Name should not contain numbers", path: ["ownerName"] })
+  .refine((data) => hasValidUrlProtocol(data.website ?? ""), { message: "Website must start with http:// or https://", path: ["website"] })
+  .refine((data) => hasMeaningfulText(data.description, 10), { message: "Description must contain meaningful text (at least 10 letters)", path: ["description"] });
 
 type BusinessForm = z.infer<typeof businessSchema>;
 

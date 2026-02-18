@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { ReCaptcha } from '@/components/ReCaptcha';
 import { Calendar } from 'lucide-react';
-import { isDateTodayOrFuture, isValidTimeFormat, isValidPersonName, hasMeaningfulName } from '@/lib/validation';
+import { isDateTodayOrFuture, isValidTimeFormat, isValidPersonName, hasMeaningfulName, hasMeaningfulText } from '@/lib/validation';
 
 const eventSchema = z
   .object({
@@ -25,7 +25,9 @@ const eventSchema = z
   .refine((data) => hasMeaningfulName(data.title), { message: 'Event title should contain at least one letter', path: ['title'] })
   .refine((data) => isDateTodayOrFuture(data.date), { message: 'Event date must be today or in the future', path: ['date'] })
   .refine((data) => isValidTimeFormat(data.time), { message: 'Enter a valid time (e.g. 10:00 AM or 14:30)', path: ['time'] })
-  .refine((data) => isValidPersonName(data.submitterName), { message: 'Name should not contain numbers', path: ['submitterName'] });
+  .refine((data) => isValidPersonName(data.submitterName), { message: 'Name should not contain numbers', path: ['submitterName'] })
+  .refine((data) => hasMeaningfulName(data.location), { message: 'Location should contain at least one letter (e.g. venue name or address)', path: ['location'] })
+  .refine((data) => !data.description || hasMeaningfulText(data.description, 5), { message: 'Description must contain meaningful text when provided', path: ['description'] });
 
 type EventForm = z.infer<typeof eventSchema>;
 

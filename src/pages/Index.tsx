@@ -1,5 +1,7 @@
 import { useState, Suspense, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { isValidSearchQuery } from '@/lib/validation';
 import { ScrollFadeIn, ScrollScale, StickyReveal, TextReveal, StaggerChildren, StaggerItem, ScrollParallax, ScrollRotate3D } from '@/components/ScrollAnimations';
 import { categories, reviews, events, deals } from '@/data/businessData';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
@@ -21,12 +23,17 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [reviewIndex, setReviewIndex] = useState(0);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/directory?search=${encodeURIComponent(searchQuery)}`);
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+    if (!isValidSearchQuery(trimmed)) {
+      toast({ title: 'Invalid search', description: 'Enter at least one letter or number to search.', variant: 'destructive' });
+      return;
     }
+    navigate(`/directory?search=${encodeURIComponent(trimmed.slice(0, 100))}`);
   };
 
   const nextReview = () => setReviewIndex((i) => (i + 1) % reviews.length);
