@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { categories } from '@/data/businessData';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { useBusinessStoreContext } from '@/contexts/BusinessStoreContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PageHeader } from '@/components/PageHeader';
@@ -10,7 +10,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { Heart } from 'lucide-react';
 
 const Directory = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const { allBusinesses } = useBusinessStoreContext();
   const { isFavorite, toggle } = useFavorites(user?.id ?? null);
@@ -24,7 +24,11 @@ const Directory = () => {
 
   const filtered = useMemo(() => {
     let result = allBusinesses.filter((b) => {
-      const matchesSearch = !search || b.name.toLowerCase().includes(search.toLowerCase()) || b.description.toLowerCase().includes(search.toLowerCase());
+      const q = search.trim().toLowerCase();
+      const matchesSearch = !q ||
+        b.name.toLowerCase().includes(q) ||
+        b.description.toLowerCase().includes(q) ||
+        b.category.toLowerCase().includes(q);
       const matchesCategory = !selectedCategory || b.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
@@ -62,9 +66,9 @@ const Directory = () => {
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/">Home</Link>
-              </BreadcrumbLink>
+              <Link to="/" className="transition-colors hover:text-foreground">
+                Home
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -89,7 +93,11 @@ const Directory = () => {
                   key={cat || 'all'}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => {
+                  setSelectedCategory(cat);
+                  setSearch('');
+                  setSearchParams((p) => { const next = new URLSearchParams(p); next.delete('search'); if (cat) next.set('category', cat); else next.delete('category'); return next; });
+                }}
                   className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     selectedCategory === cat
                       ? 'bg-primary text-primary-foreground shadow-md'
@@ -114,7 +122,11 @@ const Directory = () => {
                 type="text"
                 placeholder="Search by business name..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value.slice(0, 100))}
+                onChange={(e) => {
+                const v = e.target.value.slice(0, 100);
+                setSearch(v);
+                setSearchParams((p) => { const next = new URLSearchParams(p); if (v.trim()) next.set('search', v); else next.delete('search'); return next; });
+              }}
                 className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all"
               />
             </div>

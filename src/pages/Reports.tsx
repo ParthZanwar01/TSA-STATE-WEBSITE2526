@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
-import { FileText, Download, RefreshCw } from 'lucide-react';
+import { FileText, RefreshCw } from 'lucide-react';
 import { categories } from '@/data/businessData';
 
 type ReportSection = 'businesses' | 'reviews' | 'favorites';
@@ -85,45 +85,6 @@ const Reports = () => {
     () => allBusinesses.filter((b) => favorites.includes(b.id)),
     [allBusinesses, favorites]
   );
-
-  const exportCSV = () => {
-    const lines: string[] = [];
-
-    if (sections.businesses) {
-      lines.push('BUSINESSES');
-      lines.push('Name,Category,Address,Rating,Reviews,Price Range');
-      filteredBusinesses.forEach((b) => {
-        lines.push(`"${b.name}","${b.category}","${b.address}",${b.rating},${b.reviewCount},"${b.priceRange}"`);
-      });
-      lines.push('');
-    }
-
-    if (sections.reviews) {
-      lines.push('REVIEWS');
-      lines.push('Business ID,Author,Rating,Date,Text');
-      filteredReviews.forEach((r) => {
-        const safe = (s: string) => `"${(s || '').replace(/"/g, '""')}"`;
-        lines.push(`${r.businessId},${safe(r.author)},${r.rating},${r.date},${safe(r.text)}`);
-      });
-      lines.push('');
-    }
-
-    if (sections.favorites && user) {
-      lines.push('FAVORITES');
-      lines.push('Business ID,Name,Category');
-      favoriteBusinesses.forEach((b) => {
-        lines.push(`"${b.id}","${b.name}","${b.category}"`);
-      });
-    }
-
-    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `cypress-locallink-report-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
 
   const hasAnySection = sections.businesses || sections.reviews || (sections.favorites && user);
 
@@ -276,15 +237,6 @@ const Reports = () => {
                     <RefreshCw className="h-4 w-4" />
                     Refresh
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={exportCSV}
-                    disabled={!hasAnySection}
-                    className="gap-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    Export CSV
-                  </Button>
                 </div>
               </div>
             </div>
@@ -300,7 +252,7 @@ const Reports = () => {
                     <h3 className="font-display font-bold text-foreground text-lg mb-4">Businesses</h3>
                     <div className="max-h-64 overflow-auto rounded-lg border border-border print:max-h-none print:overflow-visible print:border-0">
                       <table className="w-full text-sm">
-                        <thead className="bg-muted/50 sticky top-0">
+                        <thead className="sticky top-0 z-10 bg-muted">
                           <tr>
                             <th className="text-left p-3">Name</th>
                             <th className="text-left p-3">Category</th>
@@ -321,7 +273,7 @@ const Reports = () => {
                       </table>
                       {filteredBusinesses.length > 50 && (
                         <p className="text-xs text-muted-foreground p-3 border-t border-border print:hidden">
-                          Showing 50 of {filteredBusinesses.length}. Export CSV for full list.
+                          Showing 50 of {filteredBusinesses.length}.
                         </p>
                       )}
                     </div>
@@ -332,7 +284,7 @@ const Reports = () => {
                     <h3 className="font-display font-bold text-foreground text-lg mb-4">Reviews</h3>
                     <div className="max-h-64 overflow-auto rounded-lg border border-border print:max-h-none print:overflow-visible print:border-0">
                       <table className="w-full text-sm">
-                        <thead className="bg-muted/50 sticky top-0">
+                        <thead className="sticky top-0 z-10 bg-muted">
                           <tr>
                             <th className="text-left p-3">Author</th>
                             <th className="text-left p-3">Rating</th>
@@ -353,7 +305,7 @@ const Reports = () => {
                       </table>
                       {filteredReviews.length > 30 && (
                         <p className="text-xs text-muted-foreground p-3 border-t border-border print:hidden">
-                          Showing 30 of {filteredReviews.length}. Export CSV for full list.
+                          Showing 30 of {filteredReviews.length}.
                         </p>
                       )}
                     </div>

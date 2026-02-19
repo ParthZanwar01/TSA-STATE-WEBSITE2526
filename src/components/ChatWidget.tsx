@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ChatMessage {
@@ -216,7 +217,9 @@ export const ChatWidget = () => {
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
-            <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} className="text-primary-foreground font-bold text-lg">×</motion.div>
+            <motion.div key="close" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <X className="w-7 h-7 text-primary-foreground" strokeWidth={2.5} />
+            </motion.div>
           ) : (
             <motion.div key="open" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="text-primary font-semibold text-sm">Chat</motion.div>
           )}
@@ -253,15 +256,24 @@ export const ChatWidget = () => {
                   <span className="text-primary-foreground/60 text-xs">Online now</span>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setMessages([WELCOME_MSG]);
-                  msgId = 0;
-                }}
-                className="text-primary-foreground/40 hover:text-primary-foreground text-xs transition-colors"
-              >
-                Restart
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setMessages([WELCOME_MSG]);
+                    msgId = 0;
+                  }}
+                  className="text-primary-foreground/40 hover:text-primary-foreground text-xs transition-colors"
+                >
+                  Restart
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close chat"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-foreground/15 hover:bg-primary-foreground/25 text-primary-foreground transition-colors"
+                >
+                  <X className="w-5 h-5" strokeWidth={2.5} />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}

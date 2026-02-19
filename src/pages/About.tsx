@@ -1,5 +1,6 @@
 import { ScrollFadeIn, StaggerChildren, StaggerItem, TextReveal } from '@/components/ScrollAnimations';
 import { PageHeader } from '@/components/PageHeader';
+import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Link } from 'react-router-dom';
