@@ -15,6 +15,8 @@ import MagneticButton from '@/components/MagneticButton';
 import GlassCard from '@/components/GlassCard';
 import { Heart } from 'lucide-react';
 
+const HERO_VIDEO_SRC = '/boardwalk.mp4';
+
 const Index = () => {
   const { user } = useAuth();
   const { allBusinesses } = useBusinessStoreContext();
@@ -44,7 +46,7 @@ const Index = () => {
       {/* ─── HERO WITH 3D MORPH ─── */}
       <StickyReveal>
         <div className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-          {/* Parallax video background */}
+          {/* Parallax video background - boardwalk with refined filter */}
           <motion.div
             className="absolute inset-0"
             style={{ scale: 1.15 }}
@@ -56,10 +58,11 @@ const Index = () => {
               muted
               loop
               playsInline
-              poster="https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=1080&fit=crop"
-              className="absolute inset-0 w-full h-full object-cover"
+              preload="metadata"
+              poster="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&h=1080&fit=crop"
+              className="absolute inset-0 w-full h-full object-cover object-[center_35%] video-refined"
             >
-              <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+              <source src={HERO_VIDEO_SRC} type="video/mp4" />
             </video>
           </motion.div>
           <div className="absolute inset-0 bg-hero-overlay" />

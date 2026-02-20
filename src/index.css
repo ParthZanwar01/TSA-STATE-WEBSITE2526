@@ -97,7 +97,15 @@
   }
 
   .bg-hero-overlay {
-    background: linear-gradient(to bottom, hsl(var(--navy) / 0.7), hsl(var(--navy) / 0.85));
+    background: linear-gradient(to bottom, hsl(var(--navy) / 0.6), hsl(var(--navy) / 0.82));
+    backdrop-filter: blur(0.5px);
+    -webkit-backdrop-filter: blur(0.5px);
+  }
+
+  /* Refined video background: subtle tone/contrast for readability */
+  .video-refined {
+    filter: brightness(0.95) contrast(1.08) saturate(0.9);
+    will-change: transform;
   }
 
   .card-hover {
