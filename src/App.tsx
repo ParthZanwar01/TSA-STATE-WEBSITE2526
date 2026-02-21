@@ -33,6 +33,7 @@ const App = () => (
     <AuthProvider>
     <BusinessStoreProvider>
     <EventStoreProvider>
+    <AccessibilityProvider>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -58,10 +59,10 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </AccessibilityProvider>
     </EventStoreProvider>
     </BusinessStoreProvider>
     </AuthProvider>
-    </AccessibilityProvider>
     </ErrorBoundary>
   </QueryClientProvider>
 );
