@@ -67,19 +67,6 @@ const Index = () => {
           </motion.div>
           <div className="absolute inset-0 bg-hero-overlay" />
 
-          {/* 3D Morph blob */}
-          <div className="absolute inset-0 opacity-40">
-            <Suspense fallback={null}>
-              <MorphScene
-                color1={[0.16, 0.24, 0.42]}
-                color2={[0.83, 0.66, 0.33]}
-                color3={[0.5, 0.2, 0.7]}
-                size={3}
-                interactive={false}
-              />
-            </Suspense>
-          </div>
-
           {/* Content */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
