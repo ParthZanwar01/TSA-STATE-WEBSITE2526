@@ -65,7 +65,6 @@ const Index = () => {
               <source src={HERO_VIDEO_SRC} type="video/mp4" />
             </video>
           </motion.div>
-          <div className="absolute inset-0 bg-hero-overlay" />
 
           {/* Content */}
           <motion.div
