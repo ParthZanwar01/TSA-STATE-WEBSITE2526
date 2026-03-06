@@ -59,12 +59,12 @@ const Index = () => {
               loop
               playsInline
               preload="metadata"
-              poster="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&h=1080&fit=crop"
               className="absolute inset-0 w-full h-full object-cover object-[center_35%] video-refined"
             >
               <source src={HERO_VIDEO_SRC} type="video/mp4" />
             </video>
           </motion.div>
+          <div className="absolute inset-0 bg-hero-overlay-dull" />
 
           {/* Content */}
           <motion.div
