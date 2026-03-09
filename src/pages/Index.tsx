@@ -15,7 +15,7 @@ import MagneticButton from '@/components/MagneticButton';
 import GlassCard from '@/components/GlassCard';
 import { Heart } from 'lucide-react';
 
-const HERO_VIDEO_SRC = '/boardwalk.mp4';
+const HERO_VIDEO_SRC = '/hero-video.mp4';
 
 const Index = () => {
   const { user } = useAuth();
