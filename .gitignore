@@ -11,6 +11,9 @@ node_modules
 dist
 .env
 Cypress-LocalLink-Codebase.docx
+
+# Large source videos (refined versions in public/)
+Untitled design.mp4
 dist-ssr
 *.local
 
