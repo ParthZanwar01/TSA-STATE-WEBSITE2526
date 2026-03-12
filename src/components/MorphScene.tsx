@@ -23,7 +23,14 @@ const MorphScene = ({
     <div className={`absolute inset-0 ${className}`}>
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          onContextLost: (e) => {
+            e.preventDefault();
+          },
+          onContextRestored: () => {},
+        }}
         style={{ background: 'transparent' }}
       >
         <ambientLight intensity={0.3} />

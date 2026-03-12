@@ -1,11 +1,11 @@
 /**
  * Error Boundary: catches React crashes and displays a friendly error page
  * instead of a white screen. Shows helpful error message and recovery options.
+ * Uses <a href="/"> instead of <Link> so the fallback works when rendered outside Router.
  */
 
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 interface Props {
   children: ReactNode;
@@ -79,13 +79,13 @@ export class ErrorBoundary extends Component<Props, State> {
                 <RefreshCw className="h-4 w-4" />
                 Try Again
               </button>
-              <Link
-                to="/"
+              <a
+                href="/"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border font-semibold hover:bg-muted transition-colors"
               >
                 <Home className="h-4 w-4" />
                 Go to Home
-              </Link>
+              </a>
             </div>
           </div>
         </div>

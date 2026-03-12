@@ -1,11 +1,21 @@
 /**
  * Business store for admin: pending submissions and approved (user-submitted) businesses.
- * Static businesses from businessData remain read-only. Approved businesses merge with static.
+ * Static businesses from businessData remain read-only. Approved businesses from SQLite.
  */
 
 import { useState, useCallback, useEffect } from 'react';
 import { businesses as staticBusinesses, type Business } from '@/data/businessData';
 import { sanitizeText } from '@/lib/sanitize';
+import {
+  getApprovedBusinesses,
+  getPendingBusinesses,
+  addApprovedBusiness as dbAddApproved,
+  addPendingBusiness as dbAddPending,
+  removePendingBusiness as dbRemovePending,
+  updateApprovedBusiness as dbUpdateApproved,
+  removeApprovedBusiness as dbRemoveApproved,
+  isDbReady,
+} from '@/lib/sqlite';
 
 export interface PendingBusiness {
   id: string;
@@ -22,37 +32,9 @@ export interface PendingBusiness {
   submittedAt: string;
 }
 
-const PENDING_KEY = 'locallink_pending_businesses';
-const APPROVED_KEY = 'locallink_approved_businesses';
 const CYPRESS_LAT = 29.9691;
 const CYPRESS_LNG = -95.6977;
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop';
-
-function loadPending(): PendingBusiness[] {
-  try {
-    const raw = localStorage.getItem(PENDING_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function loadApproved(): Business[] {
-  try {
-    const raw = localStorage.getItem(APPROVED_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function savePending(list: PendingBusiness[]) {
-  localStorage.setItem(PENDING_KEY, JSON.stringify(list));
-}
-
-function saveApproved(list: Business[]) {
-  localStorage.setItem(APPROVED_KEY, JSON.stringify(list));
-}
 
 /** Generate a full Business from a pending submission */
 function pendingToBusiness(p: PendingBusiness): Business {
@@ -73,17 +55,22 @@ function pendingToBusiness(p: PendingBusiness): Business {
   };
 }
 
+function loadFromDb() {
+  return {
+    approved: isDbReady() ? getApprovedBusinesses() : [],
+    pending: isDbReady() ? getPendingBusinesses() : [],
+  };
+}
+
 export function useBusinessStore() {
-  const [pending, setPending] = useState<PendingBusiness[]>(loadPending);
-  const [approved, setApproved] = useState<Business[]>(loadApproved);
+  const [pending, setPending] = useState<PendingBusiness[]>([]);
+  const [approved, setApproved] = useState<Business[]>([]);
 
   useEffect(() => {
-    savePending(pending);
-  }, [pending]);
-
-  useEffect(() => {
-    saveApproved(approved);
-  }, [approved]);
+    const { approved: a, pending: p } = loadFromDb();
+    setApproved(a);
+    setPending(p);
+  }, []);
 
   const allBusinesses = [...staticBusinesses, ...approved];
 
@@ -103,6 +90,7 @@ export function useBusinessStore() {
       submittedAt: new Date().toISOString(),
     };
     setPending((prev) => [...prev, item]);
+    dbAddPending(item);
   }, []);
 
   const approvePending = useCallback((pendingId: string) => {
@@ -111,22 +99,27 @@ export function useBusinessStore() {
     const biz = pendingToBusiness(p);
     setApproved((prev) => [...prev, biz]);
     setPending((prev) => prev.filter((x) => x.id !== pendingId));
+    dbAddApproved(biz);
+    dbRemovePending(pendingId);
   }, [pending]);
 
   const rejectPending = useCallback((pendingId: string) => {
     setPending((prev) => prev.filter((x) => x.id !== pendingId));
+    dbRemovePending(pendingId);
   }, []);
 
   const updateBusiness = useCallback((id: string, updates: Partial<Business>) => {
-    if (!id.startsWith('biz_submitted_')) return; // only edit user-submitted
+    if (!id.startsWith('biz_submitted_')) return;
     setApproved((prev) =>
       prev.map((b) => (b.id === id ? { ...b, ...updates } : b))
     );
+    dbUpdateApproved(id, updates);
   }, []);
 
   const removeBusiness = useCallback((id: string) => {
     if (!id.startsWith('biz_submitted_')) return;
     setApproved((prev) => prev.filter((b) => b.id !== id));
+    dbRemoveApproved(id);
   }, []);
 
   const getBusinessById = useCallback(

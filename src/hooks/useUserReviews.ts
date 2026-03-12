@@ -1,11 +1,16 @@
 /**
- * Hook for user-submitted reviews. Stores reviews in localStorage
- * to persist across sessions. Used to satisfy FBLA rubric: "Allowing
- * users to leave reviews or ratings."
+ * Hook for user-submitted reviews. Persists to SQLite (IndexedDB).
+ * Used to satisfy FBLA rubric: "Allowing users to leave reviews or ratings."
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { sanitizeText, sanitizeName } from '@/lib/sanitize';
+import {
+  getReviewsByBusinessId,
+  getAllReviewsFromDb,
+  addReview as dbAddReview,
+  removeReviewById as dbRemoveReviewById,
+} from '@/lib/sqlite';
 
 export interface UserReview {
   id: string;
@@ -18,31 +23,12 @@ export interface UserReview {
   date: string;
 }
 
-const STORAGE_KEY = 'locallink_user_reviews';
+/** Load all user-submitted reviews (for admin / Reports). */
+export const getAllReviews = (): UserReview[] => getAllReviewsFromDb();
 
-const loadReviews = (): UserReview[] => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-};
-
-const saveReviews = (reviews: UserReview[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
-};
-
-/** Load all user-submitted reviews (for admin). */
-export const getAllReviews = (): UserReview[] => loadReviews();
-
-/** Remove a review by id (for admin). Persists to localStorage. */
+/** Remove a review by id (for admin). Persists to SQLite. */
 export const removeReviewById = (reviewId: string): void => {
-  const all = loadReviews();
-  const next = all.filter((r) => r.id !== reviewId);
-  saveReviews(next);
+  dbRemoveReviewById(reviewId);
 };
 
 export const useUserReviews = (businessId: string | null) => {
@@ -50,8 +36,7 @@ export const useUserReviews = (businessId: string | null) => {
 
   useEffect(() => {
     if (!businessId) return setReviews([]);
-    const all = loadReviews();
-    setReviews(all.filter((r) => r.businessId === businessId));
+    setReviews(getReviewsByBusinessId(businessId));
   }, [businessId]);
 
   const addReview = useCallback(
@@ -75,9 +60,7 @@ export const useUserReviews = (businessId: string | null) => {
         text: safeText,
         date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
       };
-      const all = loadReviews();
-      all.push(review);
-      saveReviews(all);
+      dbAddReview(review);
       setReviews((prev) => [...prev, review]);
     },
     [businessId]
