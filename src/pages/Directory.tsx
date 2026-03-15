@@ -9,6 +9,8 @@ import { useAuth } from '@/hooks/AuthContext';
 import { useFavorites } from '@/hooks/useFavorites';
 import { Heart } from 'lucide-react';
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop';
+
 const Directory = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
@@ -159,7 +161,16 @@ const Directory = () => {
                   >
                     {/* Front */}
                     <div className="absolute inset-0 rounded-2xl overflow-hidden depth-shadow group-hover:depth-shadow-lg transition-shadow duration-300" style={{ backfaceVisibility: 'hidden' }}>
-                      <img src={biz.image} alt={biz.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                      <img
+                        src={biz.image}
+                        alt={biz.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+                        }}
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
                       <motion.button
                           whileHover={{ scale: 1.1 }}
