@@ -74,7 +74,7 @@ const Events = () => {
   const [view, setView] = useState<'list' | 'calendar'>('calendar');
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&h=600&fit=crop"
         title={<>Community <span className="text-gold">Events</span></>}
@@ -101,7 +101,7 @@ const Events = () => {
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
-            <GlassCard glow className="p-6 md:p-8 depth-shadow overflow-x-auto">
+            <GlassCard glow className={cn("p-6 md:p-8 depth-shadow", view === 'calendar' ? "overflow-hidden" : "overflow-x-auto")}>
               {view === 'list' ? (
                 <ul className="space-y-4">
                   {sortedEvents.map((ev) => (
@@ -125,15 +125,20 @@ const Events = () => {
                   ))}
                 </ul>
               ) : (
-                <Calendar
+                <div className="min-w-0 w-full max-w-full overflow-hidden">
+                  <Calendar
                   mode="single"
                   showOutsideDays={false}
                   weekStartsOn={1}
                   formatters={{
                     formatWeekdayName: (date, options) => format(date, 'EEE', { locale: options?.locale }),
                   }}
-                  className="p-3 w-full"
+                  className="p-3 w-full max-w-full"
                   classNames={{
+                    months: "min-w-0 w-full",
+                    month: "min-w-0 w-full",
+                    table: "w-full table-fixed min-w-0",
+                    tbody: "w-full",
                     head_row: "flex w-full",
                     head_cell: "flex-1 min-w-0 text-muted-foreground rounded-md font-medium text-[0.75rem] py-2",
                     row: "flex w-full mt-1 h-[5.5rem]",
@@ -146,6 +151,7 @@ const Events = () => {
                     DayContent: (props) => <DayContent {...props} events={events} />,
                   }}
                 />
+                </div>
               )}
             </GlassCard>
 

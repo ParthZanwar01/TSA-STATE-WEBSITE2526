@@ -56,6 +56,9 @@ const Reports = () => {
     return isNaN(d.getTime()) ? 0 : d.getTime();
   };
 
+  const [reviewsKey, setReviewsKey] = useState(0);
+  const reviews = useMemo(() => getAllReviews(), [reviewsKey]);
+
   const filteredReviews = useMemo(() => {
     let list = reviews;
     if (dateFrom) {
@@ -76,9 +79,6 @@ const Reports = () => {
     return list;
   }, [reviews, dateFrom, dateTo, minReviewRating, reviewSort]);
 
-  const [reviewsKey, setReviewsKey] = useState(0);
-  const reviews = useMemo(() => getAllReviews(), [reviewsKey]);
-
   const refreshData = () => setReviewsKey((k) => k + 1);
 
   const favoriteBusinesses = useMemo(
@@ -89,7 +89,7 @@ const Reports = () => {
   const hasAnySection = sections.businesses || sections.reviews || (sections.favorites && user);
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen print:pt-0 print:pb-0">
+    <div className="pt-14 pb-16 bg-background min-h-screen print:pt-0 print:pb-0">
       {/* Print-only title */}
       <h1 className="hidden print:block text-xl font-bold mb-4 px-6 pt-6">
         Cypress LocalLink – Report ({new Date().toLocaleDateString()})

@@ -28,8 +28,9 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 bg-card/95 backdrop-blur-md [border:none] [box-shadow:none]" aria-label="Main navigation" role="navigation">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-card shadow-sm" aria-label="Main navigation" role="navigation">
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-border/70" aria-hidden />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
         {/* Logo - use anchor to avoid white screen on client-side nav to home */}
         <a href="/" className="flex items-center gap-2 relative text-inherit no-underline hover:opacity-90 transition-opacity" aria-label="Cypress LocalLink - Home">
           <div className="font-display">

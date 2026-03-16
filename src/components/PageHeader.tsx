@@ -26,8 +26,8 @@ export const PageHeader = ({ title, subtitle, image = DEFAULT_IMAGE, children, c
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   return (
-    <div ref={ref} data-page-header className={`relative overflow-hidden -mt-24 pt-24 ${className}`}>
-      <div className="relative py-16 md:py-20 px-6 min-h-[200px] flex items-center">
+    <div ref={ref} data-page-header className={`relative overflow-hidden -mt-14 pt-14 ${className}`}>
+      <div className="relative py-12 md:py-16 px-6 min-h-[180px] flex items-center">
         {/* Parallax background image */}
         <motion.div
           className="absolute inset-0 -inset-y-[15%] -inset-x-[5%] w-[110%] h-[130%]"

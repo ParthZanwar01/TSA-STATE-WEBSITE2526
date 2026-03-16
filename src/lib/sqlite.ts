@@ -5,8 +5,7 @@
 
 import type { Database } from 'sql.js';
 import type { Business } from '@/data/businessData';
-import type { PendingBusiness } from '@/hooks/useBusinessStore';
-import type { UserReview } from '@/hooks/useUserReviews';
+import type { PendingBusiness, UserReview } from '@/types/db';
 
 const IDB_NAME = 'locallink_sqlite';
 const IDB_STORE = 'db';
@@ -287,12 +286,32 @@ export function addReview(r: UserReview) {
     `INSERT INTO user_reviews (id, businessId, userId, author, initials, rating, text, date, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [r.id, r.businessId, r.userId, r.author, r.initials, r.rating, r.text, r.date, '']
   );
+  syncApprovedBusinessReviewCount(r.businessId);
   schedulePersist();
+}
+
+/** Update approved business's reviewCount and rating from user_reviews (only for user-submitted businesses). */
+function syncApprovedBusinessReviewCount(businessId: string) {
+  if (!db) return;
+  const reviews = getReviewsByBusinessId(businessId);
+  const count = reviews.length;
+  const avgRating = count > 0
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / count
+    : 0;
+  const stmt = db.prepare('UPDATE approved_businesses SET reviewCount = ?, rating = ? WHERE id = ?');
+  stmt.run([count, Math.round(avgRating * 10) / 10, businessId]);
+  stmt.free();
 }
 
 export function removeReviewById(reviewId: string) {
   if (!db) return;
+  const getStmt = db.prepare('SELECT businessId FROM user_reviews WHERE id = ?');
+  getStmt.bind([reviewId]);
+  let businessId: string | null = null;
+  if (getStmt.step()) businessId = String(getStmt.get()[0]);
+  getStmt.free();
   db.run('DELETE FROM user_reviews WHERE id = ?', [reviewId]);
+  if (businessId) syncApprovedBusinessReviewCount(businessId);
   schedulePersist();
 }
 

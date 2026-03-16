@@ -43,7 +43,7 @@ const Directory = () => {
   const allCategories = ['', ...new Set(allBusinesses.map(b => b.category))];
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&h=600&fit=crop"
         children={

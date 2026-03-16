@@ -82,7 +82,7 @@ const SubmitEvent = () => {
 
   if (!user) {
     return (
-      <div className="pt-20 pb-16 bg-background min-h-screen flex items-center justify-center px-6">
+      <div className="pt-14 pb-16 bg-background min-h-screen flex items-center justify-center px-6">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center max-w-md">
           <h1 className="font-display text-4xl font-bold text-foreground mb-3">Sign in required</h1>
           <p className="text-muted-foreground text-lg mb-8">
@@ -106,7 +106,7 @@ const SubmitEvent = () => {
 
   if (submitted) {
     return (
-      <div className="pt-20 pb-16 bg-background min-h-screen flex items-center justify-center px-6">
+      <div className="pt-14 pb-16 bg-background min-h-screen flex items-center justify-center px-6">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center max-w-md">
           <h1 className="font-display text-4xl font-bold text-foreground mb-3">Thank You!</h1>
           <p className="text-muted-foreground text-lg mb-8">
@@ -137,7 +137,7 @@ const SubmitEvent = () => {
   const minDate = new Date().toISOString().slice(0, 10);
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&h=600&fit=crop"
         children={

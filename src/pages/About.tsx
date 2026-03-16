@@ -4,13 +4,9 @@ import { FloatingOrbs } from '@/components/FloatingOrbs';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
 import { Link } from 'react-router-dom';
-
-const stats = [
-  { value: "100+", label: "Local Businesses" },
-  { value: "50+", label: "Active Deals" },
-  { value: "Monthly", label: "Community Events" },
-  { value: "500+", label: "5-Star Reviews" },
-];
+import { useState, useEffect } from 'react';
+import { reviews as presetReviews } from '@/data/businessData';
+import { getAllReviewsFromDb } from '@/lib/sqlite';
 
 const values = [
   { title: "Community First", desc: "Every feature we build starts with the question: does this help our neighbors connect?" },
@@ -19,8 +15,25 @@ const values = [
 ];
 
 const About = () => {
+  const [totalReviews, setTotalReviews] = useState(presetReviews.length);
+  useEffect(() => {
+    try {
+      const userReviews = getAllReviewsFromDb();
+      setTotalReviews(presetReviews.length + userReviews.length);
+    } catch {
+      setTotalReviews(presetReviews.length);
+    }
+  }, []);
+
+  const stats = [
+    { value: "100+", label: "Local Businesses" },
+    { value: "50+", label: "Active Deals" },
+    { value: "Monthly", label: "Community Events" },
+    { value: `${totalReviews}+`, label: "5-Star Reviews" },
+  ];
+
   return (
-    <div className="pt-20 bg-background">
+    <div className="pt-14 bg-background">
       <PageHeader
         image="https://images.unsplash.com/photo-1582407947092-50b8aba1c062?w=1920&h=800&fit=crop"
         className="min-h-[60vh] [&>div]:min-h-[60vh]"
@@ -162,7 +175,12 @@ const About = () => {
                       className="relative z-10 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                       loading="lazy"
                       decoding="async"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      onError={(e) => {
+                        const el = e.currentTarget;
+                        if (el.dataset.fallback) return;
+                        el.dataset.fallback = '1';
+                        el.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop';
+                      }}
                     />
                     <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-primary/60 to-transparent z-20" />
                     <div className="absolute bottom-4 left-4 z-30">

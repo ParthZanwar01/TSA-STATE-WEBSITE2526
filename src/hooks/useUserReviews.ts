@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { sanitizeText, sanitizeName } from '@/lib/sanitize';
+import type { UserReview } from '@/types/db';
 import {
   getReviewsByBusinessId,
   getAllReviewsFromDb,
@@ -12,16 +13,7 @@ import {
   removeReviewById as dbRemoveReviewById,
 } from '@/lib/sqlite';
 
-export interface UserReview {
-  id: string;
-  businessId: string;
-  userId: string;
-  author: string;
-  initials: string;
-  rating: number;
-  text: string;
-  date: string;
-}
+export type { UserReview };
 
 /** Load all user-submitted reviews (for admin / Reports). */
 export const getAllReviews = (): UserReview[] => getAllReviewsFromDb();

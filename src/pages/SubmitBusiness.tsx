@@ -120,7 +120,7 @@ const SubmitBusiness = () => {
 
   if (submitted) {
     return (
-      <div className="pt-20 pb-16 bg-background min-h-screen flex items-center justify-center px-6">
+      <div className="pt-14 pb-16 bg-background min-h-screen flex items-center justify-center px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -142,7 +142,7 @@ const SubmitBusiness = () => {
   }
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=600&fit=crop"
         title={<>Submit Your <span className="text-gold">Business</span></>}
@@ -248,7 +248,7 @@ const SubmitBusiness = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                onClick={() => { setForm(initialForm); setErrors({}); setCaptchaToken(null); setCaptchaKey((k) => k + 1); }}
+                onClick={() => navigate('/error')}
                 className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border-2 border-border text-muted-foreground font-semibold hover:border-foreground hover:text-foreground transition-colors"
               >
                 Reset Form

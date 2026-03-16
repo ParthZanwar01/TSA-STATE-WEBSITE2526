@@ -5,6 +5,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { businesses as staticBusinesses, type Business } from '@/data/businessData';
+import type { PendingBusiness } from '@/types/db';
 import { sanitizeText } from '@/lib/sanitize';
 import {
   getApprovedBusinesses,
@@ -17,20 +18,7 @@ import {
   isDbReady,
 } from '@/lib/sqlite';
 
-export interface PendingBusiness {
-  id: string;
-  name: string;
-  category: string;
-  address: string;
-  phone?: string;
-  website?: string;
-  priceRange: string;
-  description: string;
-  ownerName: string;
-  ownerEmail: string;
-  hours?: string;
-  submittedAt: string;
-}
+export type { PendingBusiness };
 
 const CYPRESS_LAT = 29.9691;
 const CYPRESS_LNG = -95.6977;
@@ -55,9 +43,19 @@ function pendingToBusiness(p: PendingBusiness): Business {
   };
 }
 
+/** Same logic as BusinessDetail generateReviews: number of preset reviews shown for a business */
+function getPresetReviewCount(bizId: string): number {
+  const hash = bizId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  return 3 + (hash % 4);
+}
+
 function loadFromDb() {
+  const approved = isDbReady() ? getApprovedBusinesses() : [];
   return {
-    approved: isDbReady() ? getApprovedBusinesses() : [],
+    approved: approved.map((b) => ({
+      ...b,
+      reviewCount: b.reviewCount + getPresetReviewCount(b.id),
+    })),
     pending: isDbReady() ? getPendingBusinesses() : [],
   };
 }
@@ -97,7 +95,8 @@ export function useBusinessStore() {
     const p = pending.find((x) => x.id === pendingId);
     if (!p) return;
     const biz = pendingToBusiness(p);
-    setApproved((prev) => [...prev, biz]);
+    const withPresetCount = { ...biz, reviewCount: biz.reviewCount + getPresetReviewCount(biz.id) };
+    setApproved((prev) => [...prev, withPresetCount]);
     setPending((prev) => prev.filter((x) => x.id !== pendingId));
     dbAddApproved(biz);
     dbRemovePending(pendingId);

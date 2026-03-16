@@ -10,7 +10,7 @@ import { CheckCircle2 } from 'lucide-react';
 
 const Accessibility = () => {
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1920&h=600&fit=crop"
         children={

@@ -17,7 +17,7 @@ const MyFavorites = () => {
   const favoriteBusinesses = allBusinesses.filter((b) => favorites.includes(b.id));
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&h=600&fit=crop"
         title={<>My <span className="text-gold">Favorites</span></>}

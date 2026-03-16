@@ -61,11 +61,10 @@
   * {
     @apply border-border;
   }
-  /* Prevent navbar/header seam line - universal * border creates visible line at navbar/header junction */
+  /* Prevent navbar/header seam - avoid full border from universal border-color */
   nav.fixed,
   [data-page-header] {
     border: none !important;
-    box-shadow: none !important;
   }
 
   body {

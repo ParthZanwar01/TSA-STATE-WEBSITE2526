@@ -56,7 +56,7 @@ const BusinessDetail = () => {
 
   if (!biz) {
     return (
-      <div className="pt-20 pb-16 min-h-screen flex items-center justify-center bg-background">
+      <div className="pt-14 pb-16 min-h-screen flex items-center justify-center bg-background">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <h1 className="font-display text-3xl font-bold text-foreground mb-4">Business Not Found</h1>
           <Link to="/directory" className="text-gold font-semibold hover:underline">← Back to Directory</Link>
@@ -88,7 +88,7 @@ const BusinessDetail = () => {
   };
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <div className="max-w-7xl mx-auto px-6 pb-4">
         <Breadcrumb>
           <BreadcrumbList>
@@ -194,7 +194,7 @@ const BusinessDetail = () => {
                       <Heart className={`w-5 h-5 ${isFavorite(biz.id) ? 'fill-current' : ''}`} />
                     </motion.button>
                 </div>
-                <span className="text-sm text-muted-foreground">{biz.reviewCount} reviews</span>
+                <span className="text-sm text-muted-foreground">{allReviews.length} reviews</span>
               </div>
             </div>
 

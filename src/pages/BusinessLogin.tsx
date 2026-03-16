@@ -59,7 +59,7 @@ const BusinessLogin = () => {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+    <div className="pt-14 min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-gold/5" />
       <FloatingOrbs className="opacity-10" />

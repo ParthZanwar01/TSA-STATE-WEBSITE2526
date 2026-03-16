@@ -102,7 +102,7 @@ const Admin = () => {
   };
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=600&fit=crop"
         children={

@@ -24,6 +24,7 @@ import Admin from "./pages/Admin";
 import Reports from "./pages/Reports";
 import Accessibility from "./pages/Accessibility";
 import NotFound from "./pages/NotFound";
+import ErrorPage from "./pages/ErrorPage";
 
 const queryClient = new QueryClient();
 

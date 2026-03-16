@@ -78,7 +78,7 @@ const MapPage = () => {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-background">
+    <div className="pt-14 min-h-screen bg-background">
       <div className="flex flex-col lg:flex-row" style={{ height: 'calc(100vh - 5rem)' }}>
         {/* Map */}
         <div className="flex-1 relative">

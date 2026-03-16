@@ -22,7 +22,7 @@ const MySubmissions = () => {
 
   if (loading) {
     return (
-      <div className="pt-20 pb-16 bg-background min-h-screen flex items-center justify-center">
+      <div className="pt-14 pb-16 bg-background min-h-screen flex items-center justify-center">
         <span className="text-muted-foreground animate-pulse">Loading…</span>
       </div>
     );
@@ -39,7 +39,7 @@ const MySubmissions = () => {
   const hasAny = myPendingBusinesses.length > 0 || myPendingEvents.length > 0;
 
   return (
-    <div className="pt-20 pb-16 bg-background min-h-screen">
+    <div className="pt-14 pb-16 bg-background min-h-screen">
       <PageHeader
         image="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1920&h=600&fit=crop"
         children={
