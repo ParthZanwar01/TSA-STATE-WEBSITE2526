@@ -98,13 +98,13 @@ const Index = () => {
               transition={{ delay: 0.7, duration: 0.6 }}
               className="relative max-w-xl mx-auto mb-8"
             >
-              <div className="flex items-center glass rounded-full overflow-hidden shadow-2xl glow-gold">
+              <div className="flex items-center rounded-full overflow-hidden shadow-2xl glow-gold bg-primary/85 backdrop-blur-xl border border-primary-foreground/20">
                 <input
                   type="text"
                   placeholder="What are you looking for?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 px-4 py-4 bg-transparent text-primary-foreground placeholder:text-primary-foreground/40 outline-none font-body text-sm"
+                  className="flex-1 px-4 py-4 bg-transparent text-primary-foreground placeholder:text-primary-foreground/80 outline-none font-body text-sm"
                 />
                 <MagneticButton strength={0.3}>
                   <button

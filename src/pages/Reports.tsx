@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { ScrollFadeIn } from '@/components/ScrollAnimations';
-import { FileText, RefreshCw } from 'lucide-react';
+import { FileText, RefreshCw, Download } from 'lucide-react';
 import { categories } from '@/data/businessData';
 
 type ReportSection = 'businesses' | 'reviews' | 'favorites';
@@ -80,6 +80,55 @@ const Reports = () => {
   }, [reviews, dateFrom, dateTo, minReviewRating, reviewSort]);
 
   const refreshData = () => setReviewsKey((k) => k + 1);
+
+  const escapeCsv = (value: string | number): string => {
+    const s = String(value);
+    if (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r')) {
+      return `"${s.replace(/"/g, '""')}"`;
+    }
+    return s;
+  };
+
+  const exportCsv = () => {
+    const rows: string[] = [];
+    const nl = '\r\n';
+    rows.push(`Cypress LocalLink Report,Generated ${new Date().toISOString().slice(0, 10)}${nl}`);
+
+    if (sections.businesses && filteredBusinesses.length > 0) {
+      rows.push('Businesses');
+      rows.push(['Name', 'Category', 'Rating', 'Review Count', 'Address'].map(escapeCsv).join(','));
+      filteredBusinesses.forEach((b) => {
+        rows.push([b.name, b.category, b.rating, b.reviewCount, b.address ?? ''].map(escapeCsv).join(','));
+      });
+      rows.push(nl);
+    }
+
+    if (sections.reviews && filteredReviews.length > 0) {
+      rows.push('Reviews');
+      rows.push(['Author', 'Rating', 'Date', 'Review'].map(escapeCsv).join(','));
+      filteredReviews.forEach((r) => {
+        rows.push([r.author, r.rating, r.date, r.text].map(escapeCsv).join(','));
+      });
+      rows.push(nl);
+    }
+
+    if (sections.favorites && user && favoriteBusinesses.length > 0) {
+      rows.push('Favorites');
+      rows.push(['Name', 'Category', 'Rating', 'Address'].map(escapeCsv).join(','));
+      favoriteBusinesses.forEach((b) => {
+        rows.push([b.name, b.category, b.rating, b.address ?? ''].map(escapeCsv).join(','));
+      });
+    }
+
+    const csv = rows.join(nl);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `locallink-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const favoriteBusinesses = useMemo(
     () => allBusinesses.filter((b) => favorites.includes(b.id)),
@@ -236,6 +285,15 @@ const Reports = () => {
                   >
                     <RefreshCw className="h-4 w-4" />
                     Refresh
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={exportCsv}
+                    disabled={!hasAnySection}
+                    className="gap-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    Export CSV
                   </Button>
                 </div>
               </div>

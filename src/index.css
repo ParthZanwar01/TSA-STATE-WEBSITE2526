@@ -170,25 +170,55 @@
 }
 
 /* High-contrast mode for accessibility (FBLA rubric: UX Design & Rationale) */
+html[data-high-contrast="true"],
 [data-high-contrast="true"] {
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
   --card: 0 0% 100%;
   --card-foreground: 0 0% 0%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 20%;
-  --border: 0 0% 20%;
-  --primary: 220 80% 30%;
+  --muted: 0 0% 94%;
+  --muted-foreground: 0 0% 15%;
+  --border: 0 0% 15%;
+  --primary: 220 80% 25%;
   --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 220 80% 25%;
+  --accent-foreground: 0 0% 100%;
+  --navy: 220 80% 25%;
+  --navy-light: 220 70% 35%;
+  --gold: 40 80% 40%;
+  --gold-light: 40 80% 45%;
+  --ring: 220 80% 25%;
 }
+html[data-high-contrast="true"] .text-muted-foreground,
 [data-high-contrast="true"] .text-muted-foreground {
-  color: hsl(0 0% 20%) !important;
+  color: hsl(0 0% 15%) !important;
 }
+html[data-high-contrast="true"] .bg-muted,
 [data-high-contrast="true"] .bg-muted {
-  background-color: hsl(0 0% 96%) !important;
+  background-color: hsl(0 0% 94%) !important;
 }
+html[data-high-contrast="true"] .bg-background,
+[data-high-contrast="true"] .bg-background {
+  background-color: hsl(0 0% 100%) !important;
+}
+html[data-high-contrast="true"] .bg-card,
+[data-high-contrast="true"] .bg-card {
+  background-color: hsl(0 0% 100%) !important;
+}
+html[data-high-contrast="true"] .text-foreground,
+[data-high-contrast="true"] .text-foreground {
+  color: hsl(0 0% 0%) !important;
+}
+html[data-high-contrast="true"] .border-border,
 [data-high-contrast="true"] .border-border {
-  border-color: hsl(0 0% 20%) !important;
+  border-color: hsl(0 0% 15%) !important;
+}
+html[data-high-contrast="true"] body,
+[data-high-contrast="true"] body {
+  background-color: hsl(0 0% 100%) !important;
+  color: hsl(0 0% 0%) !important;
 }
 
 /* Print styles */

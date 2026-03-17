@@ -125,6 +125,16 @@ const Navbar = () => {
           </div>
           <div className="absolute inset-0 bg-primary/75 backdrop-blur-sm z-[1]" />
           <div className="relative z-10 px-6 py-6 space-y-1">
+            <div className="flex items-center justify-between px-3 py-2 border-b border-primary-foreground/20 mb-2">
+              <span className="text-sm font-medium text-primary-foreground">High contrast</span>
+              <button
+                onClick={() => { setHighContrast(!highContrast); }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30"
+                aria-label={highContrast ? 'Disable high contrast' : 'Enable high contrast'}
+              >
+                {highContrast ? 'On' : 'Off'}
+              </button>
+            </div>
             {navLinks.map((link, i) => (
               <motion.div
                 key={link.path}

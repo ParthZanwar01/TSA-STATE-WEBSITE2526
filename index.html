@@ -18,6 +18,15 @@
 </head>
 
   <body>
+    <script>
+      try {
+        if (localStorage.getItem('locallink_high_contrast') === 'true') {
+          document.documentElement.setAttribute('data-high-contrast', 'true');
+        } else {
+          document.documentElement.setAttribute('data-high-contrast', 'false');
+        }
+      } catch (_) {}
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
