@@ -23,6 +23,7 @@ import MyFavorites from "./pages/MyFavorites";
 import Admin from "./pages/Admin";
 import Reports from "./pages/Reports";
 import Accessibility from "./pages/Accessibility";
+import References from "./pages/References";
 import NotFound from "./pages/NotFound";
 import ErrorPage from "./pages/ErrorPage";
 
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/reports" element={<Reports />} />
             <Route path="/login" element={<BusinessLogin />} />
             <Route path="/accessibility" element={<Accessibility />} />
+            <Route path="/references" element={<References />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

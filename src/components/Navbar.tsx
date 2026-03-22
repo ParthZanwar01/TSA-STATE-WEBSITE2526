@@ -14,6 +14,7 @@ const baseNavLinks = [
   { label: 'Submit', path: '/submit' },
   { label: 'My Favorites', path: '/favorites' },
   { label: 'Reports', path: '/reports' },
+  { label: 'References', path: '/references' },
 ];
 
 const Navbar = () => {
