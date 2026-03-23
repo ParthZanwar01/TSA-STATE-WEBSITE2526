@@ -102,7 +102,7 @@
   }
 
   .bg-hero-overlay-dull {
-    background: linear-gradient(to bottom, hsl(220 20% 15% / 0.45), hsl(220 15% 12% / 0.55));
+    background: linear-gradient(to bottom, hsl(220 20% 15% / 0.25), hsl(220 15% 12% / 0.35));
   }
 
   /* Refined video background: subtle tone/contrast for readability */
