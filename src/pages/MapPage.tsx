@@ -73,7 +73,7 @@ const MapPage = () => {
 
   const centerMap = () => {
     if (mapRef.current) {
-      mapRef.current.setView([29.9691, -95.6977], 16);
+      mapRef.current.setView([29.9700, -95.6400], 13);
     }
   };
 
@@ -97,8 +97,8 @@ const MapPage = () => {
           </div>
 
           <MapContainer
-            center={[29.9691, -95.6977]}
-            zoom={16}
+            center={[29.9700, -95.6400]}
+            zoom={13}
             className="w-full h-full z-0"
           >
             <MapRefController mapRef={mapRef} />
