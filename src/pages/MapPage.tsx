@@ -201,12 +201,9 @@ const MapPage = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: Math.min(i * 0.02, 0.4) }}
+                onClick={() => mapRef.current?.flyTo([biz.lat, biz.lng], 17, { duration: 1.2 })}
                 className="flex items-center gap-4 px-5 py-4 hover:bg-muted/50 transition-colors cursor-pointer group"
               >
-                <Link
-                  to={`/business/${biz.id}`}
-                  className="flex items-center gap-4 flex-1 min-w-0"
-                >
                 <img
                   src={biz.image}
                   alt={biz.name}
@@ -221,8 +218,14 @@ const MapPage = () => {
                     <span className="truncate">{biz.category}</span>
                   </div>
                   <p className="text-xs text-muted-foreground/70 truncate mt-0.5">{biz.address}</p>
+                  <Link
+                    to={`/business/${biz.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs text-gold hover:underline mt-0.5 inline-block"
+                  >
+                    View profile →
+                  </Link>
                 </div>
-                </Link>
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
