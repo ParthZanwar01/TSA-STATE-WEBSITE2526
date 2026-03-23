@@ -4,10 +4,11 @@
  * in Cypress LocalLink, as required by the FBLA Coding & Programming rubric.
  */
 
+import { Link } from 'react-router-dom';
 import { PageHeader } from '@/components/PageHeader';
 import GlassCard from '@/components/GlassCard';
 import { ScrollFadeIn, StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, CheckCircle2, BookOpen, Code2, Lightbulb } from 'lucide-react';
 
 interface RefEntry {
   name: string;
@@ -135,11 +136,144 @@ const References = () => (
 
     <div className="max-w-4xl mx-auto px-6 mt-10 space-y-8">
 
+      {/* ── PROGRAM DOCUMENTATION ── */}
+
+      {/* How the program addresses the topic */}
+      <ScrollFadeIn>
+        <GlassCard glow className="p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-5">
+            <Lightbulb className="w-6 h-6 text-gold flex-shrink-0" aria-hidden />
+            <h2 className="font-display text-xl font-bold text-foreground">How This Program Addresses the Topic</h2>
+          </div>
+          <p className="text-muted-foreground leading-relaxed mb-5">
+            The 2025–2026 FBLA Coding &amp; Programming topic is <strong className="text-foreground">Byte-Sized Business Boost</strong> — build
+            a tool that helps users discover and support small, local businesses in their community.
+            Cypress LocalLink addresses every required feature:
+          </p>
+          <ul className="space-y-4">
+            {[
+              {
+                feature: 'Sort businesses by category',
+                how: 'The Directory page provides one-click category filter buttons (Restaurant, Retail, Health & Fitness, Beauty & Spa, Automotive, Services, Non-Profit, Entertainment, and more). Clicking any category instantly filters the 92 listed businesses.',
+                where: '/directory',
+                label: 'Go to Directory',
+              },
+              {
+                feature: 'Allow users to leave reviews or ratings',
+                how: 'On any Business Detail page, signed-in users see a "Leave a Review" button that opens an inline star-rating selector (1–5 stars) and text area. Reviews are saved to a local SQLite database (via sql.js / IndexedDB) and immediately appear in the review list.',
+                where: '/directory',
+                label: 'Browse businesses',
+              },
+              {
+                feature: 'Sort businesses by reviews or ratings',
+                how: 'The Directory page Sort dropdown offers "Highest Rating" and "Most Reviews" options. Selecting either re-orders all visible businesses in real time.',
+                where: '/directory',
+                label: 'Go to Directory',
+              },
+              {
+                feature: 'Save / bookmark favorite businesses',
+                how: 'Every business card and detail page shows a heart icon. Clicking it bookmarks the business (stored in localStorage). All saved businesses are collected on the My Favorites page.',
+                where: '/favorites',
+                label: 'View Favorites',
+              },
+              {
+                feature: 'Display special deals or coupons',
+                how: 'The home page features a "Deals & Coupons" section showing active promotions from local businesses. The Events page also surfaces time-limited offers alongside community events.',
+                where: '/',
+                label: 'View Deals on Home',
+              },
+              {
+                feature: 'Verification step to prevent bot activity',
+                how: 'Google reCAPTCHA v2 is embedded in both the Submit Business form and the Login / Sign-Up form. A valid CAPTCHA token is required before either form can be submitted, blocking automated bot submissions.',
+                where: '/submit',
+                label: 'View Submit Form',
+              },
+            ].map(({ feature, how, where, label }) => (
+              <li key={feature} className="flex gap-3">
+                <CheckCircle2 className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" aria-hidden />
+                <div>
+                  <strong className="text-foreground">{feature}</strong>
+                  <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{how}</p>
+                  <Link to={where} className="text-xs text-gold hover:underline mt-1 inline-block">{label} →</Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </GlassCard>
+      </ScrollFadeIn>
+
+      {/* How to use the program */}
+      <ScrollFadeIn>
+        <GlassCard glow className="p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-5">
+            <BookOpen className="w-6 h-6 text-gold flex-shrink-0" aria-hidden />
+            <h2 className="font-display text-xl font-bold text-foreground">How to Use Cypress LocalLink</h2>
+          </div>
+          <ol className="space-y-4 list-none">
+            {[
+              { step: '1', title: 'Browse the Directory', desc: 'Navigate to the Directory page. Use the category buttons to filter by business type, or type in the search bar to find a specific business by name, description, or address. Use the Sort dropdown to order by name, rating, or number of reviews.' },
+              { step: '2', title: 'View a Business', desc: 'Click any business card (or tap the "Details" button on the flip side) to open its detail page. Here you can see photos, hours, location, deals, and community reviews.' },
+              { step: '3', title: 'Leave a Review', desc: 'Create an account or sign in (demo@locallink.com / demo123). On any Business Detail page, click "Leave a Review," select a star rating, write your comment (minimum 10 characters), and submit.' },
+              { step: '4', title: 'Save Favorites', desc: 'Click the heart icon on any business card or detail page to bookmark it. Visit My Favorites from the navbar to see all your saved businesses.' },
+              { step: '5', title: 'Explore the Map', desc: 'The Map page shows all businesses plotted on an interactive OpenStreetMap. Click any pin to see business info and link to its detail page.' },
+              { step: '6', title: 'View Deals & Events', desc: 'The home page Deals section and the Events page list active promotions and community events. Toggle between calendar and list view on the Events page.' },
+              { step: '7', title: 'Generate Reports', desc: 'The Reports page lets you filter businesses by category, minimum rating, and sort order, then export the results as a CSV file for data analysis.' },
+              { step: '8', title: 'Submit Your Business', desc: 'Business owners can add their listing via the Submit page. Complete the form (name, category, address, description, contact info) and pass the reCAPTCHA verification to submit.' },
+            ].map(({ step, title, desc }) => (
+              <li key={step} className="flex gap-4">
+                <span className="w-7 h-7 rounded-full bg-gold/20 text-gold font-bold text-sm flex items-center justify-center flex-shrink-0 mt-0.5">{step}</span>
+                <div>
+                  <strong className="text-foreground">{title}</strong>
+                  <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{desc}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </GlassCard>
+      </ScrollFadeIn>
+
+      {/* Language selection rationale */}
+      <ScrollFadeIn>
+        <GlassCard glow className="p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-5">
+            <Code2 className="w-6 h-6 text-gold flex-shrink-0" aria-hidden />
+            <h2 className="font-display text-xl font-bold text-foreground">Language &amp; Technology Selection</h2>
+          </div>
+          <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+            <div>
+              <strong className="text-foreground">TypeScript (superset of JavaScript)</strong>
+              <p className="mt-1">TypeScript was chosen over plain JavaScript because its static type system catches errors at compile time rather than runtime. For a data-driven app with complex business objects, review schemas, and filter logic, strict typing via Zod inference ensures that data models and validation stay in sync throughout the entire codebase — eliminating a major class of bugs before the program ever runs.</p>
+            </div>
+            <div>
+              <strong className="text-foreground">React 18 + Vite</strong>
+              <p className="mt-1">React's component model enables a modular, reusable architecture — each page, card, and form is an isolated unit that can be developed, tested, and maintained independently. This directly satisfies the rubric's modularity requirement. Vite provides near-instant hot module replacement during development and an optimized production bundle. Together they represent the current industry standard for high-performance interactive web applications.</p>
+            </div>
+            <div>
+              <strong className="text-foreground">sql.js (SQLite compiled to WebAssembly)</strong>
+              <p className="mt-1">User reviews need to persist across page reloads without a backend server. sql.js provides a full relational SQLite database running in the browser via WebAssembly, stored in IndexedDB. This demonstrates advanced data structure usage (relational tables, indexed queries) while keeping the application fully standalone — a key rubric requirement.</p>
+            </div>
+            <div>
+              <strong className="text-foreground">Tailwind CSS + Framer Motion</strong>
+              <p className="mt-1">Tailwind enables rapid, consistent styling through utility classes without requiring separate CSS files. Framer Motion adds production-quality animations (page transitions, scroll reveals, interactive card effects) that enhance the user journey and demonstrate advanced UI knowledge beyond basic HTML/CSS.</p>
+            </div>
+          </div>
+        </GlassCard>
+      </ScrollFadeIn>
+
+      {/* Divider */}
+      <ScrollFadeIn>
+        <div className="flex items-center gap-4">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-sm text-muted-foreground font-medium">Open-Source Attributions</span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+      </ScrollFadeIn>
+
       {/* Intro */}
       <ScrollFadeIn>
         <GlassCard className="p-6 md:p-8">
           <p className="text-muted-foreground leading-relaxed">
-            Cypress LocalLink is built entirely on open-source software. The following pages document
+            Cypress LocalLink is built entirely on open-source software. The following tables document
             every library, framework, media source, and third-party service used in the application,
             in compliance with the FBLA Coding &amp; Programming event guidelines which require
             documentation of all copyrighted or open-source material.
