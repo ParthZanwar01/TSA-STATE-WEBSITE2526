@@ -207,7 +207,7 @@ export const events: Event[] = [
   { id: "evt_013", title: "Library Story Time & Crafts", date: "2026-03-01", day: "1", month: "Mar", time: "10:30 AM", location: "Cypress Public Library" },
 ];
 
-// Deals from FBLA (subset for display)
+// Deals (subset for display)
 export const deals: Deal[] = [
   { id: "deal_001", business_id: "biz_rest_001", title: "20% Off Breakfast", description: "Start your day right! Get 20% off any breakfast item before 10 AM.", discount: "20%", valid_until: "2026-04-01" },
   { id: "deal_002", business_id: "biz_fit_001", title: "First Month Free", description: "New members get their first month absolutely free. No commitment required.", discount: "100% First Month", valid_until: "2026-04-15" },

@@ -1,123 +1,139 @@
 /**
- * References & Attributions page.
- * Documents all libraries, images, fonts, and copyrighted material used
- * in Cypress LocalLink, as required by the FBLA Coding & Programming rubric.
+ * TSA Webmaster Reference Page.
+ * Contains: Plan of Work, Student Copyright Checklist,
+ * References & Image Citations, and Open-Source Library Attributions.
  */
 
-import { Link } from 'react-router-dom';
 import { PageHeader } from '@/components/PageHeader';
 import GlassCard from '@/components/GlassCard';
-import { ScrollFadeIn, StaggerChildren, StaggerItem } from '@/components/ScrollAnimations';
-import { ExternalLink, CheckCircle2, BookOpen, Code2, Lightbulb } from 'lucide-react';
+import { ScrollFadeIn } from '@/components/ScrollAnimations';
+import { CheckCircle2, XCircle, ExternalLink } from 'lucide-react';
 
-interface RefEntry {
-  name: string;
-  version?: string;
-  purpose: string;
-  license: string;
-  url: string;
-}
-
-const frameworks: RefEntry[] = [
-  { name: 'React', version: '18.3.1', purpose: 'Core UI framework', license: 'MIT', url: 'https://react.dev' },
-  { name: 'TypeScript', version: '5.8.3', purpose: 'Static type system', license: 'Apache 2.0', url: 'https://www.typescriptlang.org' },
-  { name: 'Vite', version: '5.4.19', purpose: 'Build tool & dev server', license: 'MIT', url: 'https://vitejs.dev' },
-  { name: 'React Router DOM', version: '6.30.1', purpose: 'Client-side routing', license: 'MIT', url: 'https://reactrouter.com' },
-  { name: 'TanStack Query', version: '5.83.0', purpose: 'Async state management', license: 'MIT', url: 'https://tanstack.com/query' },
+/* ── WORK LOG DATA ─────────────────────────────────────── */
+const workLog = [
+  { date: '12/10/2025', task: 'Design a wireframe for the website',            time: '5 Hours',  members: 'S.C, A.D, P.Z', comments: 'Initial layout and UI/UX flow established.' },
+  { date: '12/15/2025', task: 'Research and select color palette & assets',    time: '3 Hours',  members: 'S.C, A.D, P.Z', comments: 'Ensured all images used are copyright-free or CC.' },
+  { date: '01/05/2026', task: 'Set up HTML structure and CSS grid',             time: '8 Hours',  members: 'S.C, A.D, P.Z', comments: 'Built the responsive framework for the homepage.' },
+  { date: '01/20/2026', task: 'Implement navigation and sub-pages',             time: '5 Hours',  members: 'S.C, A.D, P.Z', comments: 'Linked all internal pages and tested navigation menus.' },
+  { date: '02/02/2026', task: 'Browser compatibility & accessibility testing',  time: '1 Hour',   members: 'S.C, A.D, P.Z', comments: 'Verified site works on Chrome, Safari, and mobile.' },
+  { date: '02/05/2026', task: 'Final audit of Plan of Work & citations',        time: '1 Hour',   members: 'S.C, A.D, P.Z', comments: 'Finalized the LEAP requirements and site bibliography.' },
 ];
 
-const ui: RefEntry[] = [
-  { name: 'Tailwind CSS', version: '3.4.17', purpose: 'Utility-first CSS styling', license: 'MIT', url: 'https://tailwindcss.com' },
-  { name: 'Framer Motion', version: '11.18.2', purpose: 'Animations & page transitions', license: 'MIT', url: 'https://www.framer.com/motion' },
-  { name: 'Shadcn/UI', purpose: 'Accessible headless UI component library', license: 'MIT', url: 'https://ui.shadcn.com' },
-  { name: 'Radix UI', purpose: 'Unstyled accessible UI primitives (used by Shadcn)', license: 'MIT', url: 'https://www.radix-ui.com' },
-  { name: 'Lucide React', version: '0.462.0', purpose: 'Icon set', license: 'ISC', url: 'https://lucide.dev' },
-  { name: 'Sonner', version: '1.7.4', purpose: 'Toast notifications', license: 'MIT', url: 'https://sonner.emilkowal.ski' },
-  { name: 'next-themes', version: '0.3.0', purpose: 'Dark / light theme management', license: 'MIT', url: 'https://github.com/pacocoursey/next-themes' },
-  { name: 'Recharts', version: '2.15.4', purpose: 'Charts in Reports page', license: 'MIT', url: 'https://recharts.org' },
-  { name: 'Embla Carousel', version: '8.6.0', purpose: 'Carousel / slider component', license: 'MIT', url: 'https://www.embla-carousel.com' },
-  { name: 'Vaul', version: '0.9.9', purpose: 'Drawer component', license: 'MIT', url: 'https://vaul.emilkowal.ski' },
+/* ── IMAGE CITATION DATA ────────────────────────────────── */
+const mapAssets = [
+  { name: 'Leaflet JavaScript Library',    credit: 'Leaflet contributors.',       url: 'https://leafletjs.com',                                              license: 'BSD 2-Clause' },
+  { name: 'OpenStreetMap Tiles & Data',    credit: 'OpenStreetMap contributors.', url: 'https://www.openstreetmap.org',                                      license: 'ODbL' },
+  { name: 'Leaflet Marker Icon',           credit: 'Leaflet v1.9.4.',             url: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',        license: 'BSD 2-Clause' },
+  { name: 'Leaflet Marker Icon 2x',        credit: 'Leaflet v1.9.4.',             url: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',     license: 'BSD 2-Clause' },
+  { name: 'Leaflet Marker Shadow',         credit: 'Leaflet v1.9.4.',             url: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',      license: 'BSD 2-Clause' },
 ];
 
-const data: RefEntry[] = [
-  { name: 'sql.js', version: '1.14.0', purpose: 'SQLite compiled to WebAssembly — used for client-side review persistence', license: 'MIT', url: 'https://sql.js.org' },
-  { name: 'Zod', version: '3.25.76', purpose: 'Schema-based form validation', license: 'MIT', url: 'https://zod.dev' },
-  { name: 'React Hook Form', version: '7.61.1', purpose: 'Form state management', license: 'MIT', url: 'https://react-hook-form.com' },
-  { name: '@hookform/resolvers', version: '3.10.0', purpose: 'Zod adapter for React Hook Form', license: 'MIT', url: 'https://github.com/react-hook-form/resolvers' },
-  { name: 'date-fns', version: '3.6.0', purpose: 'Date formatting utilities', license: 'MIT', url: 'https://date-fns.org' },
+const businessImages = [
+  { file: 'business-hardware-store.jpg',   url: 'https://images.unsplash.com/photo-1534398079543-7ae6d016b86a' },
+  { file: 'business-mexican-vibrant.jpg',  url: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47' },
+  { file: 'business-pool-indoor.jpg',      url: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7' },
+  { file: 'business-artisan-crafts.jpg',   url: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261' },
+  { file: 'business-bbq-spread.jpg',       url: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd' },
+  { file: 'business-salon-modern.jpg',     url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035' },
+  { file: 'business-dental-friendly.jpg',  url: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09' },
+  { file: 'business-burger-gourmet.jpg',   url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd' },
+  { file: 'business-chiropractic-room.jpg',url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1' },
+  { file: 'business-car-restoration.jpg',  url: 'https://images.unsplash.com/photo-1487754180451-c456f719a1fc' },
+  { file: 'business-gym-modern.jpg',       url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48' },
+  { file: 'business-yoga-studio.jpg',      url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597' },
+  { file: 'business-coffee-shop.jpg',      url: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb' },
+  { file: 'business-pizza-authentic.jpg',  url: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002' },
+  { file: 'business-sushi-platter.jpg',    url: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c' },
+  { file: 'business-steakhouse-premium.jpg',url:'https://images.unsplash.com/photo-1600891964092-4316c288032e' },
+  { file: 'business-spa-luxury.jpg',       url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874' },
+  { file: 'business-bookstore-cozy.jpg',   url: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66' },
+  { file: 'business-pet-grooming-pro.jpg', url: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7' },
+  { file: 'business-landscaping-pro.jpg',  url: 'https://images.unsplash.com/photo-1558904541-efa843a96f01' },
 ];
 
-const mapping: RefEntry[] = [
-  { name: 'Leaflet', version: '1.9.4', purpose: 'Interactive map library', license: 'BSD 2-Clause', url: 'https://leafletjs.com' },
-  { name: 'react-leaflet', version: '4.2.1', purpose: 'React bindings for Leaflet', license: 'Hippocratic 3.0', url: 'https://react-leaflet.js.org' },
-  { name: 'OpenStreetMap', purpose: 'Map tile data — © OpenStreetMap contributors', license: 'ODbL', url: 'https://www.openstreetmap.org/copyright' },
+const additionalImages = [
+  { file: 'business-brunch-patio.jpg',    url: 'https://unsplash.com/photos/VIzZEKOBwQU' },
+  { file: 'business-artisan-pizza.jpg',   url: 'https://unsplash.com/photos/8qDTh2VuY2E' },
+  { file: 'business-coffee-barista.jpg',  url: 'https://unsplash.com/photos/i_14ssnvvG8'  },
+  { file: 'business-crossfit-action.jpg', url: 'https://unsplash.com/photos/CFHR72opVe0'  },
+  { file: 'business-barbershop.jpg',      url: 'https://unsplash.com/photos/KiksfXfT5k0'  },
+  { file: 'business-spa-candles.jpg',     url: 'https://unsplash.com/photos/fRhI-lZr-3o'  },
+  { file: 'business-accounting-pro.jpg',  url: 'https://unsplash.com/photos/nfTA8pdaq9A'  },
+  { file: 'business-plant-nursery.jpg',   url: 'https://unsplash.com/photos/LWzoJS50s0o'  },
+  { file: 'business-garden-center.jpg',   url: 'https://unsplash.com/photos/AbNOsW8N-Po'  },
 ];
 
-const threeD: RefEntry[] = [
-  { name: '@react-three/fiber', version: '8.18.0', purpose: 'React renderer for Three.js — powers the 3D morph blob background', license: 'MIT', url: 'https://docs.pmnd.rs/react-three-fiber' },
-  { name: '@react-three/drei', version: '9.122.0', purpose: 'Helper components for react-three-fiber', license: 'MIT', url: 'https://github.com/pmndrs/drei' },
-  { name: 'Three.js', version: '0.160.x', purpose: '3D graphics library', license: 'MIT', url: 'https://threejs.org' },
+const boardwalkImages = [
+  { file: 'boardwalk/category-dining.jpg',    url: 'https://unsplash.com/s/photos/restaurant-dining' },
+  { file: 'boardwalk/category-waterfront.jpg',url: 'https://unsplash.com/photos/t-kaF_EptLE'         },
+  { file: 'boardwalk/category-play.jpg',      url: 'https://unsplash.com/s/photos/playground'        },
+  { file: 'boardwalk/category-nightlife.jpg', url: 'https://unsplash.com/s/photos/nightlife'         },
+  { file: 'boardwalk/lifestyle-sunset.jpg',   url: 'https://unsplash.com/photos/ZzLzuZOtARU'         },
+  { file: 'hero-cypress-main.jpg',            url: 'https://unsplash.com/photos/ZzLzuZOtARU'         },
+  { file: 'gallery-community.jpg',            url: 'https://unsplash.com/s/photos/community-gathering'},
+  { file: 'grid-pattern.png',                 url: 'https://unsplash.com'                            },
+  { file: 'community-map-clean.png',          url: 'https://unsplash.com'                            },
 ];
 
-const security: RefEntry[] = [
-  { name: 'react-google-recaptcha', version: '3.1.0', purpose: 'Google reCAPTCHA v2 widget — bot prevention on Submit Business and Login forms', license: 'MIT', url: 'https://github.com/dozoisch/react-google-recaptcha' },
-  { name: 'Google reCAPTCHA', purpose: 'Bot-detection service by Google LLC', license: 'Google Terms of Service', url: 'https://developers.google.com/recaptcha' },
+/* ── OPEN SOURCE LIBS ───────────────────────────────────── */
+interface LibEntry { name: string; version?: string; purpose: string; license: string; url: string; }
+const libraries: LibEntry[] = [
+  { name: 'React',                version: '18.3.1',  purpose: 'Core UI framework',                              license: 'MIT',          url: 'https://react.dev' },
+  { name: 'TypeScript',           version: '5.8.3',   purpose: 'Static type system',                             license: 'Apache 2.0',   url: 'https://www.typescriptlang.org' },
+  { name: 'Vite',                 version: '5.4.19',  purpose: 'Build tool & dev server',                        license: 'MIT',          url: 'https://vitejs.dev' },
+  { name: 'React Router DOM',     version: '6.30.1',  purpose: 'Client-side routing',                            license: 'MIT',          url: 'https://reactrouter.com' },
+  { name: 'Tailwind CSS',         version: '3.4.17',  purpose: 'Utility-first CSS styling',                      license: 'MIT',          url: 'https://tailwindcss.com' },
+  { name: 'Framer Motion',        version: '11.18.2', purpose: 'Animations & page transitions',                  license: 'MIT',          url: 'https://www.framer.com/motion' },
+  { name: 'Shadcn/UI',            purpose: 'Accessible headless UI components',                                   license: 'MIT',          url: 'https://ui.shadcn.com' },
+  { name: 'Radix UI',             purpose: 'Unstyled accessible UI primitives',                                   license: 'MIT',          url: 'https://www.radix-ui.com' },
+  { name: 'Lucide React',         version: '0.462.0', purpose: 'Icon set',                                       license: 'ISC',          url: 'https://lucide.dev' },
+  { name: 'sql.js',               version: '1.14.0',  purpose: 'SQLite compiled to WebAssembly (review storage)',license: 'MIT',          url: 'https://sql.js.org' },
+  { name: 'Zod',                  version: '3.25.76', purpose: 'Schema-based form validation',                   license: 'MIT',          url: 'https://zod.dev' },
+  { name: 'React Hook Form',      version: '7.61.1',  purpose: 'Form state management',                          license: 'MIT',          url: 'https://react-hook-form.com' },
+  { name: 'Leaflet',              version: '1.9.4',   purpose: 'Interactive map library',                        license: 'BSD 2-Clause', url: 'https://leafletjs.com' },
+  { name: 'react-leaflet',        version: '4.2.1',   purpose: 'React bindings for Leaflet',                     license: 'Hippocratic',  url: 'https://react-leaflet.js.org' },
+  { name: '@react-three/fiber',   version: '8.18.0',  purpose: '3D morph background (Three.js renderer)',        license: 'MIT',          url: 'https://docs.pmnd.rs/react-three-fiber' },
+  { name: 'react-google-recaptcha',version:'3.1.0',   purpose: 'Google reCAPTCHA v2 bot prevention',             license: 'MIT',          url: 'https://github.com/dozoisch/react-google-recaptcha' },
+  { name: 'Recharts',             version: '2.15.4',  purpose: 'Charts in Reports page',                         license: 'MIT',          url: 'https://recharts.org' },
+  { name: 'TanStack Query',       version: '5.83.0',  purpose: 'Async state management',                         license: 'MIT',          url: 'https://tanstack.com/query' },
+  { name: 'date-fns',             version: '3.6.0',   purpose: 'Date formatting utilities',                      license: 'MIT',          url: 'https://date-fns.org' },
 ];
 
-const media = [
-  {
-    name: 'Unsplash',
-    description: 'All photography used for business listings, page headers, and the home page hero image.',
-    license: 'Unsplash License (free to use, no attribution required)',
-    url: 'https://unsplash.com/license',
-    notable: [
-      'Business listing photos — various Unsplash photographers',
-      'Restaurant & café imagery',
-      'Retail & storefront photography',
-    ],
-  },
-];
-
-const Section = ({ title, entries }: { title: string; entries: RefEntry[] }) => (
-  <ScrollFadeIn>
-    <GlassCard glow className="p-6 md:p-8">
-      <h2 className="font-display text-xl font-bold text-foreground mb-5">{title}</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-2 pr-4 font-semibold text-foreground">Name</th>
-              <th className="pb-2 pr-4 font-semibold text-foreground hidden sm:table-cell">Version</th>
-              <th className="pb-2 pr-4 font-semibold text-foreground">Purpose</th>
-              <th className="pb-2 font-semibold text-foreground hidden md:table-cell">License</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((e) => (
-              <tr key={e.name} className="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors">
-                <td className="py-3 pr-4">
-                  <a
-                    href={e.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gold hover:underline font-medium inline-flex items-center gap-1"
-                  >
-                    {e.name}
-                    <ExternalLink className="w-3 h-3 opacity-60" />
-                  </a>
-                </td>
-                <td className="py-3 pr-4 text-muted-foreground hidden sm:table-cell">{e.version ?? '—'}</td>
-                <td className="py-3 pr-4 text-foreground/80">{e.purpose}</td>
-                <td className="py-3 text-muted-foreground hidden md:table-cell">{e.license}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </GlassCard>
-  </ScrollFadeIn>
+/* ── SMALL HELPERS ──────────────────────────────────────── */
+const Pill = ({ yes }: { yes: boolean }) => (
+  <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full ${yes ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+    {yes ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+    {yes ? 'YES' : 'NO'}
+  </span>
 );
 
+const ImageTable = ({ rows }: { rows: { file: string; url: string }[] }) => (
+  <div className="overflow-x-auto">
+    <table className="w-full text-xs">
+      <thead>
+        <tr className="border-b border-border text-left">
+          <th className="pb-2 pr-4 font-semibold text-foreground">File</th>
+          <th className="pb-2 font-semibold text-foreground">Source URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(r => (
+          <tr key={r.file} className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors">
+            <td className="py-2 pr-4 font-mono text-muted-foreground">{r.file}</td>
+            <td className="py-2">
+              <a href={r.url} target="_blank" rel="noopener noreferrer"
+                className="text-gold hover:underline inline-flex items-center gap-1 break-all">
+                {r.url}<ExternalLink className="w-3 h-3 flex-shrink-0" />
+              </a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+/* ── PAGE ───────────────────────────────────────────────── */
 const References = () => (
   <div className="pt-14 pb-16 bg-background min-h-screen">
     <PageHeader
@@ -125,209 +141,274 @@ const References = () => (
       children={
         <div>
           <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-3">
-            References &amp; <span className="text-gold">Attributions</span>
+            Reference <span className="text-gold">Page</span>
           </h1>
           <p className="text-primary-foreground/80 text-lg">
-            All libraries, tools, and media used in Cypress LocalLink
+            TSA Webmaster — Plan of Work, Copyright Checklist &amp; Citations
           </p>
         </div>
       }
     />
 
-    <div className="max-w-4xl mx-auto px-6 mt-10 space-y-8">
+    <div className="max-w-4xl mx-auto px-6 mt-10 space-y-10">
 
-      {/* ── PROGRAM DOCUMENTATION ── */}
-
-      {/* How the program addresses the topic */}
-      <ScrollFadeIn>
-        <GlassCard glow className="p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-5">
-            <Lightbulb className="w-6 h-6 text-gold flex-shrink-0" aria-hidden />
-            <h2 className="font-display text-xl font-bold text-foreground">How This Program Addresses the Topic</h2>
-          </div>
-          <p className="text-muted-foreground leading-relaxed mb-5">
-            The 2025–2026 FBLA Coding &amp; Programming topic is <strong className="text-foreground">Byte-Sized Business Boost</strong> — build
-            a tool that helps users discover and support small, local businesses in their community.
-            Cypress LocalLink addresses every required feature:
-          </p>
-          <ul className="space-y-4">
-            {[
-              {
-                feature: 'Sort businesses by category',
-                how: 'The Directory page provides one-click category filter buttons (Restaurant, Retail, Health & Fitness, Beauty & Spa, Automotive, Services, Non-Profit, Entertainment, and more). Clicking any category instantly filters the 92 listed businesses.',
-                where: '/directory',
-                label: 'Go to Directory',
-              },
-              {
-                feature: 'Allow users to leave reviews or ratings',
-                how: 'On any Business Detail page, signed-in users see a "Leave a Review" button that opens an inline star-rating selector (1–5 stars) and text area. Reviews are saved to a local SQLite database (via sql.js / IndexedDB) and immediately appear in the review list.',
-                where: '/directory',
-                label: 'Browse businesses',
-              },
-              {
-                feature: 'Sort businesses by reviews or ratings',
-                how: 'The Directory page Sort dropdown offers "Highest Rating" and "Most Reviews" options. Selecting either re-orders all visible businesses in real time.',
-                where: '/directory',
-                label: 'Go to Directory',
-              },
-              {
-                feature: 'Save / bookmark favorite businesses',
-                how: 'Every business card and detail page shows a heart icon. Clicking it bookmarks the business (stored in localStorage). All saved businesses are collected on the My Favorites page.',
-                where: '/favorites',
-                label: 'View Favorites',
-              },
-              {
-                feature: 'Display special deals or coupons',
-                how: 'The home page features a "Deals & Coupons" section showing active promotions from local businesses. The Events page also surfaces time-limited offers alongside community events.',
-                where: '/',
-                label: 'View Deals on Home',
-              },
-              {
-                feature: 'Verification step to prevent bot activity',
-                how: 'Google reCAPTCHA v2 is embedded in both the Submit Business form and the Login / Sign-Up form. A valid CAPTCHA token is required before either form can be submitted, blocking automated bot submissions.',
-                where: '/submit',
-                label: 'View Submit Form',
-              },
-            ].map(({ feature, how, where, label }) => (
-              <li key={feature} className="flex gap-3">
-                <CheckCircle2 className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" aria-hidden />
-                <div>
-                  <strong className="text-foreground">{feature}</strong>
-                  <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{how}</p>
-                  <Link to={where} className="text-xs text-gold hover:underline mt-1 inline-block">{label} →</Link>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </GlassCard>
-      </ScrollFadeIn>
-
-      {/* How to use the program */}
-      <ScrollFadeIn>
-        <GlassCard glow className="p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-5">
-            <BookOpen className="w-6 h-6 text-gold flex-shrink-0" aria-hidden />
-            <h2 className="font-display text-xl font-bold text-foreground">How to Use Cypress LocalLink</h2>
-          </div>
-          <ol className="space-y-4 list-none">
-            {[
-              { step: '1', title: 'Browse the Directory', desc: 'Navigate to the Directory page. Use the category buttons to filter by business type, or type in the search bar to find a specific business by name, description, or address. Use the Sort dropdown to order by name, rating, or number of reviews.' },
-              { step: '2', title: 'View a Business', desc: 'Click any business card (or tap the "Details" button on the flip side) to open its detail page. Here you can see photos, hours, location, deals, and community reviews.' },
-              { step: '3', title: 'Leave a Review', desc: 'Create an account or sign in (demo@locallink.com / demo123). On any Business Detail page, click "Leave a Review," select a star rating, write your comment (minimum 10 characters), and submit.' },
-              { step: '4', title: 'Save Favorites', desc: 'Click the heart icon on any business card or detail page to bookmark it. Visit My Favorites from the navbar to see all your saved businesses.' },
-              { step: '5', title: 'Explore the Map', desc: 'The Map page shows all businesses plotted on an interactive OpenStreetMap. Click any pin to see business info and link to its detail page.' },
-              { step: '6', title: 'View Deals & Events', desc: 'The home page Deals section and the Events page list active promotions and community events. Toggle between calendar and list view on the Events page.' },
-              { step: '7', title: 'Generate Reports', desc: 'The Reports page lets you filter businesses by category, minimum rating, and sort order, then export the results as a CSV file for data analysis.' },
-              { step: '8', title: 'Submit Your Business', desc: 'Business owners can add their listing via the Submit page. Complete the form (name, category, address, description, contact info) and pass the reCAPTCHA verification to submit.' },
-            ].map(({ step, title, desc }) => (
-              <li key={step} className="flex gap-4">
-                <span className="w-7 h-7 rounded-full bg-gold/20 text-gold font-bold text-sm flex items-center justify-center flex-shrink-0 mt-0.5">{step}</span>
-                <div>
-                  <strong className="text-foreground">{title}</strong>
-                  <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{desc}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </GlassCard>
-      </ScrollFadeIn>
-
-      {/* Language selection rationale */}
-      <ScrollFadeIn>
-        <GlassCard glow className="p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-5">
-            <Code2 className="w-6 h-6 text-gold flex-shrink-0" aria-hidden />
-            <h2 className="font-display text-xl font-bold text-foreground">Language &amp; Technology Selection</h2>
-          </div>
-          <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-            <div>
-              <strong className="text-foreground">TypeScript (superset of JavaScript)</strong>
-              <p className="mt-1">TypeScript was chosen over plain JavaScript because its static type system catches errors at compile time rather than runtime. For a data-driven app with complex business objects, review schemas, and filter logic, strict typing via Zod inference ensures that data models and validation stay in sync throughout the entire codebase — eliminating a major class of bugs before the program ever runs.</p>
-            </div>
-            <div>
-              <strong className="text-foreground">React 18 + Vite</strong>
-              <p className="mt-1">React's component model enables a modular, reusable architecture — each page, card, and form is an isolated unit that can be developed, tested, and maintained independently. This directly satisfies the rubric's modularity requirement. Vite provides near-instant hot module replacement during development and an optimized production bundle. Together they represent the current industry standard for high-performance interactive web applications.</p>
-            </div>
-            <div>
-              <strong className="text-foreground">sql.js (SQLite compiled to WebAssembly)</strong>
-              <p className="mt-1">User reviews need to persist across page reloads without a backend server. sql.js provides a full relational SQLite database running in the browser via WebAssembly, stored in IndexedDB. This demonstrates advanced data structure usage (relational tables, indexed queries) while keeping the application fully standalone — a key rubric requirement.</p>
-            </div>
-            <div>
-              <strong className="text-foreground">Tailwind CSS + Framer Motion</strong>
-              <p className="mt-1">Tailwind enables rapid, consistent styling through utility classes without requiring separate CSS files. Framer Motion adds production-quality animations (page transitions, scroll reveals, interactive card effects) that enhance the user journey and demonstrate advanced UI knowledge beyond basic HTML/CSS.</p>
-            </div>
-          </div>
-        </GlassCard>
-      </ScrollFadeIn>
-
-      {/* Divider */}
-      <ScrollFadeIn>
-        <div className="flex items-center gap-4">
-          <div className="flex-1 h-px bg-border" />
-          <span className="text-sm text-muted-foreground font-medium">Open-Source Attributions</span>
-          <div className="flex-1 h-px bg-border" />
-        </div>
-      </ScrollFadeIn>
-
-      {/* Intro */}
+      {/* ── REQUIRED PDF DOWNLOADS ── */}
       <ScrollFadeIn>
         <GlassCard className="p-6 md:p-8">
-          <p className="text-muted-foreground leading-relaxed">
-            Cypress LocalLink is built entirely on open-source software. The following tables document
-            every library, framework, media source, and third-party service used in the application,
-            in compliance with the FBLA Coding &amp; Programming event guidelines which require
-            documentation of all copyrighted or open-source material.
+          <h2 className="font-display text-xl font-bold text-foreground mb-2">Required TSA Documents</h2>
+          <p className="text-sm text-muted-foreground mb-5">The following documents are required by the TSA Webmaster event guidelines and are available as PDF downloads.</p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <a
+              href="/Webmaster Work Log.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-xl font-semibold text-sm hover:bg-navy-light transition-colors depth-shadow"
+            >
+              <ExternalLink className="w-4 h-4" />
+              View Work Log (PDF)
+            </a>
+            <a
+              href="/Webmaster Copyright Checklist.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 border border-border px-5 py-3 rounded-xl font-semibold text-sm text-foreground hover:bg-muted transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+              View Copyright Checklist (PDF)
+            </a>
+          </div>
+        </GlassCard>
+      </ScrollFadeIn>
+
+      {/* ── FRAMEWORK STATEMENT ── */}
+      <ScrollFadeIn>
+        <GlassCard className="p-6 md:p-8">
+          <h2 className="font-display text-xl font-bold text-foreground mb-3">Framework Statement</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            This website was built using <strong className="text-foreground">React 18 + Vite + TypeScript</strong> as the core framework.
+            All components, pages, layouts, styling (Tailwind CSS), and logic were designed and written entirely by the team —
+            <strong className="text-foreground"> no pre-built templates or themes were used</strong>. The UI component library (Shadcn/UI)
+            provides unstyled accessible primitives that were fully customized with our own design system (navy/gold color palette,
+            glassmorphism cards, typography, animations). No content management system (CMS) such as WordPress, Joomla, or Drupal was used.
           </p>
         </GlassCard>
       </ScrollFadeIn>
 
-      {/* Sections */}
-      <Section title="Core Framework & Language" entries={frameworks} />
-      <Section title="UI Components & Styling" entries={ui} />
-      <Section title="Data, Forms & Validation" entries={data} />
-      <Section title="Mapping" entries={mapping} />
-      <Section title="3D Graphics (Morph Background)" entries={threeD} />
-      <Section title="Security — Bot Prevention" entries={security} />
-
-      {/* Media */}
+      {/* ── 1. PLAN OF WORK ── */}
       <ScrollFadeIn>
         <GlassCard glow className="p-6 md:p-8">
-          <h2 className="font-display text-xl font-bold text-foreground mb-5">Photography & Media</h2>
-          <StaggerChildren className="space-y-6">
-            {media.map((m) => (
-              <StaggerItem key={m.name}>
-                <div className="border-b border-border/50 pb-6 last:border-0 last:pb-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <a
-                      href={m.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gold hover:underline font-semibold inline-flex items-center gap-1"
-                    >
-                      {m.name}
-                      <ExternalLink className="w-3 h-3 opacity-60" />
-                    </a>
-                    <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{m.license}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">{m.description}</p>
-                  <ul className="list-disc list-inside space-y-1">
-                    {m.notable.map((n) => (
-                      <li key={n} className="text-sm text-foreground/70">{n}</li>
-                    ))}
-                  </ul>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
+          <h2 className="font-display text-xl font-bold text-foreground mb-1">Technology Student Association — Plan of Work</h2>
+          <p className="text-sm text-muted-foreground mb-6">Advisor signature: <span className="italic text-foreground">Juan Lopez</span></p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-primary text-primary-foreground rounded-t-lg">
+                  <th className="px-3 py-2.5 text-left font-semibold rounded-tl-lg">Date</th>
+                  <th className="px-3 py-2.5 text-left font-semibold">Task</th>
+                  <th className="px-3 py-2.5 text-left font-semibold">Time</th>
+                  <th className="px-3 py-2.5 text-left font-semibold">Team Members</th>
+                  <th className="px-3 py-2.5 text-left font-semibold rounded-tr-lg">Comments</th>
+                </tr>
+              </thead>
+              <tbody>
+                {workLog.map((row, i) => (
+                  <tr key={i} className={`border-b border-border/50 ${i % 2 === 0 ? 'bg-muted/30' : ''}`}>
+                    <td className="px-3 py-3 text-muted-foreground whitespace-nowrap">{row.date}</td>
+                    <td className="px-3 py-3 text-foreground">{row.task}</td>
+                    <td className="px-3 py-3 text-muted-foreground whitespace-nowrap">{row.time}</td>
+                    <td className="px-3 py-3 text-muted-foreground whitespace-nowrap">{row.members}</td>
+                    <td className="px-3 py-3 text-foreground/80">{row.comments}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </GlassCard>
       </ScrollFadeIn>
 
-      {/* Footer note */}
+      {/* ── 2. COPYRIGHT CHECKLIST ── */}
       <ScrollFadeIn>
-        <p className="text-center text-sm text-muted-foreground pb-4">
+        <GlassCard glow className="p-6 md:p-8">
+          <h2 className="font-display text-xl font-bold text-foreground mb-1">Student Copyright Checklist</h2>
+          <p className="text-xs text-muted-foreground mb-6 italic">For students to complete and advisors to verify</p>
+
+          <div className="space-y-6">
+            {/* Q1 */}
+            <div className="border border-border/60 rounded-xl p-4">
+              <p className="font-semibold text-foreground mb-2">
+                1. Does your solution integrate any type of music and/or sound? <Pill yes={false} />
+              </p>
+              <p className="text-sm text-muted-foreground">No music or sound is used in this application. Proceeding to question 2.</p>
+            </div>
+
+            {/* Q2 */}
+            <div className="border border-border/60 rounded-xl p-4 space-y-3">
+              <p className="font-semibold text-foreground">
+                2. Does your solution integrate any graphics/videos? <Pill yes={true} />
+              </p>
+              <p className="font-medium text-foreground text-sm">
+                Are the graphics/videos copyrighted, registered and/or trademarked? <Pill yes={true} />
+              </p>
+              <div className="bg-muted/40 rounded-lg p-3 text-sm text-foreground/80">
+                <strong>2B applied:</strong> All graphics are royalty-free (Unsplash License) or created from open-licensed assets. Full citations are provided in the References &amp; Image Citations section below. Written permission was obtained from Emily Heineman (Caldwell Companies) for Towne Lake and boardwalk photography. Permission emails are documented on this page.
+              </div>
+            </div>
+
+            {/* Q3 */}
+            <div className="border border-border/60 rounded-xl p-4">
+              <p className="font-semibold text-foreground mb-2">
+                3. Does your solution use another's thoughts or research? <Pill yes={false} />
+              </p>
+              <p className="text-sm text-muted-foreground">All written content is original. No external research or third-party text is incorporated.</p>
+            </div>
+
+            {/* Signatures */}
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="border border-border/60 rounded-xl p-4">
+                <p className="text-xs text-muted-foreground mb-1">Student Initials</p>
+                <p className="font-semibold text-foreground text-lg">S.C, P.Z, A.D</p>
+              </div>
+              <div className="border border-border/60 rounded-xl p-4">
+                <p className="text-xs text-muted-foreground mb-1">Chapter Advisor Signature</p>
+                <p className="font-semibold text-foreground text-lg italic">Juan Lopez</p>
+              </div>
+            </div>
+          </div>
+        </GlassCard>
+      </ScrollFadeIn>
+
+      {/* ── 3. PERMISSION DOCUMENTATION ── */}
+      <ScrollFadeIn>
+        <GlassCard glow className="p-6 md:p-8">
+          <h2 className="font-display text-xl font-bold text-foreground mb-2">Permission Documentation</h2>
+          <p className="text-sm text-muted-foreground mb-5">Written permission obtained from Caldwell Companies for use of Towne Lake and boardwalk imagery.</p>
+          <div className="space-y-4 text-sm">
+            <div className="bg-muted/40 rounded-xl p-4 border border-border/50">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-foreground">Parth Zanwar → Emily Heineman</span>
+                <span className="text-xs text-muted-foreground">Fri, Nov 14, 2025, 5:20 PM</span>
+              </div>
+              <p className="text-foreground/80 leading-relaxed">Hi! My name is Parth, and I hope you're doing well. My team and I are students at Cypress Ranch High School, and we're currently working on a school project. I was wondering if I could have permission to use a few of your images — they would be incredibly helpful in bringing our project to life. Thank you so much for your time, and please let me know if that would be alright! Best, Parth</p>
+            </div>
+            <div className="bg-gold/5 rounded-xl p-4 border border-gold/20">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-foreground">Emily Heineman (eheineman@caldwellcos.com) → Parth</span>
+                <span className="text-xs text-muted-foreground">Nov 15, 2025, 12:37 PM</span>
+              </div>
+              <p className="text-foreground/80 leading-relaxed">"Hi - yes you can use Towne Lake pictures from our website. Thank you for checking!"</p>
+              <p className="text-xs text-muted-foreground mt-1 italic">Sent from my iPhone</p>
+            </div>
+            <div className="bg-muted/40 rounded-xl p-4 border border-border/50">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-foreground">Parth Zanwar → Emily Heineman</span>
+                <span className="text-xs text-muted-foreground">Nov 29, 2025, 7:21 PM</span>
+              </div>
+              <p className="text-foreground/80 leading-relaxed">Hi Emily, Thank you again for granting permission to use the Towne Lake pictures from your website. I was also wondering if we could use some of the pictures and videos from the boardwalk site for our project as well? Best, Parth</p>
+            </div>
+            <div className="bg-gold/5 rounded-xl p-4 border border-gold/20">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-foreground">Emily Heineman (eheineman@caldwellcos.com) → Parth</span>
+                <span className="text-xs text-muted-foreground">Nov 30, 2025, 6:38 PM</span>
+              </div>
+              <p className="text-foreground/80 leading-relaxed">"Hi Parth, if they are on our website, you may use them. Thanks for asking. Emily"</p>
+              <p className="text-xs text-muted-foreground mt-1 italic">Sent from my iPhone</p>
+            </div>
+          </div>
+        </GlassCard>
+      </ScrollFadeIn>
+
+      {/* ── 4. IMAGE CITATIONS ── */}
+      <ScrollFadeIn>
+        <GlassCard glow className="p-6 md:p-8">
+          <h2 className="font-display text-xl font-bold text-foreground mb-2">References and Image Citations</h2>
+          <p className="text-sm text-muted-foreground mb-6">All images, icons, and map assets were sourced from royalty-free or openly licensed platforms. All assets are used strictly for educational purposes as part of a Technology Student Association Webmaster competition project. No commercial use is intended.</p>
+
+          {/* Map assets */}
+          <h3 className="font-semibold text-foreground mb-3">Map and Geospatial Assets</h3>
+          <div className="overflow-x-auto mb-6">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left">
+                  <th className="pb-2 pr-4 font-semibold text-foreground">Asset</th>
+                  <th className="pb-2 pr-4 font-semibold text-foreground">Credit</th>
+                  <th className="pb-2 pr-4 font-semibold text-foreground hidden md:table-cell">License</th>
+                  <th className="pb-2 font-semibold text-foreground">URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mapAssets.map(a => (
+                  <tr key={a.name} className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors">
+                    <td className="py-2.5 pr-4 font-medium text-foreground">{a.name}</td>
+                    <td className="py-2.5 pr-4 text-muted-foreground">{a.credit}</td>
+                    <td className="py-2.5 pr-4 text-muted-foreground hidden md:table-cell">{a.license}</td>
+                    <td className="py-2.5">
+                      <a href={a.url} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline inline-flex items-center gap-1 text-xs break-all">
+                        {a.url}<ExternalLink className="w-3 h-3 flex-shrink-0" />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Unsplash notice */}
+          <div className="bg-muted/40 rounded-xl p-4 mb-5 text-sm">
+            <strong className="text-foreground">Unsplash Image Platform</strong> — <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">unsplash.com</a>
+            <p className="text-muted-foreground mt-1">License: Unsplash License. Permits free use for commercial and noncommercial purposes. No attribution required; attribution provided here for educational documentation compliance.</p>
+          </div>
+
+          <h3 className="font-semibold text-foreground mb-3">Business & Application Images</h3>
+          <p className="text-xs text-muted-foreground mb-3">Used across Index, Directory, Events, Deals, Favorites, and About pages.</p>
+          <ImageTable rows={businessImages} />
+
+          <h3 className="font-semibold text-foreground mt-6 mb-3">Additional Business & Lifestyle Images</h3>
+          <p className="text-xs text-muted-foreground mb-3">Used for mock data, category pages, and UI illustrations.</p>
+          <ImageTable rows={additionalImages} />
+
+          <h3 className="font-semibold text-foreground mt-6 mb-3">Boardwalk, Hero &amp; UI Assets</h3>
+          <p className="text-xs text-muted-foreground mb-3">Used on Index, About, and mock data sections. Boardwalk/Towne Lake images used with written permission from Caldwell Companies (see Permission Documentation above).</p>
+          <ImageTable rows={boardwalkImages} />
+        </GlassCard>
+      </ScrollFadeIn>
+
+      {/* ── 5. OPEN SOURCE LIBRARIES ── */}
+      <ScrollFadeIn>
+        <GlassCard glow className="p-6 md:p-8">
+          <h2 className="font-display text-xl font-bold text-foreground mb-5">Open-Source Libraries &amp; Frameworks</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left">
+                  <th className="pb-2 pr-4 font-semibold text-foreground">Library</th>
+                  <th className="pb-2 pr-4 font-semibold text-foreground hidden sm:table-cell">Version</th>
+                  <th className="pb-2 pr-4 font-semibold text-foreground">Purpose</th>
+                  <th className="pb-2 font-semibold text-foreground hidden md:table-cell">License</th>
+                </tr>
+              </thead>
+              <tbody>
+                {libraries.map(l => (
+                  <tr key={l.name} className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors">
+                    <td className="py-2.5 pr-4">
+                      <a href={l.url} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline font-medium inline-flex items-center gap-1">
+                        {l.name}<ExternalLink className="w-3 h-3 opacity-60" />
+                      </a>
+                    </td>
+                    <td className="py-2.5 pr-4 text-muted-foreground hidden sm:table-cell">{l.version ?? '—'}</td>
+                    <td className="py-2.5 pr-4 text-foreground/80">{l.purpose}</td>
+                    <td className="py-2.5 text-muted-foreground hidden md:table-cell">{l.license}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </GlassCard>
+      </ScrollFadeIn>
+
+      <ScrollFadeIn>
+        <p className="text-center text-xs text-muted-foreground pb-4">
           All trademarks and registered trademarks are property of their respective owners.
-          This project is submitted for educational purposes as part of the FBLA 2025–2026
-          Coding &amp; Programming competition.
+          This project is submitted for educational purposes as part of the TSA 2025–2026 Webmaster competition.
         </p>
       </ScrollFadeIn>
 

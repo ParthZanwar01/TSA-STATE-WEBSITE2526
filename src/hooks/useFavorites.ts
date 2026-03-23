@@ -1,6 +1,6 @@
 /**
  * Hook for managing user favorites (bookmarked businesses).
- * Persists to SQLite (IndexedDB) per user ID for FBLA rubric: "Saving/bookmarking favorites."
+ * Persists to SQLite (IndexedDB) per user ID for TSA Webmaster rubric: saving/bookmarking favorites.
  */
 
 import { useState, useEffect, useCallback } from 'react';

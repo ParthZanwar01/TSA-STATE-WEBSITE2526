@@ -1,6 +1,6 @@
 /**
  * Hook for user-submitted reviews. Persists to SQLite (IndexedDB).
- * Used to satisfy FBLA rubric: "Allowing users to leave reviews or ratings."
+ * Used to satisfy TSA Webmaster rubric requirement: allowing users to leave reviews or ratings.
  */
 
 import { useState, useEffect, useCallback } from 'react';

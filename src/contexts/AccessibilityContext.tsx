@@ -1,6 +1,6 @@
 /**
  * Accessibility context: high-contrast mode.
- * Persists to localStorage for FBLA rubric: "Accessibility features."
+ * Persists to localStorage for TSA Webmaster rubric: accessibility features.
  */
 
 import { createContext, useContext, useState, useLayoutEffect, type ReactNode } from 'react';

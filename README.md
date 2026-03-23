@@ -1,6 +1,6 @@
 # Cypress LocalLink
 
-**FBLA 2025–2026 Coding & Programming — "Byte-Sized Business Boost"**
+**TSA 2025–2026 Webmaster Competition**
 
 A full-featured local business discovery web application for Cypress, Texas. Helps community members find, review, and support small local businesses.
 

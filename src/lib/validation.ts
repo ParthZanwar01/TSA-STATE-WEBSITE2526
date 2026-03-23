@@ -1,5 +1,5 @@
 /**
- * Syntactical and semantic validation for FBLA rubric:
+ * Syntactical and semantic validation for TSA Webmaster rubric:
  * "Input validation applied on both syntactical and semantic levels."
  *
  * Syntactical = format (correct structure: regex, URL format, email format, length).

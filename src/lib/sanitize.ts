@@ -1,5 +1,5 @@
 /**
- * Input sanitization for data storage with security (FBLA rubric).
+ * Input sanitization for data storage with security (TSA Webmaster rubric).
  * Trims and limits strings before storing in localStorage.
  */
 

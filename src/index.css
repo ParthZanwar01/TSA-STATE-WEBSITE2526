@@ -169,7 +169,7 @@
   }
 }
 
-/* High-contrast mode for accessibility (FBLA rubric: UX Design & Rationale) */
+/* High-contrast mode for accessibility (TSA Webmaster rubric: UX Design) */
 html[data-high-contrast="true"],
 [data-high-contrast="true"] {
   --background: 0 0% 100%;
