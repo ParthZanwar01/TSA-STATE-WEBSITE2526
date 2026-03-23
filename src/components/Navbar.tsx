@@ -13,7 +13,6 @@ const baseNavLinks = [
   { label: 'Events', path: '/events' },
   { label: 'Submit', path: '/submit' },
   { label: 'My Favorites', path: '/favorites' },
-  { label: 'Reports', path: '/reports' },
   { label: 'Reference Page', path: '/references' },
 ];
 

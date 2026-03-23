@@ -21,7 +21,6 @@ import BusinessDetail from "./pages/BusinessDetail";
 import BusinessLogin from "./pages/BusinessLogin";
 import MyFavorites from "./pages/MyFavorites";
 import Admin from "./pages/Admin";
-import Reports from "./pages/Reports";
 import Accessibility from "./pages/Accessibility";
 import References from "./pages/References";
 import NotFound from "./pages/NotFound";
@@ -53,7 +52,6 @@ const App = () => (
             <Route path="/business/:id" element={<BusinessDetail />} />
             <Route path="/favorites" element={<MyFavorites />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/reports" element={<Reports />} />
             <Route path="/login" element={<BusinessLogin />} />
             <Route path="/accessibility" element={<Accessibility />} />
             <Route path="/references" element={<References />} />
